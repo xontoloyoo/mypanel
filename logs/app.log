@@ -1,0 +1,1226 @@
+[2026-08-16 19:07:01] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\Downloads\cli-panel\data\panel.db
+[2026-08-16 19:07:01] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 19:07:01] [DEBUG] [executor]: Executing command: which nginx
+[2026-08-16 19:07:01] [WARNING] [executor]: Command failed [code 1]: which nginx | Error: which: no nginx in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:01] [DEBUG] [executor]: Executing command: which mysql
+[2026-08-16 19:07:01] [WARNING] [executor]: Command failed [code 1]: which mysql | Error: which: no mysql in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:01] [DEBUG] [executor]: Executing command: which mariadb
+[2026-08-16 19:07:01] [WARNING] [executor]: Command failed [code 1]: which mariadb | Error: which: no mariadb in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:01] [DEBUG] [executor]: Executing command: which certbot
+[2026-08-16 19:07:01] [WARNING] [executor]: Command failed [code 1]: which certbot | Error: which: no certbot in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:01] [DEBUG] [executor]: Executing command: which ufw
+[2026-08-16 19:07:01] [WARNING] [executor]: Command failed [code 1]: which ufw | Error: which: no ufw in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:01] [DEBUG] [executor]: Executing command: which crontab
+[2026-08-16 19:07:01] [WARNING] [executor]: Command failed [code 1]: which crontab | Error: which: no crontab in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:01] [DEBUG] [executor]: Executing command: which sqlite3
+[2026-08-16 19:07:02] [WARNING] [executor]: Command failed [code 1]: which sqlite3 | Error: which: no sqlite3 in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:02] [DEBUG] [executor]: Executing command: systemctl is-active nginx
+[2026-08-16 19:07:02] [WARNING] [executor]: Command failed [code 1]: systemctl is-active nginx | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:02] [DEBUG] [executor]: Executing command: systemctl is-active mariadb
+[2026-08-16 19:07:02] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mariadb | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:02] [DEBUG] [executor]: Executing command: systemctl is-active mysql
+[2026-08-16 19:07:02] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mysql | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:02] [DEBUG] [executor]: Executing command: systemctl is-active ufw
+[2026-08-16 19:07:02] [WARNING] [executor]: Command failed [code 1]: systemctl is-active ufw | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:02] [DEBUG] [executor]: Executing command: systemctl is-active cron
+[2026-08-16 19:07:02] [WARNING] [executor]: Command failed [code 1]: systemctl is-active cron | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:02] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 19:07:02] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:02] [INFO] [doctor]: Auto-repair: Created missing storage directories.
+[2026-08-16 19:07:07] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\Downloads\cli-panel\data\panel.db
+[2026-08-16 19:07:07] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 19:07:07] [DEBUG] [executor]: Executing command: which nginx
+[2026-08-16 19:07:07] [WARNING] [executor]: Command failed [code 1]: which nginx | Error: which: no nginx in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:07] [DEBUG] [executor]: Executing command: which mysql
+[2026-08-16 19:07:07] [WARNING] [executor]: Command failed [code 1]: which mysql | Error: which: no mysql in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:07] [DEBUG] [executor]: Executing command: which mariadb
+[2026-08-16 19:07:07] [WARNING] [executor]: Command failed [code 1]: which mariadb | Error: which: no mariadb in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:07] [DEBUG] [executor]: Executing command: which certbot
+[2026-08-16 19:07:07] [WARNING] [executor]: Command failed [code 1]: which certbot | Error: which: no certbot in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:07] [DEBUG] [executor]: Executing command: which ufw
+[2026-08-16 19:07:08] [WARNING] [executor]: Command failed [code 1]: which ufw | Error: which: no ufw in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:08] [DEBUG] [executor]: Executing command: which crontab
+[2026-08-16 19:07:08] [WARNING] [executor]: Command failed [code 1]: which crontab | Error: which: no crontab in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:08] [DEBUG] [executor]: Executing command: which sqlite3
+[2026-08-16 19:07:08] [WARNING] [executor]: Command failed [code 1]: which sqlite3 | Error: which: no sqlite3 in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:08] [DEBUG] [executor]: Executing command: systemctl is-active nginx
+[2026-08-16 19:07:08] [WARNING] [executor]: Command failed [code 1]: systemctl is-active nginx | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:08] [DEBUG] [executor]: Executing command: systemctl is-active mariadb
+[2026-08-16 19:07:08] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mariadb | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:08] [DEBUG] [executor]: Executing command: systemctl is-active mysql
+[2026-08-16 19:07:08] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mysql | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:08] [DEBUG] [executor]: Executing command: systemctl is-active ufw
+[2026-08-16 19:07:08] [WARNING] [executor]: Command failed [code 1]: systemctl is-active ufw | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:08] [DEBUG] [executor]: Executing command: systemctl is-active cron
+[2026-08-16 19:07:08] [WARNING] [executor]: Command failed [code 1]: systemctl is-active cron | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:08] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 19:07:08] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:11] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\Downloads\cli-panel\data\panel.db
+[2026-08-16 19:07:11] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 19:07:11] [INFO] [main]: cli-panel interactive session started.
+[2026-08-16 19:07:11] [DEBUG] [executor]: Executing command: which nginx
+[2026-08-16 19:07:11] [WARNING] [executor]: Command failed [code 1]: which nginx | Error: which: no nginx in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:11] [DEBUG] [executor]: Executing command: which mysql
+[2026-08-16 19:07:11] [WARNING] [executor]: Command failed [code 1]: which mysql | Error: which: no mysql in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:11] [DEBUG] [executor]: Executing command: which mariadb
+[2026-08-16 19:07:11] [WARNING] [executor]: Command failed [code 1]: which mariadb | Error: which: no mariadb in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:11] [DEBUG] [executor]: Executing command: which certbot
+[2026-08-16 19:07:11] [WARNING] [executor]: Command failed [code 1]: which certbot | Error: which: no certbot in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:11] [DEBUG] [executor]: Executing command: which ufw
+[2026-08-16 19:07:12] [WARNING] [executor]: Command failed [code 1]: which ufw | Error: which: no ufw in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:12] [DEBUG] [executor]: Executing command: which crontab
+[2026-08-16 19:07:12] [WARNING] [executor]: Command failed [code 1]: which crontab | Error: which: no crontab in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:12] [DEBUG] [executor]: Executing command: which sqlite3
+[2026-08-16 19:07:12] [WARNING] [executor]: Command failed [code 1]: which sqlite3 | Error: which: no sqlite3 in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:12] [DEBUG] [executor]: Executing command: systemctl is-active nginx
+[2026-08-16 19:07:12] [WARNING] [executor]: Command failed [code 1]: systemctl is-active nginx | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:12] [DEBUG] [executor]: Executing command: systemctl is-active mariadb
+[2026-08-16 19:07:12] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mariadb | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:12] [DEBUG] [executor]: Executing command: systemctl is-active mysql
+[2026-08-16 19:07:12] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mysql | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:12] [DEBUG] [executor]: Executing command: systemctl is-active ufw
+[2026-08-16 19:07:12] [WARNING] [executor]: Command failed [code 1]: systemctl is-active ufw | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:12] [DEBUG] [executor]: Executing command: systemctl is-active cron
+[2026-08-16 19:07:12] [WARNING] [executor]: Command failed [code 1]: systemctl is-active cron | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:12] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 19:07:12] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:12] [DEBUG] [executor]: Executing command: which nginx
+[2026-08-16 19:07:12] [WARNING] [executor]: Command failed [code 1]: which nginx | Error: which: no nginx in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:12] [DEBUG] [executor]: Executing command: which mysql
+[2026-08-16 19:07:12] [WARNING] [executor]: Command failed [code 1]: which mysql | Error: which: no mysql in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:12] [DEBUG] [executor]: Executing command: which mariadb
+[2026-08-16 19:07:12] [WARNING] [executor]: Command failed [code 1]: which mariadb | Error: which: no mariadb in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:12] [DEBUG] [executor]: Executing command: which certbot
+[2026-08-16 19:07:13] [WARNING] [executor]: Command failed [code 1]: which certbot | Error: which: no certbot in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:13] [DEBUG] [executor]: Executing command: which ufw
+[2026-08-16 19:07:13] [WARNING] [executor]: Command failed [code 1]: which ufw | Error: which: no ufw in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:13] [DEBUG] [executor]: Executing command: which crontab
+[2026-08-16 19:07:13] [WARNING] [executor]: Command failed [code 1]: which crontab | Error: which: no crontab in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:13] [DEBUG] [executor]: Executing command: which sqlite3
+[2026-08-16 19:07:13] [WARNING] [executor]: Command failed [code 1]: which sqlite3 | Error: which: no sqlite3 in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 19:07:13] [DEBUG] [executor]: Executing command: systemctl is-active nginx
+[2026-08-16 19:07:13] [WARNING] [executor]: Command failed [code 1]: systemctl is-active nginx | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:13] [DEBUG] [executor]: Executing command: systemctl is-active mariadb
+[2026-08-16 19:07:13] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mariadb | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:13] [DEBUG] [executor]: Executing command: systemctl is-active mysql
+[2026-08-16 19:07:13] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mysql | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:13] [DEBUG] [executor]: Executing command: systemctl is-active ufw
+[2026-08-16 19:07:13] [WARNING] [executor]: Command failed [code 1]: systemctl is-active ufw | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:13] [DEBUG] [executor]: Executing command: systemctl is-active cron
+[2026-08-16 19:07:13] [WARNING] [executor]: Command failed [code 1]: systemctl is-active cron | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:13] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 19:07:13] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 19:07:13] [INFO] [main]: cli-panel session terminated by keyboard interrupt.
+[2026-08-16 21:41:58] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\Downloads\cli-panel\data\panel.db
+[2026-08-16 21:41:58] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 21:41:58] [INFO] [tuner]: Parameter 'memory_limit' updated to '512M' successfully.
+[2026-08-16 21:41:58] [INFO] [tuner]: Parameter 'worker_processes' updated to 'auto' successfully.
+[2026-08-16 21:41:58] [INFO] [tuner]: Parameter 'worker_connections' updated to '4096' successfully.
+[2026-08-16 21:41:58] [INFO] [tuner]: Parameter 'multi_accept' updated to 'on' successfully.
+[2026-08-16 21:41:58] [INFO] [tuner]: Parameter 'sendfile' updated to 'on' successfully.
+[2026-08-16 21:41:58] [INFO] [tuner]: Parameter 'tcp_nopush' updated to 'on' successfully.
+[2026-08-16 21:41:58] [INFO] [tuner]: Parameter 'tcp_nodelay' updated to 'on' successfully.
+[2026-08-16 21:41:58] [INFO] [tuner]: Parameter 'keepalive_timeout' updated to '60' successfully.
+[2026-08-16 21:41:58] [INFO] [tuner]: Parameter 'gzip' updated to 'on' successfully.
+[2026-08-16 21:41:58] [INFO] [tuner]: Parameter 'gzip_comp_level' updated to '6' successfully.
+[2026-08-16 21:41:58] [INFO] [tuner]: Parameter 'client_max_body_size' updated to '256M' successfully.
+[2026-08-16 21:41:58] [INFO] [tuner]: Parameter 'fastcgi_buffer_size' updated to '256k' successfully.
+[2026-08-16 21:41:58] [INFO] [tuner]: Parameter 'fastcgi_buffers' updated to '8 128k' successfully.
+[2026-08-16 21:41:58] [INFO] [tuner]: Parameter 'fastcgi_read_timeout' updated to '120s' successfully.
+[2026-08-16 21:41:58] [INFO] [tuner]: Applied 'performance' preset (13 parameters tuned across 1 service(s)).
+[2026-08-16 21:41:58] [INFO] [tuner]: Swap setup mock mode on Windows: 2 GB swap configured.
+[2026-08-16 21:41:58] [DEBUG] [executor]: Executing command: php -v
+[2026-08-16 21:41:58] [WARNING] [executor]: Command failed [code 1]: php -v | Error: 'php' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 21:41:58] [DEBUG] [executor]: Executing command: php -m
+[2026-08-16 21:41:58] [WARNING] [executor]: Command failed [code 1]: php -m | Error: 'php' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 21:41:58] [INFO] [php_manager]: Mock install PHP extension: php8.1-redis
+[2026-08-16 21:42:04] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\Downloads\cli-panel\data\panel.db
+[2026-08-16 21:42:04] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 21:42:04] [INFO] [main]: cli-panel interactive session started.
+[2026-08-16 21:42:05] [INFO] [main]: cli-panel interactive session ended by user.
+[2026-08-16 22:07:13] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\Downloads\cli-panel\data\panel.db
+[2026-08-16 22:07:13] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:07:13] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (19 functions blacklisted).
+[2026-08-16 22:07:13] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (18 functions blacklisted).
+[2026-08-16 22:07:13] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (19 functions blacklisted).
+[2026-08-16 22:07:13] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (0 functions blacklisted).
+[2026-08-16 22:07:18] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\Downloads\cli-panel\data\panel.db
+[2026-08-16 22:07:18] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:07:18] [INFO] [main]: cli-panel interactive session started.
+[2026-08-16 22:07:19] [INFO] [main]: cli-panel interactive session ended by user.
+[2026-08-16 22:39:24] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\Downloads\cli-panel\data\panel.db
+[2026-08-16 22:39:24] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:39:24] [INFO] [site]: Created WAF default snippet at data\test_mock_waf\waf_default.conf
+[2026-08-16 22:39:24] [INFO] [site]: Created WAF default snippet at C:\Users\WahHF\Downloads\cli-panel\data\mock_config\waf_default.conf
+[2026-08-16 22:39:31] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\Downloads\cli-panel\data\panel.db
+[2026-08-16 22:39:31] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:39:31] [INFO] [main]: cli-panel interactive session started.
+[2026-08-16 22:39:32] [INFO] [main]: cli-panel interactive session ended by user.
+[2026-08-16 22:43:08] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\tmp0x5d6_67\test_panel.db
+[2026-08-16 22:43:08] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:43:08] [ERROR] [database]: Database execution error on 'INSERT INTO databases (db_name, db_user, charset) VALUES (?, ?, ?);': NOT NULL constraint failed: databases.db_pass
+[2026-08-16 22:43:08] [ERROR] [database]: Database transaction rolled back due to: NOT NULL constraint failed: databases.db_pass
+[2026-08-16 22:43:08] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\tmp0x5d6_67\test_site.db
+[2026-08-16 22:43:08] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:43:08] [ERROR] [database]: Database fetch_one error on '
+                    SELECT id, domain, root_path, php_version, ssl_status, created_at
+                    WHERE domain = ?;
+                    ': no such column: id
+[2026-08-16 22:43:08] [ERROR] [database]: Database transaction rolled back due to: no such column: id
+[2026-08-16 22:43:08] [ERROR] [site]: Failed to get site 'mysite.local': no such column: id
+[2026-08-16 22:43:08] [DEBUG] [site]: Created placeholder index.html at C:\Users\WahHF\AppData\Local\Temp\tmp0x5d6_67\wwwroot\mysite.local\index.html
+[2026-08-16 22:43:08] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:43:08] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:08] [DEBUG] [site]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:43:08] [INFO] [site]: Site 'mysite.local' successfully created with root 'C:\Users\WahHF\AppData\Local\Temp\tmp0x5d6_67\wwwroot\mysite.local'
+[2026-08-16 22:43:08] [DEBUG] [executor]: Executing command: certbot certonly --webroot -w C:\Users\WahHF\AppData\Local\Temp\tmp0x5d6_67\wwwroot\mysite.local -d mysite.local --non-interactive --agree-tos --email admin@mysite.local
+[2026-08-16 22:43:08] [WARNING] [executor]: Command failed [code 1]: certbot certonly --webroot -w C:\Users\WahHF\AppData\Local\Temp\tmp0x5d6_67\wwwroot\mysite.local -d mysite.local --non-interactive --agree-tos --email admin@mysite.local | Error: 'certbot' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:08] [DEBUG] [ssl]: Certbot CLI not found on host. Simulating SSL certificate issuance.
+[2026-08-16 22:43:08] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:43:08] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:08] [DEBUG] [ssl]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:43:08] [INFO] [ssl]: SSL certificate for 'mysite.local' enabled successfully.
+[2026-08-16 22:43:08] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:43:08] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:08] [DEBUG] [ssl]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:43:08] [INFO] [ssl]: SSL for site 'mysite.local' disabled.
+[2026-08-16 22:43:08] [ERROR] [database]: Database fetch_one error on '
+                    SELECT id, domain, root_path, php_version, ssl_status, created_at
+                    WHERE domain = ?;
+                    ': no such column: id
+[2026-08-16 22:43:08] [ERROR] [database]: Database transaction rolled back due to: no such column: id
+[2026-08-16 22:43:08] [ERROR] [site]: Failed to get site 'mysite.local': no such column: id
+[2026-08-16 22:43:08] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\tmp0x5d6_67\test_database.db
+[2026-08-16 22:43:08] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:43:08] [DEBUG] [executor]: Executing command: mysql -u root -e "CREATE DATABASE IF NOT EXISTS `store_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE USER IF NOT EXISTS 'store_user'@'localhost' IDENTIFIED BY 'SecurePass123!@#'; GRANT ALL PRIVILEGES ON `store_db`.* TO 'store_user'@'localhost'; FLUSH PRIVILEGES;"
+[2026-08-16 22:43:08] [WARNING] [executor]: Command failed [code 1]: mysql -u root -e "CREATE DATABASE IF NOT EXISTS `store_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE USER IF NOT EXISTS 'store_user'@'localhost' IDENTIFIED BY 'SecurePass123!@#'; GRANT ALL PRIVILEGES ON `store_db`.* TO 'store_user'@'localhost'; FLUSH PRIVILEGES;" | Error: 'mysql' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:08] [DEBUG] [database]: MySQL CLI binary not available on host. Proceeding in mock mode.
+[2026-08-16 22:43:08] [INFO] [database]: Database 'store_db' with user 'store_user' created successfully.
+[2026-08-16 22:43:08] [DEBUG] [executor]: Executing command: mysql -u root -e "ALTER USER 'store_user'@'localhost' IDENTIFIED BY 'NewSecurePass987!#'; FLUSH PRIVILEGES;"
+[2026-08-16 22:43:08] [WARNING] [executor]: Command failed [code 1]: mysql -u root -e "ALTER USER 'store_user'@'localhost' IDENTIFIED BY 'NewSecurePass987!#'; FLUSH PRIVILEGES;" | Error: 'mysql' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:08] [DEBUG] [database]: MySQL CLI binary not available on host. Proceeding in mock mode.
+[2026-08-16 22:43:08] [INFO] [database]: Password updated for user 'store_user'
+[2026-08-16 22:43:08] [DEBUG] [executor]: Executing command: mysql -u root -e "DROP DATABASE IF EXISTS `store_db`; DROP USER IF EXISTS 'store_user'@'localhost'; FLUSH PRIVILEGES;"
+[2026-08-16 22:43:08] [WARNING] [executor]: Command failed [code 1]: mysql -u root -e "DROP DATABASE IF EXISTS `store_db`; DROP USER IF EXISTS 'store_user'@'localhost'; FLUSH PRIVILEGES;" | Error: 'mysql' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:08] [DEBUG] [database]: MySQL CLI binary not available on host. Proceeding in mock mode.
+[2026-08-16 22:43:09] [INFO] [database]: Database 'store_db' deleted successfully.
+[2026-08-16 22:43:09] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\tmp0x5d6_67\test_firewall.db
+[2026-08-16 22:43:09] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:43:09] [DEBUG] [executor]: Executing command: ufw allow 80/tcp
+[2026-08-16 22:43:09] [WARNING] [executor]: Command failed [code 1]: ufw allow 80/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:09] [DEBUG] [firewall]: UFW CLI not found on host. Adding rule to registry in mock mode.
+[2026-08-16 22:43:09] [INFO] [firewall]: Firewall rule added: allow 80/tcp (HTTP Web)
+[2026-08-16 22:43:09] [DEBUG] [executor]: Executing command: ufw allow 3000:4000/tcp
+[2026-08-16 22:43:09] [WARNING] [executor]: Command failed [code 1]: ufw allow 3000:4000/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:09] [DEBUG] [firewall]: UFW CLI not found on host. Adding rule to registry in mock mode.
+[2026-08-16 22:43:09] [INFO] [firewall]: Firewall rule added: allow 3000:4000/tcp (Node services)
+[2026-08-16 22:43:09] [DEBUG] [executor]: Executing command: ufw delete allow 3000:4000/tcp
+[2026-08-16 22:43:09] [WARNING] [executor]: Command failed [code 1]: ufw delete allow 3000:4000/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:09] [DEBUG] [firewall]: UFW CLI not found on host. Deleting rule in mock mode.
+[2026-08-16 22:43:09] [INFO] [firewall]: Firewall rule ID 2 deleted successfully.
+[2026-08-16 22:43:09] [DEBUG] [executor]: Executing command: ufw --force enable
+[2026-08-16 22:43:09] [WARNING] [executor]: Command failed [code 1]: ufw --force enable | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:09] [DEBUG] [firewall]: UFW CLI not found on host. Simulating state toggle.
+[2026-08-16 22:43:10] [DEBUG] [executor]: Executing command: systemctl is-active nginx
+[2026-08-16 22:43:10] [WARNING] [executor]: Command failed [code 1]: systemctl is-active nginx | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:10] [DEBUG] [executor]: Executing command: systemctl is-active mysql
+[2026-08-16 22:43:10] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mysql | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:10] [DEBUG] [executor]: Executing command: systemctl is-active mariadb
+[2026-08-16 22:43:10] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mariadb | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:10] [DEBUG] [executor]: Executing command: systemctl is-active ufw
+[2026-08-16 22:43:10] [WARNING] [executor]: Command failed [code 1]: systemctl is-active ufw | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:10] [DEBUG] [executor]: Executing command: systemctl is-active php-fpm
+[2026-08-16 22:43:10] [WARNING] [executor]: Command failed [code 1]: systemctl is-active php-fpm | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:10] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\tmp0x5d6_67\test_cron.db
+[2026-08-16 22:43:10] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:43:10] [DEBUG] [executor]: Executing command: crontab -l
+[2026-08-16 22:43:10] [WARNING] [executor]: Command failed [code 1]: crontab -l | Error: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:10] [DEBUG] [cron]: crontab -l returned error or is empty: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:10] [DEBUG] [executor]: Executing command: echo "0 3 * * * /www/server/panel/.venv/bin/python -c \"from app.modules.backup import BackupManager; BackupManager().backup_site('example.com')\" # CLI_PANEL_JOB_1
+" | crontab -
+[2026-08-16 22:43:10] [DEBUG] [executor]: Command succeeded [code 0]: echo "0 3 * * * /www/server/panel/.venv/bin/python -c \"from app.modules.backup import BackupManager; BackupManager().backup_site('example.com')\" # CLI_PANEL_JOB_1
+" | crontab -
+[2026-08-16 22:43:10] [INFO] [cron]: Cron job 'Nightly Site Backup' (ID 1) added to crontab.
+[2026-08-16 22:43:10] [DEBUG] [executor]: Executing command: crontab -l
+[2026-08-16 22:43:10] [WARNING] [executor]: Command failed [code 1]: crontab -l | Error: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:10] [DEBUG] [cron]: crontab -l returned error or is empty: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:10] [DEBUG] [executor]: Executing command: echo "
+" | crontab -
+[2026-08-16 22:43:10] [DEBUG] [executor]: Command succeeded [code 0]: echo "
+" | crontab -
+[2026-08-16 22:43:10] [INFO] [cron]: Cron job ID 1 state changed to disabled.
+[2026-08-16 22:43:10] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\tmp0x5d6_67\test_migration.db
+[2026-08-16 22:43:10] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:43:10] [ERROR] [database]: Database execution error on 'INSERT INTO databases (db_name, db_user, charset) VALUES (?, ?, ?);': NOT NULL constraint failed: databases.db_pass
+[2026-08-16 22:43:10] [ERROR] [database]: Database transaction rolled back due to: NOT NULL constraint failed: databases.db_pass
+[2026-08-16 22:43:10] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\tmp0x5d6_67\test_doctor.db
+[2026-08-16 22:43:10] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:43:10] [DEBUG] [executor]: Executing command: which nginx
+[2026-08-16 22:43:10] [WARNING] [executor]: Command failed [code 1]: which nginx | Error: which: no nginx in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:43:10] [DEBUG] [executor]: Executing command: which mysql
+[2026-08-16 22:43:10] [WARNING] [executor]: Command failed [code 1]: which mysql | Error: which: no mysql in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:43:10] [DEBUG] [executor]: Executing command: which mariadb
+[2026-08-16 22:43:10] [WARNING] [executor]: Command failed [code 1]: which mariadb | Error: which: no mariadb in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:43:10] [DEBUG] [executor]: Executing command: which certbot
+[2026-08-16 22:43:10] [WARNING] [executor]: Command failed [code 1]: which certbot | Error: which: no certbot in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:43:10] [DEBUG] [executor]: Executing command: which ufw
+[2026-08-16 22:43:10] [WARNING] [executor]: Command failed [code 1]: which ufw | Error: which: no ufw in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:43:10] [DEBUG] [executor]: Executing command: which crontab
+[2026-08-16 22:43:10] [WARNING] [executor]: Command failed [code 1]: which crontab | Error: which: no crontab in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:43:10] [DEBUG] [executor]: Executing command: which sqlite3
+[2026-08-16 22:43:11] [WARNING] [executor]: Command failed [code 1]: which sqlite3 | Error: which: no sqlite3 in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:43:11] [DEBUG] [executor]: Executing command: systemctl is-active nginx
+[2026-08-16 22:43:11] [WARNING] [executor]: Command failed [code 1]: systemctl is-active nginx | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:11] [DEBUG] [executor]: Executing command: systemctl is-active mariadb
+[2026-08-16 22:43:11] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mariadb | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:11] [DEBUG] [executor]: Executing command: systemctl is-active mysql
+[2026-08-16 22:43:11] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mysql | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:11] [DEBUG] [executor]: Executing command: systemctl is-active ufw
+[2026-08-16 22:43:11] [WARNING] [executor]: Command failed [code 1]: systemctl is-active ufw | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:11] [DEBUG] [executor]: Executing command: systemctl is-active cron
+[2026-08-16 22:43:11] [WARNING] [executor]: Command failed [code 1]: systemctl is-active cron | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:11] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:43:11] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:11] [INFO] [tuner]: Parameter 'memory_limit' updated to '512M' successfully.
+[2026-08-16 22:43:11] [INFO] [tuner]: Parameter 'worker_processes' updated to 'auto' successfully.
+[2026-08-16 22:43:11] [INFO] [tuner]: Parameter 'worker_connections' updated to '4096' successfully.
+[2026-08-16 22:43:11] [INFO] [tuner]: Parameter 'multi_accept' updated to 'on' successfully.
+[2026-08-16 22:43:11] [INFO] [tuner]: Parameter 'sendfile' updated to 'on' successfully.
+[2026-08-16 22:43:11] [INFO] [tuner]: Parameter 'tcp_nopush' updated to 'on' successfully.
+[2026-08-16 22:43:11] [INFO] [tuner]: Parameter 'tcp_nodelay' updated to 'on' successfully.
+[2026-08-16 22:43:11] [INFO] [tuner]: Parameter 'keepalive_timeout' updated to '60' successfully.
+[2026-08-16 22:43:11] [INFO] [tuner]: Parameter 'gzip' updated to 'on' successfully.
+[2026-08-16 22:43:11] [INFO] [tuner]: Parameter 'gzip_comp_level' updated to '6' successfully.
+[2026-08-16 22:43:11] [INFO] [tuner]: Parameter 'client_max_body_size' updated to '256M' successfully.
+[2026-08-16 22:43:11] [INFO] [tuner]: Parameter 'fastcgi_buffer_size' updated to '256k' successfully.
+[2026-08-16 22:43:11] [INFO] [tuner]: Parameter 'fastcgi_buffers' updated to '8 128k' successfully.
+[2026-08-16 22:43:11] [INFO] [tuner]: Parameter 'fastcgi_read_timeout' updated to '120s' successfully.
+[2026-08-16 22:43:11] [INFO] [tuner]: Applied 'performance' preset (13 parameters tuned across 1 service(s)).
+[2026-08-16 22:43:11] [INFO] [tuner]: Swap setup mock mode on Windows: 2 GB swap configured.
+[2026-08-16 22:43:11] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (19 functions blacklisted).
+[2026-08-16 22:43:11] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (18 functions blacklisted).
+[2026-08-16 22:43:11] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (19 functions blacklisted).
+[2026-08-16 22:43:11] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (0 functions blacklisted).
+[2026-08-16 22:43:11] [INFO] [site]: Created WAF default snippet at C:\Users\WahHF\AppData\Local\Temp\tmp0x5d6_67\mock_config\waf_default.conf
+[2026-08-16 22:43:52] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_6nu3jmow\suite_1\test_panel.db
+[2026-08-16 22:43:52] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:43:52] [ERROR] [database]: Database execution error on 'INSERT INTO databases (db_name, db_user, charset) VALUES (?, ?, ?);': NOT NULL constraint failed: databases.db_pass
+[2026-08-16 22:43:52] [ERROR] [database]: Database transaction rolled back due to: NOT NULL constraint failed: databases.db_pass
+[2026-08-16 22:43:52] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_6nu3jmow\suite_2\test_site.db
+[2026-08-16 22:43:52] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:43:52] [ERROR] [database]: Database fetch_one error on '
+                    SELECT id, domain, root_path, php_version, ssl_status, created_at
+                    WHERE domain = ?;
+                    ': no such column: id
+[2026-08-16 22:43:52] [ERROR] [database]: Database transaction rolled back due to: no such column: id
+[2026-08-16 22:43:52] [ERROR] [site]: Failed to get site 'mysite.local': no such column: id
+[2026-08-16 22:43:52] [DEBUG] [site]: Created placeholder index.html at C:\Users\WahHF\AppData\Local\Temp\clipanel_test_6nu3jmow\suite_2\wwwroot\mysite.local\index.html
+[2026-08-16 22:43:52] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:43:52] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:52] [DEBUG] [site]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:43:52] [INFO] [site]: Site 'mysite.local' successfully created with root 'C:\Users\WahHF\AppData\Local\Temp\clipanel_test_6nu3jmow\suite_2\wwwroot\mysite.local'
+[2026-08-16 22:43:52] [DEBUG] [executor]: Executing command: certbot certonly --webroot -w C:\Users\WahHF\AppData\Local\Temp\clipanel_test_6nu3jmow\suite_2\wwwroot\mysite.local -d mysite.local --non-interactive --agree-tos --email admin@mysite.local
+[2026-08-16 22:43:52] [WARNING] [executor]: Command failed [code 1]: certbot certonly --webroot -w C:\Users\WahHF\AppData\Local\Temp\clipanel_test_6nu3jmow\suite_2\wwwroot\mysite.local -d mysite.local --non-interactive --agree-tos --email admin@mysite.local | Error: 'certbot' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:52] [DEBUG] [ssl]: Certbot CLI not found on host. Simulating SSL certificate issuance.
+[2026-08-16 22:43:52] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:43:52] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:52] [DEBUG] [ssl]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:43:52] [INFO] [ssl]: SSL certificate for 'mysite.local' enabled successfully.
+[2026-08-16 22:43:52] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:43:52] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:52] [DEBUG] [ssl]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:43:52] [INFO] [ssl]: SSL for site 'mysite.local' disabled.
+[2026-08-16 22:43:52] [ERROR] [database]: Database fetch_one error on '
+                    SELECT id, domain, root_path, php_version, ssl_status, created_at
+                    WHERE domain = ?;
+                    ': no such column: id
+[2026-08-16 22:43:52] [ERROR] [database]: Database transaction rolled back due to: no such column: id
+[2026-08-16 22:43:52] [ERROR] [site]: Failed to get site 'mysite.local': no such column: id
+[2026-08-16 22:43:52] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_6nu3jmow\suite_3\test_database.db
+[2026-08-16 22:43:52] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:43:52] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_6nu3jmow\suite_4\test_firewall.db
+[2026-08-16 22:43:52] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:43:52] [DEBUG] [executor]: Executing command: ufw allow 80/tcp
+[2026-08-16 22:43:52] [WARNING] [executor]: Command failed [code 1]: ufw allow 80/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:52] [DEBUG] [firewall]: UFW CLI not found on host. Adding rule to registry in mock mode.
+[2026-08-16 22:43:52] [INFO] [firewall]: Firewall rule added: allow 80/tcp (HTTP Web)
+[2026-08-16 22:43:52] [DEBUG] [executor]: Executing command: ufw allow 3000:4000/tcp
+[2026-08-16 22:43:52] [WARNING] [executor]: Command failed [code 1]: ufw allow 3000:4000/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:52] [DEBUG] [firewall]: UFW CLI not found on host. Adding rule to registry in mock mode.
+[2026-08-16 22:43:52] [INFO] [firewall]: Firewall rule added: allow 3000:4000/tcp (Node services)
+[2026-08-16 22:43:52] [DEBUG] [executor]: Executing command: ufw delete allow 3000:4000/tcp
+[2026-08-16 22:43:52] [WARNING] [executor]: Command failed [code 1]: ufw delete allow 3000:4000/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:52] [DEBUG] [firewall]: UFW CLI not found on host. Deleting rule in mock mode.
+[2026-08-16 22:43:52] [INFO] [firewall]: Firewall rule ID 2 deleted successfully.
+[2026-08-16 22:43:52] [DEBUG] [executor]: Executing command: ufw --force enable
+[2026-08-16 22:43:52] [WARNING] [executor]: Command failed [code 1]: ufw --force enable | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:52] [DEBUG] [firewall]: UFW CLI not found on host. Simulating state toggle.
+[2026-08-16 22:43:53] [DEBUG] [executor]: Executing command: systemctl is-active nginx
+[2026-08-16 22:43:53] [WARNING] [executor]: Command failed [code 1]: systemctl is-active nginx | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:53] [DEBUG] [executor]: Executing command: systemctl is-active mysql
+[2026-08-16 22:43:53] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mysql | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:53] [DEBUG] [executor]: Executing command: systemctl is-active mariadb
+[2026-08-16 22:43:53] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mariadb | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:53] [DEBUG] [executor]: Executing command: systemctl is-active ufw
+[2026-08-16 22:43:53] [WARNING] [executor]: Command failed [code 1]: systemctl is-active ufw | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:53] [DEBUG] [executor]: Executing command: systemctl is-active php-fpm
+[2026-08-16 22:43:53] [WARNING] [executor]: Command failed [code 1]: systemctl is-active php-fpm | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:53] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_6nu3jmow\suite_6\test_cron.db
+[2026-08-16 22:43:53] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:43:53] [DEBUG] [executor]: Executing command: crontab -l
+[2026-08-16 22:43:53] [WARNING] [executor]: Command failed [code 1]: crontab -l | Error: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:53] [DEBUG] [cron]: crontab -l returned error or is empty: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:53] [DEBUG] [executor]: Executing command: echo "0 3 * * * /www/server/panel/.venv/bin/python -c \"from app.modules.backup import BackupManager; BackupManager().backup_site('example.com')\" # CLI_PANEL_JOB_1
+" | crontab -
+[2026-08-16 22:43:53] [DEBUG] [executor]: Command succeeded [code 0]: echo "0 3 * * * /www/server/panel/.venv/bin/python -c \"from app.modules.backup import BackupManager; BackupManager().backup_site('example.com')\" # CLI_PANEL_JOB_1
+" | crontab -
+[2026-08-16 22:43:53] [INFO] [cron]: Cron job 'Nightly Site Backup' (ID 1) added to crontab.
+[2026-08-16 22:43:53] [DEBUG] [executor]: Executing command: crontab -l
+[2026-08-16 22:43:53] [WARNING] [executor]: Command failed [code 1]: crontab -l | Error: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:53] [DEBUG] [cron]: crontab -l returned error or is empty: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:53] [DEBUG] [executor]: Executing command: echo "
+" | crontab -
+[2026-08-16 22:43:53] [DEBUG] [executor]: Command succeeded [code 0]: echo "
+" | crontab -
+[2026-08-16 22:43:53] [INFO] [cron]: Cron job ID 1 state changed to disabled.
+[2026-08-16 22:43:53] [INFO] [backup]: Starting site backup for 'site_a' -> C:\Users\WahHF\AppData\Local\Temp\clipanel_test_6nu3jmow\suite_6\backups\site\web_site_a_20260816_224353.tar.gz
+[2026-08-16 22:43:53] [INFO] [backup]: Site 'site_a' successfully backed up: web_site_a_20260816_224353.tar.gz (265 B)
+[2026-08-16 22:43:53] [INFO] [backup]: Deleted backup file: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_6nu3jmow\suite_6\backups\site\web_site_a_20260816_224353.tar.gz
+[2026-08-16 22:43:53] [INFO] [backup]: Backup record ID 1 (site_a) deleted successfully.
+[2026-08-16 22:43:53] [INFO] [log_viewer]: Cleared log file: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_6nu3jmow\suite_7\access.log
+[2026-08-16 22:43:53] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_6nu3jmow\suite_8\test_migration.db
+[2026-08-16 22:43:53] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:43:53] [ERROR] [database]: Database execution error on 'INSERT INTO databases (db_name, db_user, charset) VALUES (?, ?, ?);': NOT NULL constraint failed: databases.db_pass
+[2026-08-16 22:43:53] [ERROR] [database]: Database transaction rolled back due to: NOT NULL constraint failed: databases.db_pass
+[2026-08-16 22:43:53] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_6nu3jmow\suite_9\test_doctor.db
+[2026-08-16 22:43:53] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:43:53] [DEBUG] [executor]: Executing command: which nginx
+[2026-08-16 22:43:54] [WARNING] [executor]: Command failed [code 1]: which nginx | Error: which: no nginx in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:43:54] [DEBUG] [executor]: Executing command: which mysql
+[2026-08-16 22:43:54] [WARNING] [executor]: Command failed [code 1]: which mysql | Error: which: no mysql in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:43:54] [DEBUG] [executor]: Executing command: which mariadb
+[2026-08-16 22:43:54] [WARNING] [executor]: Command failed [code 1]: which mariadb | Error: which: no mariadb in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:43:54] [DEBUG] [executor]: Executing command: which certbot
+[2026-08-16 22:43:54] [WARNING] [executor]: Command failed [code 1]: which certbot | Error: which: no certbot in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:43:54] [DEBUG] [executor]: Executing command: which ufw
+[2026-08-16 22:43:54] [WARNING] [executor]: Command failed [code 1]: which ufw | Error: which: no ufw in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:43:54] [DEBUG] [executor]: Executing command: which crontab
+[2026-08-16 22:43:54] [WARNING] [executor]: Command failed [code 1]: which crontab | Error: which: no crontab in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:43:54] [DEBUG] [executor]: Executing command: which sqlite3
+[2026-08-16 22:43:54] [WARNING] [executor]: Command failed [code 1]: which sqlite3 | Error: which: no sqlite3 in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:43:54] [DEBUG] [executor]: Executing command: systemctl is-active nginx
+[2026-08-16 22:43:54] [WARNING] [executor]: Command failed [code 1]: systemctl is-active nginx | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:54] [DEBUG] [executor]: Executing command: systemctl is-active mariadb
+[2026-08-16 22:43:54] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mariadb | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:54] [DEBUG] [executor]: Executing command: systemctl is-active mysql
+[2026-08-16 22:43:54] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mysql | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:54] [DEBUG] [executor]: Executing command: systemctl is-active ufw
+[2026-08-16 22:43:54] [WARNING] [executor]: Command failed [code 1]: systemctl is-active ufw | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:54] [DEBUG] [executor]: Executing command: systemctl is-active cron
+[2026-08-16 22:43:54] [WARNING] [executor]: Command failed [code 1]: systemctl is-active cron | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:54] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:43:54] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:43:54] [INFO] [tuner]: Parameter 'memory_limit' updated to '512M' successfully.
+[2026-08-16 22:43:54] [INFO] [tuner]: Parameter 'worker_processes' updated to 'auto' successfully.
+[2026-08-16 22:43:54] [INFO] [tuner]: Parameter 'worker_connections' updated to '4096' successfully.
+[2026-08-16 22:43:54] [INFO] [tuner]: Parameter 'multi_accept' updated to 'on' successfully.
+[2026-08-16 22:43:54] [INFO] [tuner]: Parameter 'sendfile' updated to 'on' successfully.
+[2026-08-16 22:43:54] [INFO] [tuner]: Parameter 'tcp_nopush' updated to 'on' successfully.
+[2026-08-16 22:43:54] [INFO] [tuner]: Parameter 'tcp_nodelay' updated to 'on' successfully.
+[2026-08-16 22:43:54] [INFO] [tuner]: Parameter 'keepalive_timeout' updated to '60' successfully.
+[2026-08-16 22:43:54] [INFO] [tuner]: Parameter 'gzip' updated to 'on' successfully.
+[2026-08-16 22:43:54] [INFO] [tuner]: Parameter 'gzip_comp_level' updated to '6' successfully.
+[2026-08-16 22:43:54] [INFO] [tuner]: Parameter 'client_max_body_size' updated to '256M' successfully.
+[2026-08-16 22:43:54] [INFO] [tuner]: Parameter 'fastcgi_buffer_size' updated to '256k' successfully.
+[2026-08-16 22:43:54] [INFO] [tuner]: Parameter 'fastcgi_buffers' updated to '8 128k' successfully.
+[2026-08-16 22:43:54] [INFO] [tuner]: Parameter 'fastcgi_read_timeout' updated to '120s' successfully.
+[2026-08-16 22:43:54] [INFO] [tuner]: Applied 'performance' preset (13 parameters tuned across 1 service(s)).
+[2026-08-16 22:43:54] [INFO] [tuner]: Swap setup mock mode on Windows: 2 GB swap configured.
+[2026-08-16 22:43:54] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (19 functions blacklisted).
+[2026-08-16 22:43:54] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (18 functions blacklisted).
+[2026-08-16 22:43:54] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (19 functions blacklisted).
+[2026-08-16 22:43:54] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (0 functions blacklisted).
+[2026-08-16 22:43:54] [INFO] [site]: Created WAF default snippet at C:\Users\WahHF\AppData\Local\Temp\clipanel_test_6nu3jmow\suite_10\mock_config\waf_default.conf
+[2026-08-16 22:44:42] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_1\test_panel.db
+[2026-08-16 22:44:42] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:44:42] [DEBUG] [executor]: Executing command: echo 'cli-panel test'
+[2026-08-16 22:44:42] [DEBUG] [executor]: Command succeeded [code 0]: echo 'cli-panel test'
+[2026-08-16 22:44:42] [DEBUG] [executor]: Executing command: "C:\Users\WahHF\Downloads\cli-panel\.venv\Scripts\python.exe" -c "import time; time.sleep(3)"
+[2026-08-16 22:44:45] [ERROR] [executor]: Command timed out after 1 seconds: "C:\Users\WahHF\Downloads\cli-panel\.venv\Scripts\python.exe" -c "import time; time.sleep(3)"
+[2026-08-16 22:44:45] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_2\test_site.db
+[2026-08-16 22:44:45] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:44:45] [DEBUG] [site]: Created placeholder index.html at C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_2\wwwroot\mysite.local\index.html
+[2026-08-16 22:44:45] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:44:45] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:45] [DEBUG] [site]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:44:45] [INFO] [site]: Site 'mysite.local' successfully created with root 'C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_2\wwwroot\mysite.local'
+[2026-08-16 22:44:45] [DEBUG] [executor]: Executing command: certbot certonly --webroot -w C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_2\wwwroot\mysite.local -d mysite.local --non-interactive --agree-tos --email admin@mysite.local
+[2026-08-16 22:44:45] [WARNING] [executor]: Command failed [code 1]: certbot certonly --webroot -w C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_2\wwwroot\mysite.local -d mysite.local --non-interactive --agree-tos --email admin@mysite.local | Error: 'certbot' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:45] [DEBUG] [ssl]: Certbot CLI not found on host. Simulating SSL certificate issuance.
+[2026-08-16 22:44:45] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:44:45] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:45] [DEBUG] [ssl]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:44:45] [INFO] [ssl]: SSL certificate for 'mysite.local' enabled successfully.
+[2026-08-16 22:44:45] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:44:45] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:45] [DEBUG] [ssl]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:44:45] [INFO] [ssl]: SSL for site 'mysite.local' disabled.
+[2026-08-16 22:44:45] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:44:45] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:45] [DEBUG] [site]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:44:45] [INFO] [site]: Deleted root directory for site 'mysite.local': C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_2\wwwroot\mysite.local
+[2026-08-16 22:44:45] [INFO] [site]: Site 'mysite.local' successfully deleted.
+[2026-08-16 22:44:45] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_3\test_database.db
+[2026-08-16 22:44:45] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:44:45] [DEBUG] [executor]: Executing command: mysql -u root -e "CREATE DATABASE IF NOT EXISTS `store_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE USER IF NOT EXISTS 'store_user'@'localhost' IDENTIFIED BY 'SecurePass123!@#'; GRANT ALL PRIVILEGES ON `store_db`.* TO 'store_user'@'localhost'; FLUSH PRIVILEGES;"
+[2026-08-16 22:44:45] [WARNING] [executor]: Command failed [code 1]: mysql -u root -e "CREATE DATABASE IF NOT EXISTS `store_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE USER IF NOT EXISTS 'store_user'@'localhost' IDENTIFIED BY 'SecurePass123!@#'; GRANT ALL PRIVILEGES ON `store_db`.* TO 'store_user'@'localhost'; FLUSH PRIVILEGES;" | Error: 'mysql' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:45] [DEBUG] [database]: MySQL CLI binary not available on host. Proceeding in mock mode.
+[2026-08-16 22:44:45] [INFO] [database]: Database 'store_db' with user 'store_user' created successfully.
+[2026-08-16 22:44:45] [DEBUG] [executor]: Executing command: mysql -u root -e "ALTER USER 'store_user'@'localhost' IDENTIFIED BY 'NewSecurePass987!#'; FLUSH PRIVILEGES;"
+[2026-08-16 22:44:45] [WARNING] [executor]: Command failed [code 1]: mysql -u root -e "ALTER USER 'store_user'@'localhost' IDENTIFIED BY 'NewSecurePass987!#'; FLUSH PRIVILEGES;" | Error: 'mysql' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:45] [DEBUG] [database]: MySQL CLI binary not available on host. Proceeding in mock mode.
+[2026-08-16 22:44:45] [INFO] [database]: Password updated for user 'store_user'
+[2026-08-16 22:44:45] [DEBUG] [executor]: Executing command: mysql -u root -e "DROP DATABASE IF EXISTS `store_db`; DROP USER IF EXISTS 'store_user'@'localhost'; FLUSH PRIVILEGES;"
+[2026-08-16 22:44:45] [WARNING] [executor]: Command failed [code 1]: mysql -u root -e "DROP DATABASE IF EXISTS `store_db`; DROP USER IF EXISTS 'store_user'@'localhost'; FLUSH PRIVILEGES;" | Error: 'mysql' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:45] [DEBUG] [database]: MySQL CLI binary not available on host. Proceeding in mock mode.
+[2026-08-16 22:44:45] [INFO] [database]: Database 'store_db' deleted successfully.
+[2026-08-16 22:44:45] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_4\test_firewall.db
+[2026-08-16 22:44:45] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:44:45] [DEBUG] [executor]: Executing command: ufw allow 80/tcp
+[2026-08-16 22:44:45] [WARNING] [executor]: Command failed [code 1]: ufw allow 80/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:45] [DEBUG] [firewall]: UFW CLI not found on host. Adding rule to registry in mock mode.
+[2026-08-16 22:44:45] [INFO] [firewall]: Firewall rule added: allow 80/tcp (HTTP Web)
+[2026-08-16 22:44:45] [DEBUG] [executor]: Executing command: ufw allow 3000:4000/tcp
+[2026-08-16 22:44:45] [WARNING] [executor]: Command failed [code 1]: ufw allow 3000:4000/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:45] [DEBUG] [firewall]: UFW CLI not found on host. Adding rule to registry in mock mode.
+[2026-08-16 22:44:45] [INFO] [firewall]: Firewall rule added: allow 3000:4000/tcp (Node services)
+[2026-08-16 22:44:45] [DEBUG] [executor]: Executing command: ufw delete allow 3000:4000/tcp
+[2026-08-16 22:44:45] [WARNING] [executor]: Command failed [code 1]: ufw delete allow 3000:4000/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:45] [DEBUG] [firewall]: UFW CLI not found on host. Deleting rule in mock mode.
+[2026-08-16 22:44:45] [INFO] [firewall]: Firewall rule ID 2 deleted successfully.
+[2026-08-16 22:44:45] [DEBUG] [executor]: Executing command: ufw --force enable
+[2026-08-16 22:44:45] [WARNING] [executor]: Command failed [code 1]: ufw --force enable | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:45] [DEBUG] [firewall]: UFW CLI not found on host. Simulating state toggle.
+[2026-08-16 22:44:46] [DEBUG] [executor]: Executing command: systemctl is-active nginx
+[2026-08-16 22:44:46] [WARNING] [executor]: Command failed [code 1]: systemctl is-active nginx | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:46] [DEBUG] [executor]: Executing command: systemctl is-active mysql
+[2026-08-16 22:44:46] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mysql | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:46] [DEBUG] [executor]: Executing command: systemctl is-active mariadb
+[2026-08-16 22:44:46] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mariadb | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:46] [DEBUG] [executor]: Executing command: systemctl is-active ufw
+[2026-08-16 22:44:46] [WARNING] [executor]: Command failed [code 1]: systemctl is-active ufw | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:46] [DEBUG] [executor]: Executing command: systemctl is-active php-fpm
+[2026-08-16 22:44:46] [WARNING] [executor]: Command failed [code 1]: systemctl is-active php-fpm | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:46] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_6\test_cron.db
+[2026-08-16 22:44:47] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:44:47] [DEBUG] [executor]: Executing command: crontab -l
+[2026-08-16 22:44:47] [WARNING] [executor]: Command failed [code 1]: crontab -l | Error: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:47] [DEBUG] [cron]: crontab -l returned error or is empty: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:47] [DEBUG] [executor]: Executing command: echo "0 3 * * * /www/server/panel/.venv/bin/python -c \"from app.modules.backup import BackupManager; BackupManager().backup_site('example.com')\" # CLI_PANEL_JOB_1
+" | crontab -
+[2026-08-16 22:44:47] [DEBUG] [executor]: Command succeeded [code 0]: echo "0 3 * * * /www/server/panel/.venv/bin/python -c \"from app.modules.backup import BackupManager; BackupManager().backup_site('example.com')\" # CLI_PANEL_JOB_1
+" | crontab -
+[2026-08-16 22:44:47] [INFO] [cron]: Cron job 'Nightly Site Backup' (ID 1) added to crontab.
+[2026-08-16 22:44:47] [DEBUG] [executor]: Executing command: crontab -l
+[2026-08-16 22:44:47] [WARNING] [executor]: Command failed [code 1]: crontab -l | Error: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:47] [DEBUG] [cron]: crontab -l returned error or is empty: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:47] [DEBUG] [executor]: Executing command: echo "
+" | crontab -
+[2026-08-16 22:44:47] [DEBUG] [executor]: Command succeeded [code 0]: echo "
+" | crontab -
+[2026-08-16 22:44:47] [INFO] [cron]: Cron job ID 1 state changed to disabled.
+[2026-08-16 22:44:47] [INFO] [backup]: Starting site backup for 'site_a' -> C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_6\backups\site\web_site_a_20260816_224447.tar.gz
+[2026-08-16 22:44:47] [INFO] [backup]: Site 'site_a' successfully backed up: web_site_a_20260816_224447.tar.gz (269 B)
+[2026-08-16 22:44:47] [INFO] [backup]: Deleted backup file: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_6\backups\site\web_site_a_20260816_224447.tar.gz
+[2026-08-16 22:44:47] [INFO] [backup]: Backup record ID 1 (site_a) deleted successfully.
+[2026-08-16 22:44:47] [INFO] [log_viewer]: Cleared log file: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_7\access.log
+[2026-08-16 22:44:47] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_8\test_migration.db
+[2026-08-16 22:44:47] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:44:47] [INFO] [migration]: Exported migration bundle: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_8\migration_exports\panel_migration_20260816_224447.tar.gz
+[2026-08-16 22:44:47] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_8\target_imported.db
+[2026-08-16 22:44:47] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:44:47] [INFO] [migration]: Created emergency pre-import database backup: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_8\panel.db.bak_20260816_224447
+[2026-08-16 22:44:47] [INFO] [migration]: Restored database from bundle: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_8\migration_exports\panel_migration_20260816_224447.tar.gz
+[2026-08-16 22:44:47] [INFO] [migration]: Configuration bundle successfully restored! Restored: 1 site(s), 1 db(s), 0 firewall rule(s), 0 cron task(s).
+[2026-08-16 22:44:47] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_9\test_doctor.db
+[2026-08-16 22:44:47] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:44:47] [DEBUG] [executor]: Executing command: which nginx
+[2026-08-16 22:44:47] [WARNING] [executor]: Command failed [code 1]: which nginx | Error: which: no nginx in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:44:47] [DEBUG] [executor]: Executing command: which mysql
+[2026-08-16 22:44:47] [WARNING] [executor]: Command failed [code 1]: which mysql | Error: which: no mysql in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:44:47] [DEBUG] [executor]: Executing command: which mariadb
+[2026-08-16 22:44:47] [WARNING] [executor]: Command failed [code 1]: which mariadb | Error: which: no mariadb in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:44:47] [DEBUG] [executor]: Executing command: which certbot
+[2026-08-16 22:44:47] [WARNING] [executor]: Command failed [code 1]: which certbot | Error: which: no certbot in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:44:47] [DEBUG] [executor]: Executing command: which ufw
+[2026-08-16 22:44:47] [WARNING] [executor]: Command failed [code 1]: which ufw | Error: which: no ufw in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:44:47] [DEBUG] [executor]: Executing command: which crontab
+[2026-08-16 22:44:48] [WARNING] [executor]: Command failed [code 1]: which crontab | Error: which: no crontab in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:44:48] [DEBUG] [executor]: Executing command: which sqlite3
+[2026-08-16 22:44:48] [WARNING] [executor]: Command failed [code 1]: which sqlite3 | Error: which: no sqlite3 in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:44:48] [DEBUG] [executor]: Executing command: systemctl is-active nginx
+[2026-08-16 22:44:48] [WARNING] [executor]: Command failed [code 1]: systemctl is-active nginx | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:48] [DEBUG] [executor]: Executing command: systemctl is-active mariadb
+[2026-08-16 22:44:48] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mariadb | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:48] [DEBUG] [executor]: Executing command: systemctl is-active mysql
+[2026-08-16 22:44:48] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mysql | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:48] [DEBUG] [executor]: Executing command: systemctl is-active ufw
+[2026-08-16 22:44:48] [WARNING] [executor]: Command failed [code 1]: systemctl is-active ufw | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:48] [DEBUG] [executor]: Executing command: systemctl is-active cron
+[2026-08-16 22:44:48] [WARNING] [executor]: Command failed [code 1]: systemctl is-active cron | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:48] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:44:48] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:48] [INFO] [tuner]: Parameter 'memory_limit' updated to '512M' successfully.
+[2026-08-16 22:44:48] [INFO] [tuner]: Parameter 'worker_processes' updated to 'auto' successfully.
+[2026-08-16 22:44:48] [INFO] [tuner]: Parameter 'worker_connections' updated to '4096' successfully.
+[2026-08-16 22:44:48] [INFO] [tuner]: Parameter 'multi_accept' updated to 'on' successfully.
+[2026-08-16 22:44:48] [INFO] [tuner]: Parameter 'sendfile' updated to 'on' successfully.
+[2026-08-16 22:44:48] [INFO] [tuner]: Parameter 'tcp_nopush' updated to 'on' successfully.
+[2026-08-16 22:44:48] [INFO] [tuner]: Parameter 'tcp_nodelay' updated to 'on' successfully.
+[2026-08-16 22:44:48] [INFO] [tuner]: Parameter 'keepalive_timeout' updated to '60' successfully.
+[2026-08-16 22:44:48] [INFO] [tuner]: Parameter 'gzip' updated to 'on' successfully.
+[2026-08-16 22:44:48] [INFO] [tuner]: Parameter 'gzip_comp_level' updated to '6' successfully.
+[2026-08-16 22:44:48] [INFO] [tuner]: Parameter 'client_max_body_size' updated to '256M' successfully.
+[2026-08-16 22:44:48] [INFO] [tuner]: Parameter 'fastcgi_buffer_size' updated to '256k' successfully.
+[2026-08-16 22:44:48] [INFO] [tuner]: Parameter 'fastcgi_buffers' updated to '8 128k' successfully.
+[2026-08-16 22:44:48] [INFO] [tuner]: Parameter 'fastcgi_read_timeout' updated to '120s' successfully.
+[2026-08-16 22:44:48] [INFO] [tuner]: Applied 'performance' preset (13 parameters tuned across 1 service(s)).
+[2026-08-16 22:44:48] [INFO] [tuner]: Swap setup mock mode on Windows: 2 GB swap configured.
+[2026-08-16 22:44:48] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (19 functions blacklisted).
+[2026-08-16 22:44:48] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (18 functions blacklisted).
+[2026-08-16 22:44:48] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (19 functions blacklisted).
+[2026-08-16 22:44:48] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (0 functions blacklisted).
+[2026-08-16 22:44:48] [INFO] [site]: Created WAF default snippet at C:\Users\WahHF\AppData\Local\Temp\clipanel_test_5d_xxljf\suite_10\mock_config\waf_default.conf
+[2026-08-16 22:44:52] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_1\test_panel.db
+[2026-08-16 22:44:52] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:44:52] [DEBUG] [executor]: Executing command: echo 'cli-panel test'
+[2026-08-16 22:44:52] [DEBUG] [executor]: Command succeeded [code 0]: echo 'cli-panel test'
+[2026-08-16 22:44:52] [DEBUG] [executor]: Executing command: "C:\Users\WahHF\Downloads\cli-panel\.venv\Scripts\python.exe" -c "import time; time.sleep(3)"
+[2026-08-16 22:44:55] [ERROR] [executor]: Command timed out after 1 seconds: "C:\Users\WahHF\Downloads\cli-panel\.venv\Scripts\python.exe" -c "import time; time.sleep(3)"
+[2026-08-16 22:44:55] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_2\test_site.db
+[2026-08-16 22:44:55] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:44:55] [DEBUG] [site]: Created placeholder index.html at C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_2\wwwroot\mysite.local\index.html
+[2026-08-16 22:44:55] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:44:55] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:55] [DEBUG] [site]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:44:55] [INFO] [site]: Site 'mysite.local' successfully created with root 'C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_2\wwwroot\mysite.local'
+[2026-08-16 22:44:55] [DEBUG] [executor]: Executing command: certbot certonly --webroot -w C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_2\wwwroot\mysite.local -d mysite.local --non-interactive --agree-tos --email admin@mysite.local
+[2026-08-16 22:44:55] [WARNING] [executor]: Command failed [code 1]: certbot certonly --webroot -w C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_2\wwwroot\mysite.local -d mysite.local --non-interactive --agree-tos --email admin@mysite.local | Error: 'certbot' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:55] [DEBUG] [ssl]: Certbot CLI not found on host. Simulating SSL certificate issuance.
+[2026-08-16 22:44:55] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:44:55] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:55] [DEBUG] [ssl]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:44:55] [INFO] [ssl]: SSL certificate for 'mysite.local' enabled successfully.
+[2026-08-16 22:44:55] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:44:55] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:55] [DEBUG] [ssl]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:44:55] [INFO] [ssl]: SSL for site 'mysite.local' disabled.
+[2026-08-16 22:44:55] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:44:55] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:55] [DEBUG] [site]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:44:55] [INFO] [site]: Deleted root directory for site 'mysite.local': C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_2\wwwroot\mysite.local
+[2026-08-16 22:44:55] [INFO] [site]: Site 'mysite.local' successfully deleted.
+[2026-08-16 22:44:55] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_3\test_database.db
+[2026-08-16 22:44:55] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:44:55] [DEBUG] [executor]: Executing command: mysql -u root -e "CREATE DATABASE IF NOT EXISTS `store_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE USER IF NOT EXISTS 'store_user'@'localhost' IDENTIFIED BY 'SecurePass123!@#'; GRANT ALL PRIVILEGES ON `store_db`.* TO 'store_user'@'localhost'; FLUSH PRIVILEGES;"
+[2026-08-16 22:44:55] [WARNING] [executor]: Command failed [code 1]: mysql -u root -e "CREATE DATABASE IF NOT EXISTS `store_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE USER IF NOT EXISTS 'store_user'@'localhost' IDENTIFIED BY 'SecurePass123!@#'; GRANT ALL PRIVILEGES ON `store_db`.* TO 'store_user'@'localhost'; FLUSH PRIVILEGES;" | Error: 'mysql' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:55] [DEBUG] [database]: MySQL CLI binary not available on host. Proceeding in mock mode.
+[2026-08-16 22:44:55] [INFO] [database]: Database 'store_db' with user 'store_user' created successfully.
+[2026-08-16 22:44:55] [DEBUG] [executor]: Executing command: mysql -u root -e "ALTER USER 'store_user'@'localhost' IDENTIFIED BY 'NewSecurePass987!#'; FLUSH PRIVILEGES;"
+[2026-08-16 22:44:55] [WARNING] [executor]: Command failed [code 1]: mysql -u root -e "ALTER USER 'store_user'@'localhost' IDENTIFIED BY 'NewSecurePass987!#'; FLUSH PRIVILEGES;" | Error: 'mysql' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:55] [DEBUG] [database]: MySQL CLI binary not available on host. Proceeding in mock mode.
+[2026-08-16 22:44:55] [INFO] [database]: Password updated for user 'store_user'
+[2026-08-16 22:44:55] [DEBUG] [executor]: Executing command: mysql -u root -e "DROP DATABASE IF EXISTS `store_db`; DROP USER IF EXISTS 'store_user'@'localhost'; FLUSH PRIVILEGES;"
+[2026-08-16 22:44:55] [WARNING] [executor]: Command failed [code 1]: mysql -u root -e "DROP DATABASE IF EXISTS `store_db`; DROP USER IF EXISTS 'store_user'@'localhost'; FLUSH PRIVILEGES;" | Error: 'mysql' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:55] [DEBUG] [database]: MySQL CLI binary not available on host. Proceeding in mock mode.
+[2026-08-16 22:44:55] [INFO] [database]: Database 'store_db' deleted successfully.
+[2026-08-16 22:44:55] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_4\test_firewall.db
+[2026-08-16 22:44:55] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:44:55] [DEBUG] [executor]: Executing command: ufw allow 80/tcp
+[2026-08-16 22:44:55] [WARNING] [executor]: Command failed [code 1]: ufw allow 80/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:55] [DEBUG] [firewall]: UFW CLI not found on host. Adding rule to registry in mock mode.
+[2026-08-16 22:44:55] [INFO] [firewall]: Firewall rule added: allow 80/tcp (HTTP Web)
+[2026-08-16 22:44:55] [DEBUG] [executor]: Executing command: ufw allow 3000:4000/tcp
+[2026-08-16 22:44:55] [WARNING] [executor]: Command failed [code 1]: ufw allow 3000:4000/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:55] [DEBUG] [firewall]: UFW CLI not found on host. Adding rule to registry in mock mode.
+[2026-08-16 22:44:55] [INFO] [firewall]: Firewall rule added: allow 3000:4000/tcp (Node services)
+[2026-08-16 22:44:55] [DEBUG] [executor]: Executing command: ufw delete allow 3000:4000/tcp
+[2026-08-16 22:44:55] [WARNING] [executor]: Command failed [code 1]: ufw delete allow 3000:4000/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:55] [DEBUG] [firewall]: UFW CLI not found on host. Deleting rule in mock mode.
+[2026-08-16 22:44:55] [INFO] [firewall]: Firewall rule ID 2 deleted successfully.
+[2026-08-16 22:44:55] [DEBUG] [executor]: Executing command: ufw --force enable
+[2026-08-16 22:44:55] [WARNING] [executor]: Command failed [code 1]: ufw --force enable | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:55] [DEBUG] [firewall]: UFW CLI not found on host. Simulating state toggle.
+[2026-08-16 22:44:56] [DEBUG] [executor]: Executing command: systemctl is-active nginx
+[2026-08-16 22:44:56] [WARNING] [executor]: Command failed [code 1]: systemctl is-active nginx | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:56] [DEBUG] [executor]: Executing command: systemctl is-active mysql
+[2026-08-16 22:44:56] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mysql | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:56] [DEBUG] [executor]: Executing command: systemctl is-active mariadb
+[2026-08-16 22:44:56] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mariadb | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:56] [DEBUG] [executor]: Executing command: systemctl is-active ufw
+[2026-08-16 22:44:56] [WARNING] [executor]: Command failed [code 1]: systemctl is-active ufw | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:56] [DEBUG] [executor]: Executing command: systemctl is-active php-fpm
+[2026-08-16 22:44:56] [WARNING] [executor]: Command failed [code 1]: systemctl is-active php-fpm | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:56] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_6\test_cron.db
+[2026-08-16 22:44:56] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:44:56] [DEBUG] [executor]: Executing command: crontab -l
+[2026-08-16 22:44:56] [WARNING] [executor]: Command failed [code 1]: crontab -l | Error: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:56] [DEBUG] [cron]: crontab -l returned error or is empty: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:56] [DEBUG] [executor]: Executing command: echo "0 3 * * * /www/server/panel/.venv/bin/python -c \"from app.modules.backup import BackupManager; BackupManager().backup_site('example.com')\" # CLI_PANEL_JOB_1
+" | crontab -
+[2026-08-16 22:44:56] [DEBUG] [executor]: Command succeeded [code 0]: echo "0 3 * * * /www/server/panel/.venv/bin/python -c \"from app.modules.backup import BackupManager; BackupManager().backup_site('example.com')\" # CLI_PANEL_JOB_1
+" | crontab -
+[2026-08-16 22:44:56] [INFO] [cron]: Cron job 'Nightly Site Backup' (ID 1) added to crontab.
+[2026-08-16 22:44:56] [DEBUG] [executor]: Executing command: crontab -l
+[2026-08-16 22:44:56] [WARNING] [executor]: Command failed [code 1]: crontab -l | Error: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:56] [DEBUG] [cron]: crontab -l returned error or is empty: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:56] [DEBUG] [executor]: Executing command: echo "
+" | crontab -
+[2026-08-16 22:44:56] [DEBUG] [executor]: Command succeeded [code 0]: echo "
+" | crontab -
+[2026-08-16 22:44:56] [INFO] [cron]: Cron job ID 1 state changed to disabled.
+[2026-08-16 22:44:56] [INFO] [backup]: Starting site backup for 'site_a' -> C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_6\backups\site\web_site_a_20260816_224456.tar.gz
+[2026-08-16 22:44:56] [INFO] [backup]: Site 'site_a' successfully backed up: web_site_a_20260816_224456.tar.gz (267 B)
+[2026-08-16 22:44:56] [INFO] [backup]: Deleted backup file: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_6\backups\site\web_site_a_20260816_224456.tar.gz
+[2026-08-16 22:44:56] [INFO] [backup]: Backup record ID 1 (site_a) deleted successfully.
+[2026-08-16 22:44:56] [INFO] [log_viewer]: Cleared log file: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_7\access.log
+[2026-08-16 22:44:57] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_8\test_migration.db
+[2026-08-16 22:44:57] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:44:57] [INFO] [migration]: Exported migration bundle: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_8\migration_exports\panel_migration_20260816_224457.tar.gz
+[2026-08-16 22:44:57] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_8\target_imported.db
+[2026-08-16 22:44:57] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:44:57] [INFO] [migration]: Created emergency pre-import database backup: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_8\panel.db.bak_20260816_224457
+[2026-08-16 22:44:57] [INFO] [migration]: Restored database from bundle: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_8\migration_exports\panel_migration_20260816_224457.tar.gz
+[2026-08-16 22:44:57] [INFO] [migration]: Configuration bundle successfully restored! Restored: 1 site(s), 1 db(s), 0 firewall rule(s), 0 cron task(s).
+[2026-08-16 22:44:57] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_9\test_doctor.db
+[2026-08-16 22:44:57] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:44:57] [DEBUG] [executor]: Executing command: which nginx
+[2026-08-16 22:44:57] [WARNING] [executor]: Command failed [code 1]: which nginx | Error: which: no nginx in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:44:57] [DEBUG] [executor]: Executing command: which mysql
+[2026-08-16 22:44:57] [WARNING] [executor]: Command failed [code 1]: which mysql | Error: which: no mysql in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:44:57] [DEBUG] [executor]: Executing command: which mariadb
+[2026-08-16 22:44:57] [WARNING] [executor]: Command failed [code 1]: which mariadb | Error: which: no mariadb in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:44:57] [DEBUG] [executor]: Executing command: which certbot
+[2026-08-16 22:44:57] [WARNING] [executor]: Command failed [code 1]: which certbot | Error: which: no certbot in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:44:57] [DEBUG] [executor]: Executing command: which ufw
+[2026-08-16 22:44:57] [WARNING] [executor]: Command failed [code 1]: which ufw | Error: which: no ufw in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:44:57] [DEBUG] [executor]: Executing command: which crontab
+[2026-08-16 22:44:58] [WARNING] [executor]: Command failed [code 1]: which crontab | Error: which: no crontab in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:44:58] [DEBUG] [executor]: Executing command: which sqlite3
+[2026-08-16 22:44:58] [WARNING] [executor]: Command failed [code 1]: which sqlite3 | Error: which: no sqlite3 in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:44:58] [DEBUG] [executor]: Executing command: systemctl is-active nginx
+[2026-08-16 22:44:58] [WARNING] [executor]: Command failed [code 1]: systemctl is-active nginx | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:58] [DEBUG] [executor]: Executing command: systemctl is-active mariadb
+[2026-08-16 22:44:58] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mariadb | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:58] [DEBUG] [executor]: Executing command: systemctl is-active mysql
+[2026-08-16 22:44:58] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mysql | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:58] [DEBUG] [executor]: Executing command: systemctl is-active ufw
+[2026-08-16 22:44:58] [WARNING] [executor]: Command failed [code 1]: systemctl is-active ufw | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:58] [DEBUG] [executor]: Executing command: systemctl is-active cron
+[2026-08-16 22:44:58] [WARNING] [executor]: Command failed [code 1]: systemctl is-active cron | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:58] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:44:58] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:44:58] [INFO] [tuner]: Parameter 'memory_limit' updated to '512M' successfully.
+[2026-08-16 22:44:58] [INFO] [tuner]: Parameter 'worker_processes' updated to 'auto' successfully.
+[2026-08-16 22:44:58] [INFO] [tuner]: Parameter 'worker_connections' updated to '4096' successfully.
+[2026-08-16 22:44:58] [INFO] [tuner]: Parameter 'multi_accept' updated to 'on' successfully.
+[2026-08-16 22:44:58] [INFO] [tuner]: Parameter 'sendfile' updated to 'on' successfully.
+[2026-08-16 22:44:58] [INFO] [tuner]: Parameter 'tcp_nopush' updated to 'on' successfully.
+[2026-08-16 22:44:58] [INFO] [tuner]: Parameter 'tcp_nodelay' updated to 'on' successfully.
+[2026-08-16 22:44:58] [INFO] [tuner]: Parameter 'keepalive_timeout' updated to '60' successfully.
+[2026-08-16 22:44:58] [INFO] [tuner]: Parameter 'gzip' updated to 'on' successfully.
+[2026-08-16 22:44:58] [INFO] [tuner]: Parameter 'gzip_comp_level' updated to '6' successfully.
+[2026-08-16 22:44:58] [INFO] [tuner]: Parameter 'client_max_body_size' updated to '256M' successfully.
+[2026-08-16 22:44:58] [INFO] [tuner]: Parameter 'fastcgi_buffer_size' updated to '256k' successfully.
+[2026-08-16 22:44:58] [INFO] [tuner]: Parameter 'fastcgi_buffers' updated to '8 128k' successfully.
+[2026-08-16 22:44:58] [INFO] [tuner]: Parameter 'fastcgi_read_timeout' updated to '120s' successfully.
+[2026-08-16 22:44:58] [INFO] [tuner]: Applied 'performance' preset (13 parameters tuned across 1 service(s)).
+[2026-08-16 22:44:58] [INFO] [tuner]: Swap setup mock mode on Windows: 2 GB swap configured.
+[2026-08-16 22:44:58] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (19 functions blacklisted).
+[2026-08-16 22:44:58] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (18 functions blacklisted).
+[2026-08-16 22:44:58] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (19 functions blacklisted).
+[2026-08-16 22:44:58] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (0 functions blacklisted).
+[2026-08-16 22:44:58] [INFO] [site]: Created WAF default snippet at C:\Users\WahHF\AppData\Local\Temp\clipanel_test_iignzj07\suite_10\mock_config\waf_default.conf
+[2026-08-16 22:45:06] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_1\test_panel.db
+[2026-08-16 22:45:06] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:45:06] [DEBUG] [executor]: Executing command: echo 'cli-panel test'
+[2026-08-16 22:45:06] [DEBUG] [executor]: Command succeeded [code 0]: echo 'cli-panel test'
+[2026-08-16 22:45:06] [DEBUG] [executor]: Executing command: "C:\Users\WahHF\Downloads\cli-panel\.venv\Scripts\python.exe" -c "import time; time.sleep(3)"
+[2026-08-16 22:45:09] [ERROR] [executor]: Command timed out after 1 seconds: "C:\Users\WahHF\Downloads\cli-panel\.venv\Scripts\python.exe" -c "import time; time.sleep(3)"
+[2026-08-16 22:45:09] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_2\test_site.db
+[2026-08-16 22:45:09] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:45:09] [DEBUG] [site]: Created placeholder index.html at C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_2\wwwroot\mysite.local\index.html
+[2026-08-16 22:45:09] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:45:10] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:10] [DEBUG] [site]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:45:10] [INFO] [site]: Site 'mysite.local' successfully created with root 'C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_2\wwwroot\mysite.local'
+[2026-08-16 22:45:10] [DEBUG] [executor]: Executing command: certbot certonly --webroot -w C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_2\wwwroot\mysite.local -d mysite.local --non-interactive --agree-tos --email admin@mysite.local
+[2026-08-16 22:45:10] [WARNING] [executor]: Command failed [code 1]: certbot certonly --webroot -w C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_2\wwwroot\mysite.local -d mysite.local --non-interactive --agree-tos --email admin@mysite.local | Error: 'certbot' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:10] [DEBUG] [ssl]: Certbot CLI not found on host. Simulating SSL certificate issuance.
+[2026-08-16 22:45:10] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:45:10] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:10] [DEBUG] [ssl]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:45:10] [INFO] [ssl]: SSL certificate for 'mysite.local' enabled successfully.
+[2026-08-16 22:45:10] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:45:10] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:10] [DEBUG] [ssl]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:45:10] [INFO] [ssl]: SSL for site 'mysite.local' disabled.
+[2026-08-16 22:45:10] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:45:10] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:10] [DEBUG] [site]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:45:10] [INFO] [site]: Deleted root directory for site 'mysite.local': C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_2\wwwroot\mysite.local
+[2026-08-16 22:45:10] [INFO] [site]: Site 'mysite.local' successfully deleted.
+[2026-08-16 22:45:10] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_3\test_database.db
+[2026-08-16 22:45:10] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:45:10] [DEBUG] [executor]: Executing command: mysql -u root -e "CREATE DATABASE IF NOT EXISTS `store_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE USER IF NOT EXISTS 'store_user'@'localhost' IDENTIFIED BY 'SecurePass123!@#'; GRANT ALL PRIVILEGES ON `store_db`.* TO 'store_user'@'localhost'; FLUSH PRIVILEGES;"
+[2026-08-16 22:45:10] [WARNING] [executor]: Command failed [code 1]: mysql -u root -e "CREATE DATABASE IF NOT EXISTS `store_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE USER IF NOT EXISTS 'store_user'@'localhost' IDENTIFIED BY 'SecurePass123!@#'; GRANT ALL PRIVILEGES ON `store_db`.* TO 'store_user'@'localhost'; FLUSH PRIVILEGES;" | Error: 'mysql' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:10] [DEBUG] [database]: MySQL CLI binary not available on host. Proceeding in mock mode.
+[2026-08-16 22:45:10] [INFO] [database]: Database 'store_db' with user 'store_user' created successfully.
+[2026-08-16 22:45:10] [DEBUG] [executor]: Executing command: mysql -u root -e "ALTER USER 'store_user'@'localhost' IDENTIFIED BY 'NewSecurePass987!#'; FLUSH PRIVILEGES;"
+[2026-08-16 22:45:10] [WARNING] [executor]: Command failed [code 1]: mysql -u root -e "ALTER USER 'store_user'@'localhost' IDENTIFIED BY 'NewSecurePass987!#'; FLUSH PRIVILEGES;" | Error: 'mysql' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:10] [DEBUG] [database]: MySQL CLI binary not available on host. Proceeding in mock mode.
+[2026-08-16 22:45:10] [INFO] [database]: Password updated for user 'store_user'
+[2026-08-16 22:45:10] [DEBUG] [executor]: Executing command: mysql -u root -e "DROP DATABASE IF EXISTS `store_db`; DROP USER IF EXISTS 'store_user'@'localhost'; FLUSH PRIVILEGES;"
+[2026-08-16 22:45:10] [WARNING] [executor]: Command failed [code 1]: mysql -u root -e "DROP DATABASE IF EXISTS `store_db`; DROP USER IF EXISTS 'store_user'@'localhost'; FLUSH PRIVILEGES;" | Error: 'mysql' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:10] [DEBUG] [database]: MySQL CLI binary not available on host. Proceeding in mock mode.
+[2026-08-16 22:45:10] [INFO] [database]: Database 'store_db' deleted successfully.
+[2026-08-16 22:45:10] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_4\test_firewall.db
+[2026-08-16 22:45:10] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:45:10] [DEBUG] [executor]: Executing command: ufw allow 80/tcp
+[2026-08-16 22:45:10] [WARNING] [executor]: Command failed [code 1]: ufw allow 80/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:10] [DEBUG] [firewall]: UFW CLI not found on host. Adding rule to registry in mock mode.
+[2026-08-16 22:45:10] [INFO] [firewall]: Firewall rule added: allow 80/tcp (HTTP Web)
+[2026-08-16 22:45:10] [DEBUG] [executor]: Executing command: ufw allow 3000:4000/tcp
+[2026-08-16 22:45:10] [WARNING] [executor]: Command failed [code 1]: ufw allow 3000:4000/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:10] [DEBUG] [firewall]: UFW CLI not found on host. Adding rule to registry in mock mode.
+[2026-08-16 22:45:10] [INFO] [firewall]: Firewall rule added: allow 3000:4000/tcp (Node services)
+[2026-08-16 22:45:10] [DEBUG] [executor]: Executing command: ufw delete allow 3000:4000/tcp
+[2026-08-16 22:45:10] [WARNING] [executor]: Command failed [code 1]: ufw delete allow 3000:4000/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:10] [DEBUG] [firewall]: UFW CLI not found on host. Deleting rule in mock mode.
+[2026-08-16 22:45:10] [INFO] [firewall]: Firewall rule ID 2 deleted successfully.
+[2026-08-16 22:45:10] [DEBUG] [executor]: Executing command: ufw --force enable
+[2026-08-16 22:45:10] [WARNING] [executor]: Command failed [code 1]: ufw --force enable | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:10] [DEBUG] [firewall]: UFW CLI not found on host. Simulating state toggle.
+[2026-08-16 22:45:11] [DEBUG] [executor]: Executing command: systemctl is-active nginx
+[2026-08-16 22:45:11] [WARNING] [executor]: Command failed [code 1]: systemctl is-active nginx | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:11] [DEBUG] [executor]: Executing command: systemctl is-active mysql
+[2026-08-16 22:45:11] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mysql | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:11] [DEBUG] [executor]: Executing command: systemctl is-active mariadb
+[2026-08-16 22:45:11] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mariadb | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:11] [DEBUG] [executor]: Executing command: systemctl is-active ufw
+[2026-08-16 22:45:11] [WARNING] [executor]: Command failed [code 1]: systemctl is-active ufw | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:11] [DEBUG] [executor]: Executing command: systemctl is-active php-fpm
+[2026-08-16 22:45:11] [WARNING] [executor]: Command failed [code 1]: systemctl is-active php-fpm | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:11] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_6\test_cron.db
+[2026-08-16 22:45:11] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:45:11] [DEBUG] [executor]: Executing command: crontab -l
+[2026-08-16 22:45:11] [WARNING] [executor]: Command failed [code 1]: crontab -l | Error: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:11] [DEBUG] [cron]: crontab -l returned error or is empty: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:11] [DEBUG] [executor]: Executing command: echo "0 3 * * * /www/server/panel/.venv/bin/python -c \"from app.modules.backup import BackupManager; BackupManager().backup_site('example.com')\" # CLI_PANEL_JOB_1
+" | crontab -
+[2026-08-16 22:45:11] [DEBUG] [executor]: Command succeeded [code 0]: echo "0 3 * * * /www/server/panel/.venv/bin/python -c \"from app.modules.backup import BackupManager; BackupManager().backup_site('example.com')\" # CLI_PANEL_JOB_1
+" | crontab -
+[2026-08-16 22:45:11] [INFO] [cron]: Cron job 'Nightly Site Backup' (ID 1) added to crontab.
+[2026-08-16 22:45:11] [DEBUG] [executor]: Executing command: crontab -l
+[2026-08-16 22:45:11] [WARNING] [executor]: Command failed [code 1]: crontab -l | Error: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:11] [DEBUG] [cron]: crontab -l returned error or is empty: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:11] [DEBUG] [executor]: Executing command: echo "
+" | crontab -
+[2026-08-16 22:45:11] [DEBUG] [executor]: Command succeeded [code 0]: echo "
+" | crontab -
+[2026-08-16 22:45:11] [INFO] [cron]: Cron job ID 1 state changed to disabled.
+[2026-08-16 22:45:11] [INFO] [backup]: Starting site backup for 'site_a' -> C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_6\backups\site\web_site_a_20260816_224511.tar.gz
+[2026-08-16 22:45:11] [INFO] [backup]: Site 'site_a' successfully backed up: web_site_a_20260816_224511.tar.gz (260 B)
+[2026-08-16 22:45:11] [INFO] [backup]: Deleted backup file: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_6\backups\site\web_site_a_20260816_224511.tar.gz
+[2026-08-16 22:45:11] [INFO] [backup]: Backup record ID 1 (site_a) deleted successfully.
+[2026-08-16 22:45:11] [INFO] [log_viewer]: Cleared log file: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_7\access.log
+[2026-08-16 22:45:11] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_8\test_migration.db
+[2026-08-16 22:45:11] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:45:11] [INFO] [migration]: Exported migration bundle: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_8\migration_exports\panel_migration_20260816_224511.tar.gz
+[2026-08-16 22:45:11] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_8\target_imported.db
+[2026-08-16 22:45:11] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:45:11] [INFO] [migration]: Created emergency pre-import database backup: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_8\panel.db.bak_20260816_224511
+[2026-08-16 22:45:11] [INFO] [migration]: Restored database from bundle: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_8\migration_exports\panel_migration_20260816_224511.tar.gz
+[2026-08-16 22:45:11] [INFO] [migration]: Configuration bundle successfully restored! Restored: 1 site(s), 1 db(s), 0 firewall rule(s), 0 cron task(s).
+[2026-08-16 22:45:11] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_9\test_doctor.db
+[2026-08-16 22:45:11] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:45:11] [DEBUG] [executor]: Executing command: which nginx
+[2026-08-16 22:45:11] [WARNING] [executor]: Command failed [code 1]: which nginx | Error: which: no nginx in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:45:11] [DEBUG] [executor]: Executing command: which mysql
+[2026-08-16 22:45:11] [WARNING] [executor]: Command failed [code 1]: which mysql | Error: which: no mysql in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:45:11] [DEBUG] [executor]: Executing command: which mariadb
+[2026-08-16 22:45:12] [WARNING] [executor]: Command failed [code 1]: which mariadb | Error: which: no mariadb in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:45:12] [DEBUG] [executor]: Executing command: which certbot
+[2026-08-16 22:45:12] [WARNING] [executor]: Command failed [code 1]: which certbot | Error: which: no certbot in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:45:12] [DEBUG] [executor]: Executing command: which ufw
+[2026-08-16 22:45:12] [WARNING] [executor]: Command failed [code 1]: which ufw | Error: which: no ufw in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:45:12] [DEBUG] [executor]: Executing command: which crontab
+[2026-08-16 22:45:12] [WARNING] [executor]: Command failed [code 1]: which crontab | Error: which: no crontab in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:45:12] [DEBUG] [executor]: Executing command: which sqlite3
+[2026-08-16 22:45:12] [WARNING] [executor]: Command failed [code 1]: which sqlite3 | Error: which: no sqlite3 in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:45:12] [DEBUG] [executor]: Executing command: systemctl is-active nginx
+[2026-08-16 22:45:12] [WARNING] [executor]: Command failed [code 1]: systemctl is-active nginx | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:12] [DEBUG] [executor]: Executing command: systemctl is-active mariadb
+[2026-08-16 22:45:12] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mariadb | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:12] [DEBUG] [executor]: Executing command: systemctl is-active mysql
+[2026-08-16 22:45:12] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mysql | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:12] [DEBUG] [executor]: Executing command: systemctl is-active ufw
+[2026-08-16 22:45:12] [WARNING] [executor]: Command failed [code 1]: systemctl is-active ufw | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:12] [DEBUG] [executor]: Executing command: systemctl is-active cron
+[2026-08-16 22:45:12] [WARNING] [executor]: Command failed [code 1]: systemctl is-active cron | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:12] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:45:12] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:45:12] [INFO] [tuner]: Parameter 'memory_limit' updated to '512M' successfully.
+[2026-08-16 22:45:12] [INFO] [tuner]: Parameter 'worker_processes' updated to 'auto' successfully.
+[2026-08-16 22:45:12] [INFO] [tuner]: Parameter 'worker_connections' updated to '4096' successfully.
+[2026-08-16 22:45:12] [INFO] [tuner]: Parameter 'multi_accept' updated to 'on' successfully.
+[2026-08-16 22:45:12] [INFO] [tuner]: Parameter 'sendfile' updated to 'on' successfully.
+[2026-08-16 22:45:12] [INFO] [tuner]: Parameter 'tcp_nopush' updated to 'on' successfully.
+[2026-08-16 22:45:12] [INFO] [tuner]: Parameter 'tcp_nodelay' updated to 'on' successfully.
+[2026-08-16 22:45:12] [INFO] [tuner]: Parameter 'keepalive_timeout' updated to '60' successfully.
+[2026-08-16 22:45:12] [INFO] [tuner]: Parameter 'gzip' updated to 'on' successfully.
+[2026-08-16 22:45:12] [INFO] [tuner]: Parameter 'gzip_comp_level' updated to '6' successfully.
+[2026-08-16 22:45:12] [INFO] [tuner]: Parameter 'client_max_body_size' updated to '256M' successfully.
+[2026-08-16 22:45:12] [INFO] [tuner]: Parameter 'fastcgi_buffer_size' updated to '256k' successfully.
+[2026-08-16 22:45:12] [INFO] [tuner]: Parameter 'fastcgi_buffers' updated to '8 128k' successfully.
+[2026-08-16 22:45:12] [INFO] [tuner]: Parameter 'fastcgi_read_timeout' updated to '120s' successfully.
+[2026-08-16 22:45:12] [INFO] [tuner]: Applied 'performance' preset (13 parameters tuned across 1 service(s)).
+[2026-08-16 22:45:12] [INFO] [tuner]: Swap setup mock mode on Windows: 2 GB swap configured.
+[2026-08-16 22:45:12] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (19 functions blacklisted).
+[2026-08-16 22:45:12] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (18 functions blacklisted).
+[2026-08-16 22:45:12] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (19 functions blacklisted).
+[2026-08-16 22:45:12] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (0 functions blacklisted).
+[2026-08-16 22:45:12] [INFO] [site]: Created WAF default snippet at C:\Users\WahHF\AppData\Local\Temp\clipanel_test_krra4ql2\suite_10\mock_config\waf_default.conf
+[2026-08-16 22:48:45] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_1\test_panel.db
+[2026-08-16 22:48:45] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:48:45] [DEBUG] [executor]: Executing command: echo 'cli-panel test'
+[2026-08-16 22:48:45] [DEBUG] [executor]: Command succeeded [code 0]: echo 'cli-panel test'
+[2026-08-16 22:48:45] [DEBUG] [executor]: Executing command: "C:\Users\WahHF\Downloads\cli-panel\.venv\Scripts\python.exe" -c "import time; time.sleep(3)"
+[2026-08-16 22:48:49] [ERROR] [executor]: Command timed out after 1 seconds: "C:\Users\WahHF\Downloads\cli-panel\.venv\Scripts\python.exe" -c "import time; time.sleep(3)"
+[2026-08-16 22:48:49] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_2\test_site.db
+[2026-08-16 22:48:49] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:48:49] [DEBUG] [site]: Created placeholder index.html at C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_2\wwwroot\mysite.local\index.html
+[2026-08-16 22:48:49] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:48:49] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:49] [DEBUG] [site]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:48:49] [INFO] [site]: Site 'mysite.local' successfully created with root 'C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_2\wwwroot\mysite.local'
+[2026-08-16 22:48:49] [DEBUG] [executor]: Executing command: certbot certonly --webroot -w C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_2\wwwroot\mysite.local -d mysite.local --non-interactive --agree-tos --email admin@mysite.local
+[2026-08-16 22:48:49] [WARNING] [executor]: Command failed [code 1]: certbot certonly --webroot -w C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_2\wwwroot\mysite.local -d mysite.local --non-interactive --agree-tos --email admin@mysite.local | Error: 'certbot' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:49] [DEBUG] [ssl]: Certbot CLI not found on host. Simulating SSL certificate issuance.
+[2026-08-16 22:48:49] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:48:49] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:49] [DEBUG] [ssl]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:48:49] [INFO] [ssl]: SSL certificate for 'mysite.local' enabled successfully.
+[2026-08-16 22:48:49] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:48:49] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:49] [DEBUG] [ssl]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:48:49] [INFO] [ssl]: SSL for site 'mysite.local' disabled.
+[2026-08-16 22:48:49] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:48:49] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:49] [DEBUG] [site]: Nginx not installed in current environment. Skipping reload.
+[2026-08-16 22:48:49] [INFO] [site]: Deleted root directory for site 'mysite.local': C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_2\wwwroot\mysite.local
+[2026-08-16 22:48:49] [INFO] [site]: Site 'mysite.local' successfully deleted.
+[2026-08-16 22:48:49] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_3\test_database.db
+[2026-08-16 22:48:49] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:48:49] [DEBUG] [executor]: Executing command: mysql -u root -e "CREATE DATABASE IF NOT EXISTS `store_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE USER IF NOT EXISTS 'store_user'@'localhost' IDENTIFIED BY 'SecurePass123!@#'; GRANT ALL PRIVILEGES ON `store_db`.* TO 'store_user'@'localhost'; FLUSH PRIVILEGES;"
+[2026-08-16 22:48:49] [WARNING] [executor]: Command failed [code 1]: mysql -u root -e "CREATE DATABASE IF NOT EXISTS `store_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE USER IF NOT EXISTS 'store_user'@'localhost' IDENTIFIED BY 'SecurePass123!@#'; GRANT ALL PRIVILEGES ON `store_db`.* TO 'store_user'@'localhost'; FLUSH PRIVILEGES;" | Error: 'mysql' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:49] [DEBUG] [database]: MySQL CLI binary not available on host. Proceeding in mock mode.
+[2026-08-16 22:48:49] [INFO] [database]: Database 'store_db' with user 'store_user' created successfully.
+[2026-08-16 22:48:49] [DEBUG] [executor]: Executing command: mysql -u root -e "ALTER USER 'store_user'@'localhost' IDENTIFIED BY 'NewSecurePass987!#'; FLUSH PRIVILEGES;"
+[2026-08-16 22:48:49] [WARNING] [executor]: Command failed [code 1]: mysql -u root -e "ALTER USER 'store_user'@'localhost' IDENTIFIED BY 'NewSecurePass987!#'; FLUSH PRIVILEGES;" | Error: 'mysql' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:49] [DEBUG] [database]: MySQL CLI binary not available on host. Proceeding in mock mode.
+[2026-08-16 22:48:49] [INFO] [database]: Password updated for user 'store_user'
+[2026-08-16 22:48:49] [DEBUG] [executor]: Executing command: mysql -u root -e "DROP DATABASE IF EXISTS `store_db`; DROP USER IF EXISTS 'store_user'@'localhost'; FLUSH PRIVILEGES;"
+[2026-08-16 22:48:49] [WARNING] [executor]: Command failed [code 1]: mysql -u root -e "DROP DATABASE IF EXISTS `store_db`; DROP USER IF EXISTS 'store_user'@'localhost'; FLUSH PRIVILEGES;" | Error: 'mysql' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:49] [DEBUG] [database]: MySQL CLI binary not available on host. Proceeding in mock mode.
+[2026-08-16 22:48:49] [INFO] [database]: Database 'store_db' deleted successfully.
+[2026-08-16 22:48:49] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_4\test_firewall.db
+[2026-08-16 22:48:49] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:48:49] [DEBUG] [executor]: Executing command: ufw allow 80/tcp
+[2026-08-16 22:48:49] [WARNING] [executor]: Command failed [code 1]: ufw allow 80/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:49] [DEBUG] [firewall]: UFW CLI not found on host. Adding rule to registry in mock mode.
+[2026-08-16 22:48:49] [INFO] [firewall]: Firewall rule added: allow 80/tcp (HTTP Web)
+[2026-08-16 22:48:49] [DEBUG] [executor]: Executing command: ufw allow 3000:4000/tcp
+[2026-08-16 22:48:49] [WARNING] [executor]: Command failed [code 1]: ufw allow 3000:4000/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:49] [DEBUG] [firewall]: UFW CLI not found on host. Adding rule to registry in mock mode.
+[2026-08-16 22:48:49] [INFO] [firewall]: Firewall rule added: allow 3000:4000/tcp (Node services)
+[2026-08-16 22:48:49] [DEBUG] [executor]: Executing command: ufw delete allow 3000:4000/tcp
+[2026-08-16 22:48:49] [WARNING] [executor]: Command failed [code 1]: ufw delete allow 3000:4000/tcp | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:49] [DEBUG] [firewall]: UFW CLI not found on host. Deleting rule in mock mode.
+[2026-08-16 22:48:49] [INFO] [firewall]: Firewall rule ID 2 deleted successfully.
+[2026-08-16 22:48:49] [DEBUG] [executor]: Executing command: ufw --force enable
+[2026-08-16 22:48:50] [WARNING] [executor]: Command failed [code 1]: ufw --force enable | Error: 'ufw' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:50] [DEBUG] [firewall]: UFW CLI not found on host. Simulating state toggle.
+[2026-08-16 22:48:50] [DEBUG] [executor]: Executing command: systemctl is-active nginx
+[2026-08-16 22:48:50] [WARNING] [executor]: Command failed [code 1]: systemctl is-active nginx | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:50] [DEBUG] [executor]: Executing command: systemctl is-active mysql
+[2026-08-16 22:48:50] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mysql | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:50] [DEBUG] [executor]: Executing command: systemctl is-active mariadb
+[2026-08-16 22:48:50] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mariadb | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:50] [DEBUG] [executor]: Executing command: systemctl is-active ufw
+[2026-08-16 22:48:50] [WARNING] [executor]: Command failed [code 1]: systemctl is-active ufw | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:50] [DEBUG] [executor]: Executing command: systemctl is-active php-fpm
+[2026-08-16 22:48:50] [WARNING] [executor]: Command failed [code 1]: systemctl is-active php-fpm | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:50] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_6\test_cron.db
+[2026-08-16 22:48:50] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:48:50] [DEBUG] [executor]: Executing command: crontab -l
+[2026-08-16 22:48:50] [WARNING] [executor]: Command failed [code 1]: crontab -l | Error: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:50] [DEBUG] [cron]: crontab -l returned error or is empty: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:50] [DEBUG] [executor]: Executing command: echo "0 3 * * * /www/server/panel/.venv/bin/python -c \"from app.modules.backup import BackupManager; BackupManager().backup_site('example.com')\" # CLI_PANEL_JOB_1
+" | crontab -
+[2026-08-16 22:48:50] [DEBUG] [executor]: Command succeeded [code 0]: echo "0 3 * * * /www/server/panel/.venv/bin/python -c \"from app.modules.backup import BackupManager; BackupManager().backup_site('example.com')\" # CLI_PANEL_JOB_1
+" | crontab -
+[2026-08-16 22:48:50] [INFO] [cron]: Cron job 'Nightly Site Backup' (ID 1) added to crontab.
+[2026-08-16 22:48:50] [DEBUG] [executor]: Executing command: crontab -l
+[2026-08-16 22:48:50] [WARNING] [executor]: Command failed [code 1]: crontab -l | Error: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:50] [DEBUG] [cron]: crontab -l returned error or is empty: 'crontab' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:50] [DEBUG] [executor]: Executing command: echo "
+" | crontab -
+[2026-08-16 22:48:50] [DEBUG] [executor]: Command succeeded [code 0]: echo "
+" | crontab -
+[2026-08-16 22:48:50] [INFO] [cron]: Cron job ID 1 state changed to disabled.
+[2026-08-16 22:48:51] [INFO] [backup]: Starting site backup for 'site_a' -> C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_6\backups\site\web_site_a_20260816_224851.tar.gz
+[2026-08-16 22:48:51] [INFO] [backup]: Site 'site_a' successfully backed up: web_site_a_20260816_224851.tar.gz (265 B)
+[2026-08-16 22:48:51] [INFO] [backup]: Deleted backup file: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_6\backups\site\web_site_a_20260816_224851.tar.gz
+[2026-08-16 22:48:51] [INFO] [backup]: Backup record ID 1 (site_a) deleted successfully.
+[2026-08-16 22:48:51] [INFO] [log_viewer]: Cleared log file: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_7\access.log
+[2026-08-16 22:48:51] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_8\test_migration.db
+[2026-08-16 22:48:51] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:48:51] [INFO] [migration]: Exported migration bundle: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_8\migration_exports\panel_migration_20260816_224851.tar.gz
+[2026-08-16 22:48:51] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_8\target_imported.db
+[2026-08-16 22:48:51] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:48:51] [INFO] [migration]: Created emergency pre-import database backup: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_8\panel.db.bak_20260816_224851
+[2026-08-16 22:48:51] [INFO] [migration]: Restored database from bundle: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_8\migration_exports\panel_migration_20260816_224851.tar.gz
+[2026-08-16 22:48:51] [INFO] [migration]: Configuration bundle successfully restored! Restored: 1 site(s), 1 db(s), 0 firewall rule(s), 0 cron task(s).
+[2026-08-16 22:48:51] [INFO] [database]: Initializing database schema at: C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_9\test_doctor.db
+[2026-08-16 22:48:51] [INFO] [database]: Database schema initialized successfully.
+[2026-08-16 22:48:51] [DEBUG] [executor]: Executing command: which nginx
+[2026-08-16 22:48:51] [WARNING] [executor]: Command failed [code 1]: which nginx | Error: which: no nginx in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:48:51] [DEBUG] [executor]: Executing command: which mysql
+[2026-08-16 22:48:51] [WARNING] [executor]: Command failed [code 1]: which mysql | Error: which: no mysql in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:48:51] [DEBUG] [executor]: Executing command: which mariadb
+[2026-08-16 22:48:51] [WARNING] [executor]: Command failed [code 1]: which mariadb | Error: which: no mariadb in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:48:51] [DEBUG] [executor]: Executing command: which certbot
+[2026-08-16 22:48:51] [WARNING] [executor]: Command failed [code 1]: which certbot | Error: which: no certbot in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:48:51] [DEBUG] [executor]: Executing command: which ufw
+[2026-08-16 22:48:51] [WARNING] [executor]: Command failed [code 1]: which ufw | Error: which: no ufw in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:48:52] [DEBUG] [executor]: Executing command: which crontab
+[2026-08-16 22:48:52] [WARNING] [executor]: Command failed [code 1]: which crontab | Error: which: no crontab in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:48:52] [DEBUG] [executor]: Executing command: which sqlite3
+[2026-08-16 22:48:52] [WARNING] [executor]: Command failed [code 1]: which sqlite3 | Error: which: no sqlite3 in (/mingw64/bin:/usr/bin:/c/Users/WahHF/bin:/c/Users/WahHF/.gemini/antigravity-ide/bin:/c/Program Files/Eclipse Adoptium/jdk-17.0.20.8-hotspot/bin:/c/WINDOWS/system32:/c/WINDOWS:/c/WINDOWS/System32/Wbem:/c/WINDOWS/System32/WindowsPowerShell/v1.0:/c/WINDOWS/System32/OpenSSH:/c/nodeku:/cmd:/c/Program Files (x86)/Bitvise SSH Client:/c/Program Files/Cloudflare/Cloudflare WARP:/c/pythonku:/c/pythonku/Scripts:/usr/bin:/c/Users/WahHF/AppData/Roaming/npm:/c/Users/WahHF/AppData/Local/Programs/Antigravity IDE/bin:/c/Users/WahHF/AppData/Local/Microsoft/WindowsApps)
+[2026-08-16 22:48:52] [DEBUG] [executor]: Executing command: systemctl is-active nginx
+[2026-08-16 22:48:52] [WARNING] [executor]: Command failed [code 1]: systemctl is-active nginx | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:52] [DEBUG] [executor]: Executing command: systemctl is-active mariadb
+[2026-08-16 22:48:52] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mariadb | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:52] [DEBUG] [executor]: Executing command: systemctl is-active mysql
+[2026-08-16 22:48:52] [WARNING] [executor]: Command failed [code 1]: systemctl is-active mysql | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:52] [DEBUG] [executor]: Executing command: systemctl is-active ufw
+[2026-08-16 22:48:52] [WARNING] [executor]: Command failed [code 1]: systemctl is-active ufw | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:52] [DEBUG] [executor]: Executing command: systemctl is-active cron
+[2026-08-16 22:48:52] [WARNING] [executor]: Command failed [code 1]: systemctl is-active cron | Error: 'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:52] [DEBUG] [executor]: Executing command: nginx -t
+[2026-08-16 22:48:52] [WARNING] [executor]: Command failed [code 1]: nginx -t | Error: 'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+[2026-08-16 22:48:52] [INFO] [tuner]: Parameter 'memory_limit' updated to '512M' successfully.
+[2026-08-16 22:48:52] [INFO] [tuner]: Parameter 'worker_processes' updated to 'auto' successfully.
+[2026-08-16 22:48:52] [INFO] [tuner]: Parameter 'worker_connections' updated to '4096' successfully.
+[2026-08-16 22:48:52] [INFO] [tuner]: Parameter 'multi_accept' updated to 'on' successfully.
+[2026-08-16 22:48:52] [INFO] [tuner]: Parameter 'sendfile' updated to 'on' successfully.
+[2026-08-16 22:48:52] [INFO] [tuner]: Parameter 'tcp_nopush' updated to 'on' successfully.
+[2026-08-16 22:48:52] [INFO] [tuner]: Parameter 'tcp_nodelay' updated to 'on' successfully.
+[2026-08-16 22:48:52] [INFO] [tuner]: Parameter 'keepalive_timeout' updated to '60' successfully.
+[2026-08-16 22:48:52] [INFO] [tuner]: Parameter 'gzip' updated to 'on' successfully.
+[2026-08-16 22:48:52] [INFO] [tuner]: Parameter 'gzip_comp_level' updated to '6' successfully.
+[2026-08-16 22:48:52] [INFO] [tuner]: Parameter 'client_max_body_size' updated to '256M' successfully.
+[2026-08-16 22:48:52] [INFO] [tuner]: Parameter 'fastcgi_buffer_size' updated to '256k' successfully.
+[2026-08-16 22:48:52] [INFO] [tuner]: Parameter 'fastcgi_buffers' updated to '8 128k' successfully.
+[2026-08-16 22:48:52] [INFO] [tuner]: Parameter 'fastcgi_read_timeout' updated to '120s' successfully.
+[2026-08-16 22:48:52] [INFO] [tuner]: Applied 'performance' preset (13 parameters tuned across 1 service(s)).
+[2026-08-16 22:48:52] [INFO] [tuner]: Swap setup mock mode on Windows: 2 GB swap configured.
+[2026-08-16 22:48:52] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (19 functions blacklisted).
+[2026-08-16 22:48:52] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (18 functions blacklisted).
+[2026-08-16 22:48:52] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (19 functions blacklisted).
+[2026-08-16 22:48:52] [INFO] [php_manager]: Disabled functions for PHP 8.2 updated (0 functions blacklisted).
+[2026-08-16 22:48:52] [INFO] [site]: Created WAF default snippet at C:\Users\WahHF\AppData\Local\Temp\clipanel_test_0y79x5si\suite_10\mock_config\waf_default.conf

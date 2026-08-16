@@ -1,0 +1,1 @@
+"""cli-panel application package."""
