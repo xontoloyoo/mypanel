@@ -313,6 +313,45 @@ TUNER_REGISTRY: Dict[str, Dict[str, Any]] = {
 }
 
 
+GLOBAL_NGINX_SECURITY_CONFIG = """# ==============================================================================
+# CLI-PANEL GLOBAL NGINX SECURITY & PERFORMANCE HARDENING
+# Persistently loaded in http context across all current & future Nginx versions
+# ==============================================================================
+
+server_tokens off;
+client_body_timeout 10s;
+client_header_timeout 10s;
+send_timeout 10s;
+"""
+
+
+def ensure_nginx_security_conf(target_file: Optional[Path] = None) -> Path:
+    """Ensure persistent global Nginx security config exists in conf.d (update-proof).
+
+    Args:
+        target_file: Optional custom target path.
+
+    Returns:
+        Path: Path to the persistent security file.
+    """
+    if target_file:
+        target = target_file
+    else:
+        primary = Path("/etc/nginx/conf.d/00_global_security.conf")
+        fallback = BASE_DIR / "data" / "mock_config" / "00_global_security.conf"
+        target = primary if (primary.parent.exists() or os.name != "nt") else fallback
+
+    try:
+        if not target.exists():
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(GLOBAL_NGINX_SECURITY_CONFIG, encoding="utf-8")
+            logger.info("Created global Nginx security config at %s", target)
+    except Exception as exc:
+        logger.warning("Could not create global Nginx security config at '%s': %s", target, exc)
+
+    return target
+
+
 class SwapManager:
     """Manager for checking, calculating, and creating Linux Swap memory."""
 
@@ -558,7 +597,7 @@ class ConfigTuner:
             is_nginx = service_name == "nginx"
 
             pattern = re.compile(
-                rf"^([ \t]*){escaped_param}[ \t]*(?:=|[ \t])[ \t]*[^;\r\n]*(;?)",
+                rf"^([ \t]*)[#;]?[ \t]*{escaped_param}[ \t]*(?:=|[ \t])[ \t]*[^;\r\n]*(;?)",
                 re.MULTILINE | re.IGNORECASE,
             )
 
@@ -571,11 +610,21 @@ class ConfigTuner:
             else:
                 # Append parameter if not found
                 if is_nginx:
-                    new_content = content + f"\n{param_name} {new_value};\n"
+                    http_match = re.search(r"http\s*\{", content, re.IGNORECASE)
+                    if http_match:
+                        pos = http_match.end()
+                        new_content = content[:pos] + f"\n    {param_name} {new_value};\n" + content[pos:]
+                    else:
+                        new_content = content + f"\n{param_name} {new_value};\n"
                 else:
                     new_content = content + f"\n{param_name} = {new_value}\n"
 
             target_path.write_text(new_content, encoding="utf-8")
+
+            # For Nginx, also ensure persistent security snippet exists in conf.d
+            if is_nginx:
+                sec_target = (self.mock_base / "00_global_security.conf") if self.mock_base else None
+                ensure_nginx_security_conf(sec_target)
 
             # 2. Syntax Validation
             ok, syntax_err = self.test_syntax(service_name, php_version)
@@ -622,6 +671,11 @@ class ConfigTuner:
 
         targets = ["php", "nginx", "mysql"] if service_name == "all" else [service_name]
         applied_count = 0
+
+        # Ensure persistent Nginx security configuration in conf.d
+        if "nginx" in targets:
+            sec_target = (self.mock_base / "00_global_security.conf") if self.mock_base else None
+            ensure_nginx_security_conf(sec_target)
 
         for s in targets:
             registry = TUNER_REGISTRY.get(s, {})

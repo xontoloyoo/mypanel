@@ -126,11 +126,7 @@ class SiteManager:
         Returns:
             str: Generated Nginx server block configuration.
         """
-        parts = domain.split(".")
-        if len(parts) == 2 and parts[0] != "www" and domain != "localhost":
-            server_names = f"{domain} www.{domain}"
-        else:
-            server_names = domain
+        clean_domain = domain.strip().lower()
 
         php_block = ""
         if php_version and php_version.lower() != "none":
@@ -148,7 +144,7 @@ class SiteManager:
     listen 80;
     listen [::]:80;
 
-    server_name {server_names};
+    server_name {clean_domain};
     root {root_path};
     index index.php index.html index.htm;
 

@@ -57,11 +57,7 @@ class SSLManager:
         Returns:
             str: Complete Nginx configuration string.
         """
-        parts = domain.split(".")
-        if len(parts) == 2 and parts[0] != "www" and domain != "localhost":
-            server_names = f"{domain} www.{domain}"
-        else:
-            server_names = domain
+        clean_domain = domain.strip().lower()
 
         php_block = ""
         if php_version and php_version.lower() != "none":
@@ -78,7 +74,7 @@ class SSLManager:
         config = f"""server {{
     listen 80;
     listen [::]:80;
-    server_name {server_names};
+    server_name {clean_domain};
 
     # ACME Challenge Verification for Renewal
     location ~ /\\.well-known {{
@@ -95,7 +91,7 @@ server {{
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
 
-    server_name {server_names};
+    server_name {clean_domain};
     root {root_path};
     index index.php index.html index.htm;
 
@@ -176,11 +172,7 @@ server {{
         Returns:
             str: Plain HTTP Nginx server block.
         """
-        parts = domain.split(".")
-        if len(parts) == 2 and parts[0] != "www" and domain != "localhost":
-            server_names = f"{domain} www.{domain}"
-        else:
-            server_names = domain
+        clean_domain = domain.strip().lower()
 
         php_block = ""
         if php_version and php_version.lower() != "none":
@@ -198,7 +190,7 @@ server {{
     listen 80;
     listen [::]:80;
 
-    server_name {server_names};
+    server_name {clean_domain};
     root {root_path};
     index index.php index.html index.htm;
 
