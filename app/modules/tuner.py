@@ -445,6 +445,47 @@ class ConfigTuner:
         """
         self.mock_base = Path(mock_base_dir) if mock_base_dir else None
 
+    def detect_installed_php_versions(self) -> List[str]:
+        """Detect all installed PHP versions on the host system dynamically.
+
+        Returns:
+            List[str]: Sorted list of installed version strings (e.g. ['8.1', '8.2', '8.3']).
+        """
+        if self.mock_base:
+            return ["8.2"]
+
+        versions: List[str] = []
+        if os.name != "nt":
+            php_root = Path("/etc/php")
+            if php_root.exists() and php_root.is_dir():
+                for p in php_root.iterdir():
+                    if p.is_dir() and re.match(r"^\d+\.\d+$", p.name):
+                        if (p / "fpm").exists() or (p / "cli").exists() or shutil.which(f"php{p.name}"):
+                            versions.append(p.name)
+
+        for candidate in ["7.4", "8.0", "8.1", "8.2", "8.3", "8.4"]:
+            if shutil.which(f"php{candidate}"):
+                versions.append(candidate)
+
+        if not versions:
+            res = run_cmd("php -r 'echo PHP_MAJOR_VERSION.\".\".PHP_MINOR_VERSION;' 2>/dev/null")
+            if res.success and re.match(r"^\d+\.\d+$", res.stdout.strip()):
+                versions.append(res.stdout.strip())
+
+        if not versions:
+            versions = ["8.2", "8.1", "8.3"]
+
+        return sorted(list(set(versions)), key=lambda v: [int(x) for x in v.split(".")])
+
+    def get_default_php_version(self) -> str:
+        """Get the primary or latest installed PHP version.
+
+        Returns:
+            str: Default PHP version string (e.g. '8.2' or '8.3').
+        """
+        versions = self.detect_installed_php_versions()
+        return versions[-1] if versions else "8.2"
+
     def detect_optimal_preset(self) -> str:
         """Detect recommended optimization preset based on total physical RAM.
 
@@ -463,28 +504,30 @@ class ConfigTuner:
         self,
         service_name: str,
         file_type: str = "main",
-        php_version: str = "8.2",
+        php_version: Optional[str] = None,
     ) -> Path:
         """Resolve actual configuration file path for given service.
 
         Args:
             service_name: 'php', 'nginx', or 'mysql'.
             file_type: 'php_ini', 'php_fpm', 'nginx_conf', 'nginx_waf', or 'mysql_cnf'.
-            php_version: Target PHP version (e.g. '8.2').
+            php_version: Target PHP version (auto-detected if None).
 
         Returns:
             Path: Resolved file path.
         """
         if self.mock_base:
+            mock_ver = php_version or "8.2"
             return self.mock_base / f"{service_name}_{file_type}.conf"
 
         if service_name == "php":
+            ver = php_version or self.get_default_php_version()
             if file_type == "php_fpm":
-                primary = Path(f"/etc/php/{php_version}/fpm/pool.d/www.conf")
-                fallback = BASE_DIR / "data" / "mock_config" / f"php_{php_version}_fpm.conf"
+                primary = Path(f"/etc/php/{ver}/fpm/pool.d/www.conf")
+                fallback = BASE_DIR / "data" / "mock_config" / f"php_{ver}_fpm.conf"
             else:
-                primary = Path(f"/etc/php/{php_version}/fpm/php.ini")
-                fallback = BASE_DIR / "data" / "mock_config" / f"php_{php_version}_ini.conf"
+                primary = Path(f"/etc/php/{ver}/fpm/php.ini")
+                fallback = BASE_DIR / "data" / "mock_config" / f"php_{ver}_ini.conf"
             return primary if primary.exists() or os.name != "nt" else fallback
 
         elif service_name == "nginx":
@@ -514,26 +557,27 @@ class ConfigTuner:
     def get_current_params(
         self,
         service_name: str,
-        php_version: str = "8.2",
+        php_version: Optional[str] = None,
     ) -> Dict[str, str]:
         """Parse configuration files and return currently active values for registered parameters.
 
         Args:
             service_name: 'php', 'nginx', or 'mysql'.
-            php_version: PHP version for PHP tuner.
+            php_version: PHP version for PHP tuner (auto-detected if None).
 
         Returns:
             Dict[str, str]: Dictionary mapping parameter names to current values.
         """
         registry = TUNER_REGISTRY.get(service_name, {})
         current_values: Dict[str, str] = {}
+        ver = php_version or (self.get_default_php_version() if service_name == "php" else None)
 
         # Cache file contents
         file_contents: Dict[str, str] = {}
         for param, meta in registry.items():
             ft = meta.get("file_type", "main")
             if ft not in file_contents:
-                target_p = self.get_target_path(service_name, ft, php_version)
+                target_p = self.get_target_path(service_name, ft, ver)
                 if target_p.exists():
                     try:
                         file_contents[ft] = target_p.read_text(encoding="utf-8", errors="replace")
@@ -564,7 +608,8 @@ class ConfigTuner:
         service_name: str,
         param_name: str,
         new_value: str,
-        php_version: str = "8.2",
+        php_version: Optional[str] = None,
+        reload: bool = True,
     ) -> Tuple[bool, str]:
         """Tier 2: Update a single configuration parameter with safe backup and syntax validation.
 
@@ -572,7 +617,8 @@ class ConfigTuner:
             service_name: 'php', 'nginx', or 'mysql'.
             param_name: Parameter name.
             new_value: New value to set.
-            php_version: PHP version.
+            php_version: PHP version (auto-detected if None).
+            reload: Whether to reload/restart service immediately.
 
         Returns:
             Tuple[bool, str]: (Success boolean, Status/error message).
@@ -581,9 +627,10 @@ class ConfigTuner:
         if param_name not in registry:
             return False, f"Parameter '{param_name}' is not in the recognized registry."
 
+        ver = php_version or (self.get_default_php_version() if service_name == "php" else "8.2")
         meta = registry[param_name]
         ft = meta.get("file_type", "main")
-        target_path = self.get_target_path(service_name, ft, php_version)
+        target_path = self.get_target_path(service_name, ft, ver)
 
         # Create target file if missing (for mock/fresh setups)
         if not target_path.exists():
@@ -602,16 +649,26 @@ class ConfigTuner:
             is_nginx = service_name == "nginx"
 
             pattern = re.compile(
-                rf"^([ \t]*)[#;]?[ \t]*{escaped_param}[ \t]*(?:=|[ \t])[ \t]*[^;\r\n]*(;?)",
+                rf"^([ \t]*)[#;]?[ \t]*\b{escaped_param}\b[ \t]*(?:=|[ \t])[ \t]*[^;\r\n]*(;?)",
                 re.MULTILINE | re.IGNORECASE,
             )
 
-            if pattern.search(content):
-                if is_nginx:
-                    replacement = rf"\g<1>{param_name} {new_value};"
-                else:
-                    replacement = rf"\g<1>{param_name} = {new_value}"
-                new_content = pattern.sub(replacement, content)
+            matches = list(pattern.finditer(content))
+            if matches:
+                # Deduplicate: if multiple occurrences exist in the file, replace the first and remove subsequent ones
+                parts = []
+                last_end = 0
+                for i, m in enumerate(matches):
+                    parts.append(content[last_end:m.start()])
+                    if i == 0:
+                        indent = m.group(1) or ("\t" if is_nginx else "    ")
+                        if is_nginx:
+                            parts.append(f"{indent}{param_name} {new_value};")
+                        else:
+                            parts.append(f"{indent}{param_name} = {new_value}")
+                    last_end = m.end()
+                parts.append(content[last_end:])
+                new_content = "".join(parts)
             else:
                 # Append parameter if not found
                 if is_nginx:
@@ -636,15 +693,16 @@ class ConfigTuner:
                     pass
 
             # 2. Syntax Validation
-            ok, syntax_err = self.test_syntax(service_name, php_version)
+            ok, syntax_err = self.test_syntax(service_name, ver)
             if not ok:
                 # Rollback on syntax error
                 shutil.copy2(backup_path, target_path)
                 backup_path.unlink(missing_ok=True)
                 return False, f"Syntax check failed after tweak. Rolled back. Error: {syntax_err}"
 
-            # 3. Reload Service
-            self.reload_service(service_name, php_version)
+            # 3. Reload Service if requested
+            if reload:
+                self.reload_service(service_name, ver)
             backup_path.unlink(missing_ok=True)
 
             msg = f"Parameter '{param_name}' updated to '{new_value}' successfully."
@@ -663,14 +721,17 @@ class ConfigTuner:
         self,
         service_name: str,
         preset_name: str,
-        php_version: str = "8.2",
+        php_version: Optional[str] = None,
     ) -> Tuple[bool, str]:
         """Tier 1: Apply full 1-click optimization preset to a service.
+
+        If service is 'php' or 'all' and php_version is None, it automatically
+        tunes ALL installed PHP versions detected on the system!
 
         Args:
             service_name: 'php', 'nginx', 'mysql', or 'all'.
             preset_name: 'low_end', 'balanced', or 'performance'.
-            php_version: PHP version.
+            php_version: Target PHP version or None for all installed PHP versions.
 
         Returns:
             Tuple[bool, str]: (Success boolean, Status/error message).
@@ -690,14 +751,32 @@ class ConfigTuner:
             except Exception:
                 pass
 
+        # Determine target PHP versions dynamically
+        if php_version and php_version not in ("all", "auto"):
+            target_php_versions = [php_version]
+        else:
+            target_php_versions = self.detect_installed_php_versions()
+
         for s in targets:
-            registry = TUNER_REGISTRY.get(s, {})
-            for param, meta in registry.items():
-                val = meta["presets"].get(preset_name)
-                if val:
-                    ok, _ = self.update_parameter(s, param, val, php_version)
-                    if ok:
-                        applied_count += 1
+            if s == "php":
+                registry = TUNER_REGISTRY.get("php", {})
+                for ver in target_php_versions:
+                    for param, meta in registry.items():
+                        val = meta["presets"].get(preset_name)
+                        if val:
+                            ok, _ = self.update_parameter("php", param, val, php_version=ver, reload=False)
+                            if ok:
+                                applied_count += 1
+                    self.reload_service("php", php_version=ver)
+            else:
+                registry = TUNER_REGISTRY.get(s, {})
+                for param, meta in registry.items():
+                    val = meta["presets"].get(preset_name)
+                    if val:
+                        ok, _ = self.update_parameter(s, param, val, reload=False)
+                        if ok:
+                            applied_count += 1
+                self.reload_service(s)
 
         msg = f"Applied '{preset_name}' preset ({applied_count} parameters tuned across {len(targets)} service(s))."
         logger.info(msg)
@@ -706,17 +785,19 @@ class ConfigTuner:
     def test_syntax(
         self,
         service_name: str,
-        php_version: str = "8.2",
+        php_version: Optional[str] = None,
     ) -> Tuple[bool, str]:
         """Test configuration syntax before applying service reload."""
         if os.name == "nt" or self.mock_base:
             return True, "Syntax check passed (mock mode)"
 
+        ver = php_version or self.get_default_php_version()
+
         if service_name == "nginx":
             res = run_cmd("nginx -t")
             return res.success, res.stderr or res.stdout
         elif service_name == "php":
-            res = run_cmd(f"php-fpm{php_version} -t")
+            res = run_cmd(f"php-fpm{ver} -t")
             if not res.success and "not found" in res.stderr.lower():
                 return True, "php-fpm binary not found (skipped)"
             return res.success, res.stderr or res.stdout
@@ -729,20 +810,22 @@ class ConfigTuner:
     def reload_service(
         self,
         service_name: str,
-        php_version: str = "8.2",
+        php_version: Optional[str] = None,
     ) -> Tuple[bool, str]:
         """Reload or restart service daemon to apply new configuration."""
         if os.name == "nt" or self.mock_base:
             return True, f"Mock reload {service_name} successful"
 
+        ver = php_version or self.get_default_php_version()
+
         if service_name == "nginx":
             res = run_cmd("systemctl reload nginx || systemctl restart nginx")
             return res.success, res.stderr or res.stdout
         elif service_name == "php":
-            res = run_cmd(f"systemctl reload php{php_version}-fpm || systemctl restart php{php_version}-fpm")
+            res = run_cmd(f"systemctl reload php{ver}-fpm || systemctl restart php{ver}-fpm")
             return res.success, res.stderr or res.stdout
         elif service_name == "mysql":
-            res = run_cmd("systemctl reload mariadb || systemctl reload mysql || systemctl restart mariadb || systemctl restart mysql")
+            res = run_cmd("systemctl reset-failed mariadb mysql 2>/dev/null; systemctl restart mariadb || systemctl restart mysql")
             return res.success, res.stderr or res.stdout
 
         return True, "OK"

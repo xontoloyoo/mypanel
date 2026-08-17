@@ -84,22 +84,27 @@ class PHPManager:
         """
         versions: List[str] = []
 
-        for candidate in ["8.0", "8.1", "8.2", "8.3", "8.4"]:
-            if shutil.which(f"php{candidate}") or Path(f"/etc/php/{candidate}").exists():
+        if os.name != "nt":
+            php_root = Path("/etc/php")
+            if php_root.exists() and php_root.is_dir():
+                for p in php_root.iterdir():
+                    if p.is_dir() and re.match(r"^\d+\.\d+$", p.name):
+                        if (p / "fpm").exists() or (p / "cli").exists() or shutil.which(f"php{p.name}"):
+                            versions.append(p.name)
+
+        for candidate in ["7.4", "8.0", "8.1", "8.2", "8.3", "8.4"]:
+            if shutil.which(f"php{candidate}"):
                 versions.append(candidate)
 
         if not versions:
-            res = run_cmd("php -v")
-            if res.success and "PHP" in res.stdout:
-                for v in ["8.1", "8.2", "8.3", "8.4", "8.0", "7.4"]:
-                    if v in res.stdout:
-                        versions.append(v)
-                        break
+            res = run_cmd("php -r 'echo PHP_MAJOR_VERSION.\".\".PHP_MINOR_VERSION;' 2>/dev/null")
+            if res.success and re.match(r"^\d+\.\d+$", res.stdout.strip()):
+                versions.append(res.stdout.strip())
 
         if not versions:
             versions = ["8.2", "8.1", "8.3"]
 
-        return sorted(list(set(versions)))
+        return sorted(list(set(versions)), key=lambda v: [int(x) for x in v.split(".")])
 
     def get_installed_extensions(self, version: str = "8.2") -> List[str]:
         """Query host for active PHP compiled/installed extensions.

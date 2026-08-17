@@ -117,7 +117,7 @@ class PanelApp:
                 ("5", "View Nginx Vhost Config          [V]"),
                 ("6", "Edit Nginx Vhost Config (CLI)    [E]"),
                 ("7", "Reset Nginx Config to Default    [R]"),
-                ("8", "Refresh List"),
+                ("8", "Refresh & Auto-Sync Server Sites [S]"),
                 ("0", "Back to Main Menu"),
             ]
             console.print(render_menu("Website Actions", menu_options))
@@ -125,7 +125,7 @@ class PanelApp:
 
             choice = ask_menu_choice(
                 "Choose action",
-                ["1", "2", "3", "4", "5", "6", "7", "8", "v", "V", "e", "E", "r", "R", "0"],
+                ["1", "2", "3", "4", "5", "6", "7", "8", "v", "V", "e", "E", "r", "R", "s", "S", "0"],
                 default="0",
             )
 
@@ -232,7 +232,12 @@ class PanelApp:
                         ok, msg = self.site_mgr.reset_vhost_config(domain)
                     show_message(msg, "success" if ok else "error")
                     pause_for_user()
-            elif choice == "8":
+            elif choice in ("8", "s", "S"):
+                with console.status("[bold cyan]Scanning Nginx vhosts and webroots for unsynced sites..."):
+                    count, synced_list = self.site_mgr.sync_existing_sites()
+                if count > 0:
+                    show_message(f"Successfully synced {count} site(s) from server: {', '.join(synced_list)}", "success")
+                    pause_for_user()
                 continue
             elif choice == "0":
                 break
@@ -772,7 +777,8 @@ class PanelApp:
 
     def handle_tuner_menu(self) -> None:
         """Handle server optimization presets, parameter tuning, and PHP extensions."""
-        current_php_ver = "8.2"
+        installed_php_vers = self.tuner.detect_installed_php_versions()
+        current_php_ver = self.tuner.get_default_php_version()
         while True:
             self.show_screen_header("Server Tuning & PHP Config")
 
@@ -812,7 +818,8 @@ class PanelApp:
 
             elif choice == "2":
                 # Tier 2: PHP parameters (16 params)
-                php_ver = Prompt.ask("\nEnter PHP Version", choices=["8.1", "8.2", "8.3", "8.0", "7.4"], default=current_php_ver, console=console)
+                avail_choices = installed_php_vers if installed_php_vers else ["8.1", "8.2", "8.3"]
+                php_ver = Prompt.ask("\nEnter PHP Version", choices=avail_choices, default=current_php_ver, console=console)
                 current_php_ver = php_ver
                 params = self.tuner.get_current_params("php", php_version=php_ver)
                 clear_screen()
@@ -853,7 +860,8 @@ class PanelApp:
 
             elif choice == "5":
                 # PHP Extensions
-                php_ver = Prompt.ask("\nEnter PHP Version", choices=["8.1", "8.2", "8.3", "8.0", "7.4"], default=current_php_ver, console=console)
+                avail_choices = installed_php_vers if installed_php_vers else ["8.1", "8.2", "8.3"]
+                php_ver = Prompt.ask("\nEnter PHP Version", choices=avail_choices, default=current_php_ver, console=console)
                 current_php_ver = php_ver
                 extensions = self.php_mgr.get_available_extensions(php_ver)
                 clear_screen()
