@@ -181,13 +181,30 @@ mkdir -p /www/backup/database
 mkdir -p /www/backup/migration
 mkdir -p /etc/nginx/sites-available
 mkdir -p /etc/nginx/sites-enabled
+mkdir -p /etc/nginx/conf.d
 mkdir -p /etc/nginx/waf
 mkdir -p /etc/letsencrypt/live
 
 # Set permissions
 chmod 755 /www /www/wwwroot /www/wwwlogs /www/backup /www/backup/site /www/backup/database /www/backup/migration
 
-# Write default Modular WAF rules
+# 1. Write Update-Proof Global Nginx Security Configuration (conf.d)
+if [ ! -f /etc/nginx/conf.d/00_global_security.conf ]; then
+    cat << 'EOF' > /etc/nginx/conf.d/00_global_security.conf
+# ==============================================================================
+# CLI-PANEL GLOBAL NGINX SECURITY & PERFORMANCE HARDENING
+# Persistently loaded in http context across all current & future Nginx versions
+# ==============================================================================
+
+server_tokens off;
+client_body_timeout 10s;
+client_header_timeout 10s;
+send_timeout 10s;
+EOF
+    chmod 644 /etc/nginx/conf.d/00_global_security.conf
+fi
+
+# 2. Write default Modular WAF rules
 if [ ! -f /etc/nginx/waf/waf_default.conf ]; then
     cat << 'EOF' > /etc/nginx/waf/waf_default.conf
 # ==============================================================================
