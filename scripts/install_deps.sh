@@ -235,6 +235,12 @@ if [ "${CURRENT_DIR}" != "${PANEL_DIR}" ]; then
     cp -ru "${CURRENT_DIR}/"* "${PANEL_DIR}/" || true
 fi
 
+# Ensure web templates directory is readable by Nginx daemon (www-data)
+if [ -d "${PANEL_DIR}/templates" ]; then
+    chmod -R 755 "${PANEL_DIR}/templates" 2>/dev/null || true
+    chmod -R 644 "${PANEL_DIR}/templates/errors/"*.html 2>/dev/null || true
+fi
+
 # ------------------------------------------------------------------------------
 # 6. Virtual Environment & Python Dependencies
 # ------------------------------------------------------------------------------

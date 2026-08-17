@@ -264,11 +264,6 @@ TUNER_REGISTRY: Dict[str, Dict[str, Any]] = {
             "description": "Memory buffer pool for caching InnoDB table data and indexes",
             "presets": {"low_end": "128M", "balanced": "384M", "performance": "1G"},
         },
-        "innodb_buffer_pool_instances": {
-            "file_type": "mysql_cnf",
-            "description": "Number of regions that the InnoDB buffer pool is divided into",
-            "presets": {"low_end": "1", "balanced": "1", "performance": "4"},
-        },
         "key_buffer_size": {
             "file_type": "mysql_cnf",
             "description": "Size of the buffer used for index blocks in MyISAM tables",
@@ -748,6 +743,23 @@ class ConfigTuner:
                 legacy_conf = Path("/etc/nginx/conf.d/00_global_security.conf")
                 if legacy_conf.exists():
                     legacy_conf.unlink(missing_ok=True)
+            except Exception:
+                pass
+
+        # Clean up deprecated innodb_buffer_pool_instances in MariaDB configuration
+        if "mysql" in targets and os.name != "nt":
+            try:
+                mysql_target = self.get_target_path("mysql", "mysql_cnf")
+                if mysql_target.exists():
+                    cnf_text = mysql_target.read_text(encoding="utf-8", errors="replace")
+                    if "innodb_buffer_pool_instances" in cnf_text:
+                        cnf_clean = re.sub(
+                            r"^[ \t]*innodb_buffer_pool_instances[ \t]*=[ \t]*\S+[ \t]*$",
+                            "# innodb_buffer_pool_instances deprecated in MariaDB 10.6+",
+                            cnf_text,
+                            flags=re.MULTILINE,
+                        )
+                        mysql_target.write_text(cnf_clean, encoding="utf-8")
             except Exception:
                 pass
 

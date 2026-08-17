@@ -199,6 +199,9 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         assert "try_files $uri $uri/ /index.php?$query_string;" in content, "Framework routing missing in PHP vhost"
         assert "fastcgi_split_path_info" in content, "PATH_INFO splitting missing in FastCGI block"
         assert "fastcgi_buffers 4 256k;" in content, "FastCGI buffer optimization missing"
+        assert "error_page 404 /404.html;" in content, "404 error_page directive missing in HTTP vhost"
+        assert "location = /404.html" in content, "404 location block missing in HTTP vhost"
+        assert "root /www/server/panel/templates/errors;" in content, "Custom error template root missing in HTTP vhost"
 
         # 2. Request / Setup SSL
         ok_ssl, msg_ssl = ssl_mgr.request_ssl(domain="mysite.local", email="admin@mysite.local")
@@ -213,6 +216,7 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         assert 'more_set_headers "Server: Aegis-Gateway";' in ssl_content, "more_set_headers missing in HTTPS vhost"
         assert "include /etc/nginx/waf/waf_default.conf;" in ssl_content, "WAF include missing in HTTPS vhost"
         assert "try_files $uri $uri/ /index.php?$query_string;" in ssl_content, "Framework routing missing in HTTPS PHP vhost"
+        assert "location = /404.html" in ssl_content, "404 location block missing in HTTPS vhost"
 
         # 3. Disable SSL
         ok_dis, msg_dis = ssl_mgr.disable_ssl("mysite.local")
@@ -651,8 +655,8 @@ def run_suite_10(temp_dir: Path) -> Tuple[int, Optional[str]]:
     checks += 1
     assert len(php_params) == 23, f"Expected 23 PHP params, got {len(php_params)}"
     assert len(nginx_params) == 17, f"Expected 17 Nginx params, got {len(nginx_params)}"
-    assert len(mysql_params) == 10, f"Expected 10 MySQL params, got {len(mysql_params)}"
-    assert total_params == 50, f"Expected exactly 50 parameters in registry, got {total_params}"
+    assert len(mysql_params) == 9, f"Expected 9 MySQL params, got {len(mysql_params)}"
+    assert total_params == 49, f"Expected exactly 49 parameters in registry, got {total_params}"
 
     # 2. Test ConfigTuner parameter updates & 3 presets
     tuner = ConfigTuner(mock_base_dir=str(mock_conf_dir))

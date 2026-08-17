@@ -97,7 +97,7 @@ Setiap domain yang dibuat otomatis mewarisi proteksi keamanan berikut:
 | **PHP Core & OPcache** | 10 | `memory_limit`, `upload_max_filesize`, `post_max_size`, `max_execution_time`, `max_input_vars`, `max_input_time`, `opcache.enable`, `opcache.memory_consumption`, `opcache.interned_strings_buffer`, `opcache.max_accelerated_files` |
 | **PHP-FPM Pool** | 6 | `pm`, `pm.max_children`, `pm.start_servers`, `pm.min_spare_servers`, `pm.max_spare_servers`, `pm.max_requests` |
 | **Nginx Web Server** | 13 | `worker_processes`, `worker_connections`, `multi_accept`, `sendfile`, `tcp_nopush`, `tcp_nodelay`, `keepalive_timeout`, `gzip`, `gzip_comp_level`, `client_max_body_size`, `fastcgi_buffer_size`, `fastcgi_buffers`, `fastcgi_read_timeout` |
-| **MariaDB Server** | 10 | `innodb_buffer_pool_size`, `innodb_buffer_pool_instances`, `key_buffer_size`, `max_connections`, `wait_timeout`, `interactive_timeout`, `max_allowed_packet`, `innodb_flush_log_at_trx_commit`, `tmp_table_size`, `max_heap_table_size` |
+| **MariaDB Server** | 9 | `innodb_buffer_pool_size`, `key_buffer_size`, `max_connections`, `wait_timeout`, `interactive_timeout`, `max_allowed_packet`, `innodb_flush_log_at_trx_commit`, `tmp_table_size`, `max_heap_table_size` |
 
 ---
 

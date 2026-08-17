@@ -158,6 +158,24 @@ server {{
 {routing_block}
 {php_block}
 
+    # Custom Error Pages
+    error_page 403 /403.html;
+    error_page 404 /404.html;
+    error_page 500 502 503 504 /50x.html;
+
+    location = /403.html {{
+        root /www/server/panel/templates/errors;
+        internal;
+    }}
+    location = /404.html {{
+        root /www/server/panel/templates/errors;
+        internal;
+    }}
+    location = /50x.html {{
+        root /www/server/panel/templates/errors;
+        internal;
+    }}
+
     location ~ /\\.ht {{
         deny all;
     }}
@@ -252,6 +270,24 @@ server {{
 
 {routing_block}
 {php_block}
+
+    # Custom Error Pages
+    error_page 403 /403.html;
+    error_page 404 /404.html;
+    error_page 500 502 503 504 /50x.html;
+
+    location = /403.html {{
+        root /www/server/panel/templates/errors;
+        internal;
+    }}
+    location = /404.html {{
+        root /www/server/panel/templates/errors;
+        internal;
+    }}
+    location = /50x.html {{
+        root /www/server/panel/templates/errors;
+        internal;
+    }}
 
     location ~ /\\.ht {{
         deny all;
