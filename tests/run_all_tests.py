@@ -191,6 +191,10 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         checks += 1
         assert "include /etc/nginx/waf/waf_default.conf;" in content, "WAF include missing in HTTP vhost"
         assert "X-Frame-Options" in content, "Security headers missing in HTTP vhost"
+        assert 'Server "Aegis-Gateway"' in content, "Server cloaking header missing in HTTP vhost"
+        assert "location ~ /\\.well-known" in content, "ACME .well-known block missing in HTTP vhost"
+        assert "expires 30d;" in content, "Static asset cache missing in HTTP vhost"
+        assert "index index.php index.html index.htm;" in content, "index.php priority missing in HTTP vhost"
         assert "fastcgi_pass" in content, "PHP fastcgi block missing"
 
         # 2. Request / Setup SSL
@@ -203,6 +207,7 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         assert "listen 443 ssl" in ssl_content, "HTTPS port 443 block missing"
         assert "ssl_stapling on;" in ssl_content, "OCSP stapling missing in HTTPS vhost"
         assert "Strict-Transport-Security" in ssl_content, "HSTS header missing in HTTPS vhost"
+        assert 'Server "Aegis-Gateway"' in ssl_content, "Server cloaking header missing in HTTPS vhost"
         assert "include /etc/nginx/waf/waf_default.conf;" in ssl_content, "WAF include missing in HTTPS vhost"
 
         # 3. Disable SSL
@@ -621,17 +626,17 @@ def run_suite_10(temp_dir: Path) -> Tuple[int, Optional[str]]:
     mock_conf_dir = suite_dir / "mock_config"
     mock_conf_dir.mkdir(parents=True, exist_ok=True)
 
-    # 1. Verify 39 Parameters in TUNER_REGISTRY
+    # 1. Verify 50 Parameters in TUNER_REGISTRY
     php_params = TUNER_REGISTRY.get("php", {})
     nginx_params = TUNER_REGISTRY.get("nginx", {})
     mysql_params = TUNER_REGISTRY.get("mysql", {})
     total_params = len(php_params) + len(nginx_params) + len(mysql_params)
 
     checks += 1
-    assert len(php_params) == 16, f"Expected 16 PHP params, got {len(php_params)}"
-    assert len(nginx_params) == 13, f"Expected 13 Nginx params, got {len(nginx_params)}"
+    assert len(php_params) == 23, f"Expected 23 PHP params, got {len(php_params)}"
+    assert len(nginx_params) == 17, f"Expected 17 Nginx params, got {len(nginx_params)}"
     assert len(mysql_params) == 10, f"Expected 10 MySQL params, got {len(mysql_params)}"
-    assert total_params == 39, f"Expected exactly 39 parameters in registry, got {total_params}"
+    assert total_params == 50, f"Expected exactly 50 parameters in registry, got {total_params}"
 
     # 2. Test ConfigTuner parameter updates & 3 presets
     tuner = ConfigTuner(mock_base_dir=str(mock_conf_dir))
@@ -642,6 +647,14 @@ def run_suite_10(temp_dir: Path) -> Tuple[int, Optional[str]]:
     ok_upd, msg_upd = tuner.update_parameter("php", "memory_limit", "512M", php_version="8.2")
     checks += 1
     assert ok_upd, f"Failed to update memory_limit: {msg_upd}"
+
+    ok_upd_sec, msg_upd_sec = tuner.update_parameter("php", "expose_php", "Off", php_version="8.2")
+    checks += 1
+    assert ok_upd_sec, f"Failed to update expose_php: {msg_upd_sec}"
+
+    ok_upd_tok, msg_upd_tok = tuner.update_parameter("nginx", "server_tokens", "off")
+    checks += 1
+    assert ok_upd_tok, f"Failed to update server_tokens: {msg_upd_tok}"
 
     ok_preset, msg_preset = tuner.apply_preset("nginx", "performance")
     checks += 1
