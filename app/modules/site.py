@@ -162,6 +162,7 @@ class SiteManager:
     server_name {clean_domain};
     root {root_path};
     index index.php index.html index.htm;
+    charset utf-8;
 
     # Include Modular WAF Protection
     include /etc/nginx/waf/waf_default.conf;

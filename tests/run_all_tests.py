@@ -195,6 +195,7 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         assert "location ~ /\\.well-known" in content, "ACME .well-known block missing in HTTP vhost"
         assert "expires 30d;" in content, "Static asset cache missing in HTTP vhost"
         assert "index index.php index.html index.htm;" in content, "index.php priority missing in HTTP vhost"
+        assert "charset utf-8;" in content, "charset utf-8 missing in HTTP vhost"
         assert "fastcgi_pass" in content, "PHP fastcgi block missing"
         assert "try_files $uri $uri/ /index.php?$query_string;" in content, "Framework routing missing in PHP vhost"
         assert "fastcgi_split_path_info" in content, "PATH_INFO splitting missing in FastCGI block"
@@ -211,6 +212,7 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         ssl_content = vhost_file.read_text(encoding="utf-8")
         checks += 1
         assert "listen 443 ssl" in ssl_content, "HTTPS port 443 block missing"
+        assert "charset utf-8;" in ssl_content, "charset utf-8 missing in HTTPS vhost"
         assert "ssl_stapling on;" in ssl_content, "OCSP stapling missing in HTTPS vhost"
         assert "Strict-Transport-Security" in ssl_content, "HSTS header missing in HTTPS vhost"
         assert 'more_set_headers "Server: Aegis-Gateway";' in ssl_content, "more_set_headers missing in HTTPS vhost"
