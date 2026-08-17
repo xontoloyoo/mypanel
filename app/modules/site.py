@@ -406,12 +406,123 @@ class SiteManager:
             logger.exception(err_msg)
             return False, err_msg
 
-    def list_sites(self) -> List[Dict[str, Any]]:
+    def sync_existing_sites(self) -> Tuple[int, List[str]]:
+        """Scan Nginx virtual hosts and webroots on disk to synchronize missing sites into SQLite database.
+
+        Returns:
+            Tuple[int, List[str]]: (Count of newly synced sites, List of synced domain names).
+        """
+        synced: List[str] = []
+        known_domains = {s["domain"].lower() for s in self.list_sites(auto_sync=False)}
+
+        candidate_dirs = [
+            Path(self.nginx_available),
+            Path("/etc/nginx/sites-available"),
+            Path("/etc/nginx/conf.d"),
+        ]
+
+        for c_dir in candidate_dirs:
+            if not c_dir.exists() or not c_dir.is_dir():
+                continue
+
+            for conf_file in c_dir.glob("*.conf"):
+                stem = conf_file.stem.lower()
+                if stem in ("default", "000-default", "waf_default", "mock_config"):
+                    continue
+
+                domain = stem
+                if not self.validate_domain(domain):
+                    try:
+                        content = conf_file.read_text(encoding="utf-8")
+                        m = re.search(r"server_name\s+([^;]+);", content)
+                        if m:
+                            extracted = m.group(1).strip().split()[0].lower()
+                            if self.validate_domain(extracted):
+                                domain = extracted
+                    except Exception:
+                        pass
+
+                if not self.validate_domain(domain) or domain in known_domains:
+                    continue
+
+                root_path = os.path.join(self.webroot_base, domain)
+                php_ver = "none"
+                ssl_status = 0
+
+                try:
+                    content = conf_file.read_text(encoding="utf-8")
+                    root_m = re.search(r"root\s+([^;]+);", content)
+                    if root_m:
+                        parsed_root = root_m.group(1).strip()
+                        if parsed_root:
+                            root_path = parsed_root
+
+                    php_m = re.search(r"php(\d+\.\d+)-fpm\.sock", content)
+                    if php_m:
+                        php_ver = php_m.group(1)
+
+                    if "listen 443" in content or "ssl_certificate" in content:
+                        ssl_status = 1
+                except Exception as exc:
+                    logger.debug("Could not parse vhost file '%s': %s", conf_file, exc)
+
+                try:
+                    with self.db:
+                        self.db.execute(
+                            """
+                            INSERT OR IGNORE INTO sites (domain, root_path, php_version, ssl_status)
+                            VALUES (?, ?, ?, ?);
+                            """,
+                            (domain, root_path, php_ver, ssl_status),
+                        )
+                    known_domains.add(domain)
+                    synced.append(domain)
+                    logger.info("Auto-synced existing site from Nginx vhost: %s (%s)", domain, root_path)
+                except Exception as exc:
+                    logger.warning("Failed to insert synced site '%s': %s", domain, exc)
+
+        # Also inspect webroot directory for folders matching domain format
+        webroot_p = Path(self.webroot_base)
+        if webroot_p.exists() and webroot_p.is_dir():
+            try:
+                for entry in webroot_p.iterdir():
+                    if entry.is_dir() and self.validate_domain(entry.name):
+                        dom = entry.name.lower()
+                        if dom not in known_domains:
+                            try:
+                                with self.db:
+                                    self.db.execute(
+                                        """
+                                        INSERT OR IGNORE INTO sites (domain, root_path, php_version, ssl_status)
+                                        VALUES (?, ?, ?, ?);
+                                        """,
+                                        (dom, str(entry), "none", 0),
+                                    )
+                                known_domains.add(dom)
+                                synced.append(dom)
+                                logger.info("Auto-synced existing site from webroot folder: %s", dom)
+                            except Exception as exc:
+                                logger.warning("Failed to insert synced webroot '%s': %s", dom, exc)
+            except Exception as exc:
+                logger.debug("Could not inspect webroot directory: %s", exc)
+
+        return len(synced), synced
+
+    def list_sites(self, auto_sync: bool = True) -> List[Dict[str, Any]]:
         """Retrieve all registered websites from database.
+
+        Args:
+            auto_sync: Whether to auto-discover and synchronize unindexed Nginx vhosts/webroots.
 
         Returns:
             List[Dict[str, Any]]: List of website dictionaries.
         """
+        if auto_sync:
+            try:
+                self.sync_existing_sites()
+            except Exception as exc:
+                logger.debug("Auto-sync skipped or failed: %s", exc)
+
         try:
             with self.db:
                 records = self.db.fetch_all(
