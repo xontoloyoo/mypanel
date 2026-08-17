@@ -60,23 +60,38 @@ class SSLManager:
         clean_domain = domain.strip().lower()
 
         php_block = ""
-        if php_version and php_version.lower() != "none":
+        is_php = bool(php_version and php_version.lower() != "none")
+        if is_php:
             php_sock = f"/run/php/php{php_version}-fpm.sock"
             php_block = f"""
-    # PHP-FPM FastCGI Configuration
+    # PHP-FPM FastCGI Configuration (Self-Contained & Optimized)
     location ~ \\.php$ {{
-        include snippets/fastcgi-php.conf;
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\\.php)(/.+)$;
         fastcgi_pass unix:{php_sock};
+        fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
         include fastcgi_params;
+        fastcgi_read_timeout 300;
+        fastcgi_buffer_size 128k;
+        fastcgi_buffers 4 256k;
     }}"""
+
+        routing_block = """    # Standard Application Routing (Framework & Permalinks Friendly)
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }""" if is_php else """    # Standard Application Routing (Static HTML)
+    location / {
+        try_files $uri $uri/ =404;
+    }"""
 
         config = f"""server {{
     listen 80;
     listen [::]:80;
     server_name {clean_domain};
 
-    # ACME Challenge Verification for Renewal
+    # ACME Challenge Directory Verification for Let's Encrypt SSL
     location ~ /\\.well-known {{
         allow all;
     }}
@@ -140,10 +155,7 @@ server {{
         access_log off;
     }}
 
-    # Standard Application Routing
-    location / {{
-        try_files $uri $uri/ =404;
-    }}
+{routing_block}
 {php_block}
 
     location ~ /\\.ht {{
@@ -175,16 +187,31 @@ server {{
         clean_domain = domain.strip().lower()
 
         php_block = ""
-        if php_version and php_version.lower() != "none":
+        is_php = bool(php_version and php_version.lower() != "none")
+        if is_php:
             php_sock = f"/run/php/php{php_version}-fpm.sock"
             php_block = f"""
-    # PHP-FPM FastCGI Configuration
+    # PHP-FPM FastCGI Configuration (Self-Contained & Optimized)
     location ~ \\.php$ {{
-        include snippets/fastcgi-php.conf;
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\\.php)(/.+)$;
         fastcgi_pass unix:{php_sock};
+        fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
         include fastcgi_params;
+        fastcgi_read_timeout 300;
+        fastcgi_buffer_size 128k;
+        fastcgi_buffers 4 256k;
     }}"""
+
+        routing_block = """    # Standard Application Routing (Framework & Permalinks Friendly)
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }""" if is_php else """    # Standard Application Routing (Static HTML)
+    location / {
+        try_files $uri $uri/ =404;
+    }"""
 
         return f"""server {{
     listen 80;
@@ -223,10 +250,7 @@ server {{
         access_log off;
     }}
 
-    # Standard Application Routing
-    location / {{
-        try_files $uri $uri/ =404;
-    }}
+{routing_block}
 {php_block}
 
     location ~ /\\.ht {{

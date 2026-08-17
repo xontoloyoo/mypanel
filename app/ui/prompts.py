@@ -200,8 +200,12 @@ def ask_swap_setup_inputs() -> Optional[int]:
             return 2
 
 
-def ask_site_inputs() -> Optional[Dict[str, Any]]:
-    """Interactive input flow for creating a new website."""
+def ask_site_inputs(available_php_versions: Optional[List[str]] = None) -> Optional[Dict[str, Any]]:
+    """Interactive input flow for creating a new website.
+
+    Args:
+        available_php_versions: Optional list of installed PHP version strings on the system.
+    """
     console.print("\n[bold cyan]--- Add New Website ---[/bold cyan]")
     domain = Prompt.ask("Domain Name (e.g., mysite.com or test.local)", console=console).strip().lower()
     if not domain:
@@ -215,10 +219,19 @@ def ask_site_inputs() -> Optional[Dict[str, Any]]:
         console=console,
     ).strip()
 
+    # Build dynamic PHP version choices based on actual server installations
+    if available_php_versions:
+        raw_versions = [v for v in available_php_versions if v.lower() != "none"]
+        php_choices = ["none"] + sorted(list(set(raw_versions)), key=lambda v: [int(x) for x in v.split(".") if x.isdigit()])
+    else:
+        php_choices = ["none", "8.1", "8.2", "8.3"]
+
+    default_php = php_choices[1] if len(php_choices) > 1 else "none"
+
     php_version = Prompt.ask(
         "PHP Version",
-        choices=["none", "8.1", "8.2", "8.3"],
-        default="none",
+        choices=php_choices,
+        default=default_php,
         console=console,
     ).strip()
 

@@ -130,7 +130,8 @@ class PanelApp:
             )
 
             if choice == "1":
-                inputs = ask_site_inputs()
+                installed_php = self.php_mgr.list_installed_versions()
+                inputs = ask_site_inputs(installed_php)
                 if inputs:
                     with console.status("[bold green]Configuring virtual host and directories..."):
                         ok, msg = self.site_mgr.create_site(

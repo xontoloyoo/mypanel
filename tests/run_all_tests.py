@@ -196,6 +196,9 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         assert "expires 30d;" in content, "Static asset cache missing in HTTP vhost"
         assert "index index.php index.html index.htm;" in content, "index.php priority missing in HTTP vhost"
         assert "fastcgi_pass" in content, "PHP fastcgi block missing"
+        assert "try_files $uri $uri/ /index.php?$query_string;" in content, "Framework routing missing in PHP vhost"
+        assert "fastcgi_split_path_info" in content, "PATH_INFO splitting missing in FastCGI block"
+        assert "fastcgi_buffers 4 256k;" in content, "FastCGI buffer optimization missing"
 
         # 2. Request / Setup SSL
         ok_ssl, msg_ssl = ssl_mgr.request_ssl(domain="mysite.local", email="admin@mysite.local")
@@ -209,6 +212,7 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         assert "Strict-Transport-Security" in ssl_content, "HSTS header missing in HTTPS vhost"
         assert 'more_set_headers "Server: Aegis-Gateway";' in ssl_content, "more_set_headers missing in HTTPS vhost"
         assert "include /etc/nginx/waf/waf_default.conf;" in ssl_content, "WAF include missing in HTTPS vhost"
+        assert "try_files $uri $uri/ /index.php?$query_string;" in ssl_content, "Framework routing missing in HTTPS PHP vhost"
 
         # 3. Disable SSL
         ok_dis, msg_dis = ssl_mgr.disable_ssl("mysite.local")
@@ -233,13 +237,16 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         reset_content = vhost_file.read_text(encoding="utf-8")
         assert "include /etc/nginx/waf/waf_default.conf;" in reset_content
 
-        # 5. Test Relative Document Root Resolution
-        ok_rel, msg_rel = site_mgr.create_site(domain="relative.local", root_path="custom_subfolder")
+        # 5. Test Relative Document Root & Static Site (PHP None)
+        ok_rel, msg_rel = site_mgr.create_site(domain="relative.local", root_path="custom_subfolder", php_version="none")
         checks += 1
         assert ok_rel, f"Failed to create site with relative root: {msg_rel}"
         site_rel = site_mgr.get_site("relative.local")
         assert site_rel is not None
         assert site_rel["root_path"] == str(webroot_base / "custom_subfolder"), f"Expected {webroot_base / 'custom_subfolder'}, got {site_rel['root_path']}"
+        static_vhost = (nginx_avail / "relative.local.conf").read_text(encoding="utf-8")
+        assert "try_files $uri $uri/ =404;" in static_vhost, "Static site must use try_files =404"
+        assert "fastcgi_pass" not in static_vhost, "Static site must not include fastcgi_pass"
         site_mgr.delete_site("relative.local", delete_root=True)
 
         # 6. Delete Site
