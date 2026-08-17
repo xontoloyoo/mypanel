@@ -322,6 +322,11 @@ server_tokens off;
 client_body_timeout 10s;
 client_header_timeout 10s;
 send_timeout 10s;
+
+# Global Custom Error Page Definitions
+error_page 403 /403.html;
+error_page 404 /404.html;
+error_page 500 502 503 504 /50x.html;
 """
 
 
