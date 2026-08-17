@@ -191,7 +191,7 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         checks += 1
         assert "include /etc/nginx/waf/waf_default.conf;" in content, "WAF include missing in HTTP vhost"
         assert "X-Frame-Options" in content, "Security headers missing in HTTP vhost"
-        assert 'Server "Aegis-Gateway"' in content, "Server cloaking header missing in HTTP vhost"
+        assert 'more_set_headers "Server: Aegis-Gateway";' in content, "more_set_headers missing in HTTP vhost"
         assert "location ~ /\\.well-known" in content, "ACME .well-known block missing in HTTP vhost"
         assert "expires 30d;" in content, "Static asset cache missing in HTTP vhost"
         assert "index index.php index.html index.htm;" in content, "index.php priority missing in HTTP vhost"
@@ -207,7 +207,7 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         assert "listen 443 ssl" in ssl_content, "HTTPS port 443 block missing"
         assert "ssl_stapling on;" in ssl_content, "OCSP stapling missing in HTTPS vhost"
         assert "Strict-Transport-Security" in ssl_content, "HSTS header missing in HTTPS vhost"
-        assert 'Server "Aegis-Gateway"' in ssl_content, "Server cloaking header missing in HTTPS vhost"
+        assert 'more_set_headers "Server: Aegis-Gateway";' in ssl_content, "more_set_headers missing in HTTPS vhost"
         assert "include /etc/nginx/waf/waf_default.conf;" in ssl_content, "WAF include missing in HTTPS vhost"
 
         # 3. Disable SSL
@@ -233,7 +233,16 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         reset_content = vhost_file.read_text(encoding="utf-8")
         assert "include /etc/nginx/waf/waf_default.conf;" in reset_content
 
-        # 5. Delete Site
+        # 5. Test Relative Document Root Resolution
+        ok_rel, msg_rel = site_mgr.create_site(domain="relative.local", root_path="custom_subfolder")
+        checks += 1
+        assert ok_rel, f"Failed to create site with relative root: {msg_rel}"
+        site_rel = site_mgr.get_site("relative.local")
+        assert site_rel is not None
+        assert site_rel["root_path"] == str(webroot_base / "custom_subfolder"), f"Expected {webroot_base / 'custom_subfolder'}, got {site_rel['root_path']}"
+        site_mgr.delete_site("relative.local", delete_root=True)
+
+        # 6. Delete Site
         ok_del, msg_del = site_mgr.delete_site("mysite.local", delete_root=True)
         checks += 1
         assert ok_del, f"Failed to delete site: {msg_del}"
