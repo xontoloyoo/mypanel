@@ -35,13 +35,16 @@ has_cmd() {
     command -v "$1" >/dev/null 2>&1
 }
 
-# [A] Nginx
+# [A] Nginx & Security Headers Filter Module
 if has_cmd nginx; then
     NGINX_VER=$(nginx -v 2>&1 | awk -F'/' '{print $2}' | awk '{print $1}')
     echo "[+] Nginx           : INSTALLED (v${NGINX_VER}) -> Skip reinstall"
 else
     echo "[-] Nginx           : NOT FOUND           -> Will install"
     PACKAGES_TO_INSTALL+=("nginx")
+fi
+if [ ! -f /etc/nginx/modules-enabled/50-mod-http-headers-more-filter.conf ]; then
+    PACKAGES_TO_INSTALL+=("libnginx-mod-http-headers-more-filter")
 fi
 
 # [B] MariaDB / MySQL
@@ -175,7 +178,7 @@ fi
 echo "[*] Step 2/5: Creating standard directory layout & Nginx WAF (/www/ & /etc/nginx/waf)..."
 mkdir -p /www/wwwroot
 mkdir -p /www/wwwlogs
-mkdir -p /www/server/panel
+mkdir -p /www/server/panel/templates/errors
 mkdir -p /www/backup/site
 mkdir -p /www/backup/database
 mkdir -p /www/backup/migration
@@ -200,6 +203,11 @@ server_tokens off;
 client_body_timeout 10s;
 client_header_timeout 10s;
 send_timeout 10s;
+
+# Global Custom Error Page Definitions
+error_page 403 /403.html;
+error_page 404 /404.html;
+error_page 500 502 503 504 /50x.html;
 EOF
     chmod 644 /etc/nginx/conf.d/00_global_security.conf
 fi
