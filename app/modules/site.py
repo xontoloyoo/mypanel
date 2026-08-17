@@ -116,7 +116,7 @@ class SiteManager:
         root_path: str,
         php_version: str = "none",
     ) -> str:
-        """Generate Nginx virtual host configuration file content with WAF and security headers.
+        """Generate Nginx virtual host configuration file content with WAF, cloaking, and security headers.
 
         Args:
             domain: Website domain name.
@@ -126,13 +126,17 @@ class SiteManager:
         Returns:
             str: Generated Nginx server block configuration.
         """
-        php_block = ""
-        index_files = "index.html index.htm index.php"
+        parts = domain.split(".")
+        if len(parts) == 2 and parts[0] != "www" and domain != "localhost":
+            server_names = f"{domain} www.{domain}"
+        else:
+            server_names = domain
 
+        php_block = ""
         if php_version and php_version.lower() != "none":
-            # PHP-FPM fastcgi socket configuration
             php_sock = f"/run/php/php{php_version}-fpm.sock"
             php_block = f"""
+    # PHP-FPM FastCGI Configuration
     location ~ \\.php$ {{
         include snippets/fastcgi-php.conf;
         fastcgi_pass unix:{php_sock};
@@ -144,22 +148,40 @@ class SiteManager:
     listen 80;
     listen [::]:80;
 
-    server_name {domain} www.{domain};
+    server_name {server_names};
     root {root_path};
-    index {index_files};
+    index index.php index.html index.htm;
 
     # Include Modular WAF Protection
     include /etc/nginx/waf/waf_default.conf;
 
-    # Security Headers
+    # Server Identity Cloaking & Security Headers
+    add_header Server "Aegis-Gateway" always;
     add_header X-Frame-Options "SAMEORIGIN" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-XSS-Protection "1; mode=block" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
-    access_log /var/log/nginx/{domain}_access.log;
-    error_log /var/log/nginx/{domain}_error.log;
+    # ACME Challenge Directory Verification for Let's Encrypt SSL
+    location ~ /\\.well-known {{
+        allow all;
+    }}
+    if ($uri ~ "^/\\.well-known/.*\\.(php|jsp|py|js|css|lua|ts|go|zip|tar\\.gz|rar|7z|sql|bak)$") {{
+        return 403;
+    }}
 
+    # Static Assets Browser Caching & Log Suppression
+    location ~* \\.(gif|jpg|jpeg|png|bmp|swf|ico|webp|svg|woff|woff2|ttf|eot)$ {{
+        expires 30d;
+        access_log off;
+    }}
+
+    location ~* \\.(js|css)$ {{
+        expires 12h;
+        access_log off;
+    }}
+
+    # Standard Application Routing
     location / {{
         try_files $uri $uri/ =404;
     }}
@@ -168,6 +190,9 @@ class SiteManager:
     location ~ /\\.ht {{
         deny all;
     }}
+
+    access_log /var/log/nginx/{domain}_access.log;
+    error_log /var/log/nginx/{domain}_error.log;
 }}
 """
         return config

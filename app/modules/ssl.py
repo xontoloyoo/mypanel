@@ -45,7 +45,7 @@ class SSLManager:
         cert_file: str = "",
         key_file: str = "",
     ) -> str:
-        """Generate Nginx virtual host configuration with HTTPS, OCSP stapling, and WAF.
+        """Generate Nginx virtual host configuration with HTTPS, OCSP stapling, cloaking, and WAF.
 
         Args:
             domain: Domain name.
@@ -57,12 +57,17 @@ class SSLManager:
         Returns:
             str: Complete Nginx configuration string.
         """
-        php_block = ""
-        index_files = "index.html index.htm index.php"
+        parts = domain.split(".")
+        if len(parts) == 2 and parts[0] != "www" and domain != "localhost":
+            server_names = f"{domain} www.{domain}"
+        else:
+            server_names = domain
 
+        php_block = ""
         if php_version and php_version.lower() != "none":
             php_sock = f"/run/php/php{php_version}-fpm.sock"
             php_block = f"""
+    # PHP-FPM FastCGI Configuration
     location ~ \\.php$ {{
         include snippets/fastcgi-php.conf;
         fastcgi_pass unix:{php_sock};
@@ -73,19 +78,26 @@ class SSLManager:
         config = f"""server {{
     listen 80;
     listen [::]:80;
-    server_name {domain} www.{domain};
+    server_name {server_names};
+
+    # ACME Challenge Verification for Renewal
+    location ~ /\\.well-known {{
+        allow all;
+    }}
 
     # Redirect all HTTP traffic to HTTPS
-    return 301 https://$host$request_uri;
+    location / {{
+        return 301 https://$host$request_uri;
+    }}
 }}
 
 server {{
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
 
-    server_name {domain} www.{domain};
+    server_name {server_names};
     root {root_path};
-    index {index_files};
+    index index.php index.html index.htm;
 
     # SSL Certificates
     ssl_certificate {cert_file};
@@ -105,16 +117,34 @@ server {{
     # Include Modular WAF Protection
     include /etc/nginx/waf/waf_default.conf;
 
-    # Security Headers
+    # Server Identity Cloaking & Security Headers
+    add_header Server "Aegis-Gateway" always;
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
     add_header X-Frame-Options "SAMEORIGIN" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-XSS-Protection "1; mode=block" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
-    access_log /var/log/nginx/{domain}_ssl_access.log;
-    error_log /var/log/nginx/{domain}_ssl_error.log;
+    # ACME Challenge Directory Verification
+    location ~ /\\.well-known {{
+        allow all;
+    }}
+    if ($uri ~ "^/\\.well-known/.*\\.(php|jsp|py|js|css|lua|ts|go|zip|tar\\.gz|rar|7z|sql|bak)$") {{
+        return 403;
+    }}
 
+    # Static Assets Browser Caching & Log Suppression
+    location ~* \\.(gif|jpg|jpeg|png|bmp|swf|ico|webp|svg|woff|woff2|ttf|eot)$ {{
+        expires 30d;
+        access_log off;
+    }}
+
+    location ~* \\.(js|css)$ {{
+        expires 12h;
+        access_log off;
+    }}
+
+    # Standard Application Routing
     location / {{
         try_files $uri $uri/ =404;
     }}
@@ -123,6 +153,9 @@ server {{
     location ~ /\\.ht {{
         deny all;
     }}
+
+    access_log /var/log/nginx/{domain}_ssl_access.log;
+    error_log /var/log/nginx/{domain}_ssl_error.log;
 }}
 """
         return config
@@ -143,12 +176,17 @@ server {{
         Returns:
             str: Plain HTTP Nginx server block.
         """
-        php_block = ""
-        index_files = "index.html index.htm index.php"
+        parts = domain.split(".")
+        if len(parts) == 2 and parts[0] != "www" and domain != "localhost":
+            server_names = f"{domain} www.{domain}"
+        else:
+            server_names = domain
 
+        php_block = ""
         if php_version and php_version.lower() != "none":
             php_sock = f"/run/php/php{php_version}-fpm.sock"
             php_block = f"""
+    # PHP-FPM FastCGI Configuration
     location ~ \\.php$ {{
         include snippets/fastcgi-php.conf;
         fastcgi_pass unix:{php_sock};
@@ -160,22 +198,40 @@ server {{
     listen 80;
     listen [::]:80;
 
-    server_name {domain} www.{domain};
+    server_name {server_names};
     root {root_path};
-    index {index_files};
+    index index.php index.html index.htm;
 
     # Include Modular WAF Protection
     include /etc/nginx/waf/waf_default.conf;
 
-    # Security Headers
+    # Server Identity Cloaking & Security Headers
+    add_header Server "Aegis-Gateway" always;
     add_header X-Frame-Options "SAMEORIGIN" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-XSS-Protection "1; mode=block" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
-    access_log /var/log/nginx/{domain}_access.log;
-    error_log /var/log/nginx/{domain}_error.log;
+    # ACME Challenge Directory Verification
+    location ~ /\\.well-known {{
+        allow all;
+    }}
+    if ($uri ~ "^/\\.well-known/.*\\.(php|jsp|py|js|css|lua|ts|go|zip|tar\\.gz|rar|7z|sql|bak)$") {{
+        return 403;
+    }}
 
+    # Static Assets Browser Caching & Log Suppression
+    location ~* \\.(gif|jpg|jpeg|png|bmp|swf|ico|webp|svg|woff|woff2|ttf|eot)$ {{
+        expires 30d;
+        access_log off;
+    }}
+
+    location ~* \\.(js|css)$ {{
+        expires 12h;
+        access_log off;
+    }}
+
+    # Standard Application Routing
     location / {{
         try_files $uri $uri/ =404;
     }}
@@ -184,6 +240,9 @@ server {{
     location ~ /\\.ht {{
         deny all;
     }}
+
+    access_log /var/log/nginx/{domain}_access.log;
+    error_log /var/log/nginx/{domain}_error.log;
 }}
 """
 

@@ -122,11 +122,58 @@ TUNER_REGISTRY: Dict[str, Dict[str, Any]] = {
             "description": "Maximum number of scripts that can be cached in OPcache",
             "presets": {"low_end": "10000", "balanced": "20000", "performance": "40000"},
         },
+        "expose_php": {
+            "file_type": "php_ini",
+            "section": "PHP",
+            "description": "Hide PHP version header (X-Powered-By: PHP)",
+            "presets": {"low_end": "Off", "balanced": "Off", "performance": "Off"},
+        },
+        "display_errors": {
+            "file_type": "php_ini",
+            "section": "PHP",
+            "description": "Prevent error/path disclosure on visitor screen",
+            "presets": {"low_end": "Off", "balanced": "Off", "performance": "Off"},
+        },
+        "log_errors": {
+            "file_type": "php_ini",
+            "section": "PHP",
+            "description": "Log errors to server log file for diagnostics",
+            "presets": {"low_end": "On", "balanced": "On", "performance": "On"},
+        },
+        "allow_url_include": {
+            "file_type": "php_ini",
+            "section": "PHP",
+            "description": "Block Remote File Inclusion (RFI) script execution",
+            "presets": {"low_end": "Off", "balanced": "Off", "performance": "Off"},
+        },
+        "session.cookie_httponly": {
+            "file_type": "php_ini",
+            "section": "Session",
+            "description": "Block JavaScript cookie theft (XSS defense)",
+            "presets": {"low_end": "1", "balanced": "1", "performance": "1"},
+        },
+        "session.use_strict_mode": {
+            "file_type": "php_ini",
+            "section": "Session",
+            "description": "Reject uninitialized session IDs (Fixation defense)",
+            "presets": {"low_end": "1", "balanced": "1", "performance": "1"},
+        },
+        "session.cookie_samesite": {
+            "file_type": "php_ini",
+            "section": "Session",
+            "description": "SameSite cookie policy for CSRF mitigation",
+            "presets": {"low_end": "Lax", "balanced": "Lax", "performance": "Lax"},
+        },
     },
     # -------------------------------------------------------------------------
-    # B. Nginx Web Server (13 Parameters)
+    # B. Nginx Web Server (17 Parameters)
     # -------------------------------------------------------------------------
     "nginx": {
+        "server_tokens": {
+            "file_type": "nginx_conf",
+            "description": "Hide Nginx version signature in headers and error pages",
+            "presets": {"low_end": "off", "balanced": "off", "performance": "off"},
+        },
         "worker_processes": {
             "file_type": "nginx_conf",
             "description": "Number of worker processes (auto = number of CPU cores)",
@@ -161,6 +208,21 @@ TUNER_REGISTRY: Dict[str, Dict[str, Any]] = {
             "file_type": "nginx_conf",
             "description": "Timeout during which a keep-alive client connection stays open",
             "presets": {"low_end": "15", "balanced": "30", "performance": "60"},
+        },
+        "client_body_timeout": {
+            "file_type": "nginx_conf",
+            "description": "Slowloris DoS mitigation client body timeout",
+            "presets": {"low_end": "10s", "balanced": "10s", "performance": "15s"},
+        },
+        "client_header_timeout": {
+            "file_type": "nginx_conf",
+            "description": "Slowloris DoS mitigation client header timeout",
+            "presets": {"low_end": "10s", "balanced": "10s", "performance": "15s"},
+        },
+        "send_timeout": {
+            "file_type": "nginx_conf",
+            "description": "Response transmission timeout to client",
+            "presets": {"low_end": "10s", "balanced": "10s", "performance": "15s"},
         },
         "gzip": {
             "file_type": "nginx_conf",
