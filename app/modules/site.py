@@ -152,7 +152,7 @@ class SiteManager:
     include /etc/nginx/waf/waf_default.conf;
 
     # Server Identity Cloaking & Security Headers
-    add_header Server "Aegis-Gateway" always;
+    more_set_headers "Server: Aegis-Gateway";
     add_header X-Frame-Options "SAMEORIGIN" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-XSS-Protection "1; mode=block" always;
@@ -325,8 +325,13 @@ class SiteManager:
         if existing:
             return False, f"Domain '{domain}' already exists in database."
 
-        # 3. Determine web root
-        target_root = root_path if root_path else os.path.join(self.webroot_base, domain)
+        # 3. Determine web root (always enforce absolute path under webroot_base if relative)
+        if root_path and os.path.isabs(root_path):
+            target_root = os.path.abspath(root_path)
+        elif root_path:
+            target_root = os.path.abspath(os.path.join(self.webroot_base, root_path))
+        else:
+            target_root = os.path.abspath(os.path.join(self.webroot_base, domain))
 
         try:
             # 4. Create root directory & placeholder

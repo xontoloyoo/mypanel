@@ -626,10 +626,14 @@ class ConfigTuner:
 
             target_path.write_text(new_content, encoding="utf-8")
 
-            # For Nginx, also ensure persistent security snippet exists in conf.d
-            if is_nginx:
-                sec_target = (self.mock_base / "00_global_security.conf") if self.mock_base else None
-                ensure_nginx_security_conf(sec_target)
+            # For Nginx, clean up any legacy conflicting conf.d file to prevent duplicate directive errors
+            if is_nginx and os.name != "nt":
+                try:
+                    legacy_conf = Path("/etc/nginx/conf.d/00_global_security.conf")
+                    if legacy_conf.exists():
+                        legacy_conf.unlink(missing_ok=True)
+                except Exception:
+                    pass
 
             # 2. Syntax Validation
             ok, syntax_err = self.test_syntax(service_name, php_version)
@@ -677,10 +681,14 @@ class ConfigTuner:
         targets = ["php", "nginx", "mysql"] if service_name == "all" else [service_name]
         applied_count = 0
 
-        # Ensure persistent Nginx security configuration in conf.d
-        if "nginx" in targets:
-            sec_target = (self.mock_base / "00_global_security.conf") if self.mock_base else None
-            ensure_nginx_security_conf(sec_target)
+        # Clean up any legacy duplicate file in conf.d
+        if "nginx" in targets and os.name != "nt":
+            try:
+                legacy_conf = Path("/etc/nginx/conf.d/00_global_security.conf")
+                if legacy_conf.exists():
+                    legacy_conf.unlink(missing_ok=True)
+            except Exception:
+                pass
 
         for s in targets:
             registry = TUNER_REGISTRY.get(s, {})
