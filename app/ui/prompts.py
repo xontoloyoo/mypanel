@@ -222,9 +222,13 @@ def ask_site_inputs() -> Optional[Dict[str, Any]]:
         console=console,
     ).strip()
 
+    final_root = custom_root or default_root
+    if final_root and not final_root.startswith("/"):
+        final_root = f"/www/wwwroot/{final_root}"
+
     return {
         "domain": domain,
-        "root_path": custom_root or default_root,
+        "root_path": final_root,
         "php_version": php_version,
     }
 
