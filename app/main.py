@@ -28,6 +28,8 @@ from app.modules.system import SystemManager, format_bytes
 from app.modules.tuner import ConfigTuner, SwapManager, TUNER_REGISTRY
 from app.ui.layout import clear_screen, console, render_footer, render_header, show_message
 from app.ui.prompts import (
+    ask_adminer_install_inputs,
+    ask_adminer_port_input,
     ask_auto_repair_confirmation,
     ask_cron_job_inputs,
     ask_database_inputs,
@@ -416,17 +418,21 @@ class PanelApp:
             console.print(render_databases_table(databases))
             console.print("")
 
+            adminer_stat = self.db_mgr.get_adminer_status()
+            adminer_badge = f"[green]Active (Port: {adminer_stat['port']})[/green]" if adminer_stat["active"] else "[dim]Not Installed[/dim]"
+
             menu_options = [
                 ("1", "Create New Database"),
                 ("2", "Delete Database"),
                 ("3", "Change User Password"),
-                ("4", "Refresh List"),
+                ("4", f"Web Database GUI (Adminer)   [{adminer_badge}]"),
+                ("5", "Refresh List"),
                 ("0", "Back to Main Menu"),
             ]
             console.print(render_menu("Database Actions", menu_options))
             console.print(render_footer())
 
-            choice = ask_menu_choice("Choose action", ["1", "2", "3", "4", "0"], default="0")
+            choice = ask_menu_choice("Choose action", ["1", "2", "3", "4", "5", "0"], default="0")
 
             if choice == "1":
                 inputs = ask_database_inputs()
@@ -469,6 +475,60 @@ class PanelApp:
                 show_message(msg, "success" if ok else "error")
                 pause_for_user()
             elif choice == "4":
+                while True:
+                    self.show_screen_header("Web Database GUI (Adminer)")
+                    a_stat = self.db_mgr.get_adminer_status()
+                    console.print("\n[bold cyan]--- Adminer Web GUI Status (v6.0.1) ---[/bold cyan]")
+                    console.print(f"  Installation Status : [{'green' if a_stat['installed'] else 'red'}]{'Installed' if a_stat['installed'] else 'Not Installed'}[/]")
+                    console.print(f"  Nginx Vhost Service : [{'green' if a_stat['active'] else 'dim'}]{'RUNNING' if a_stat['active'] else 'INACTIVE'}[/]")
+                    console.print(f"  Listening Port      : [bold yellow]{a_stat['port']}[/bold yellow]")
+                    if a_stat['active']:
+                        console.print(f"  Access URL          : [bold green]http://<your-server-ip>:{a_stat['port']}[/bold green]")
+                    console.print("")
+
+                    a_menu = [
+                        ("1", "Install / Enable Adminer Web GUI" if not a_stat["active"] else "Re-install / Reset Adminer Web GUI"),
+                        ("2", "Change Listening Port"),
+                        ("3", "Uninstall / Disable Adminer Web GUI"),
+                        ("0", "Back to Database Menu"),
+                    ]
+                    console.print(render_menu("Adminer Actions", a_menu))
+                    console.print(render_footer())
+
+                    a_choice = ask_menu_choice("Choose option", ["1", "2", "3", "0"], default="0")
+                    if a_choice == "1":
+                        port = ask_adminer_install_inputs()
+                        if port:
+                            with console.status(f"[bold cyan]Installing Adminer v6.0.1 on port {port}..."):
+                                ok, msg = self.db_mgr.install_adminer(port=port)
+                            show_message(msg, "success" if ok else "error")
+                            if ok:
+                                console.print(f"[bold yellow]Tip:[/bold yellow] Ensure port [bold cyan]{port}[/bold cyan] is allowed in Firewall (UFW) if not accessible.")
+                            pause_for_user()
+                    elif a_choice == "2":
+                        if not a_stat["installed"]:
+                            show_message("Adminer is not installed yet.", "warning")
+                            pause_for_user()
+                            continue
+                        new_p = ask_adminer_port_input(a_stat["port"])
+                        if new_p:
+                            with console.status(f"[bold cyan]Changing port to {new_p}..."):
+                                ok, msg = self.db_mgr.change_adminer_port(new_p)
+                            show_message(msg, "success" if ok else "error")
+                            pause_for_user()
+                    elif a_choice == "3":
+                        if not a_stat["installed"] and not a_stat["active"]:
+                            show_message("Adminer is not active.", "warning")
+                            pause_for_user()
+                            continue
+                        if confirm_action("Are you sure you want to UNINSTALL Adminer and close the listening port?"):
+                            with console.status("[bold red]Uninstalling Adminer Web GUI..."):
+                                ok, msg = self.db_mgr.uninstall_adminer()
+                            show_message(msg, "success" if ok else "error")
+                            pause_for_user()
+                    elif a_choice == "0":
+                        break
+            elif choice == "5":
                 continue
             elif choice == "0":
                 break

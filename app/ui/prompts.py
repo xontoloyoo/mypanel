@@ -513,3 +513,34 @@ def ask_import_options(
         "bundle_path": bundle_path,
         "sync_system": sync_system,
     }
+
+
+def ask_adminer_install_inputs() -> Optional[int]:
+    """Interactive prompt for installing Adminer Web DB GUI."""
+    console.print("\n[bold cyan]--- Install Adminer Web Database GUI (v6.0.1) ---[/bold cyan]")
+    console.print("[dim]Adminer will be installed in an isolated path and bound to a dedicated port.[/dim]")
+    port_str = Prompt.ask("Enter dedicated listening port", default="8888", console=console).strip()
+    try:
+        port = int(port_str)
+        if port < 1 or port > 65535:
+            console.print("[red]Port must be between 1 and 65535.[/red]")
+            return None
+        return port
+    except ValueError:
+        console.print("[red]Invalid port number.[/red]")
+        return None
+
+
+def ask_adminer_port_input(current_port: int) -> Optional[int]:
+    """Interactive prompt for changing Adminer listening port."""
+    console.print(f"\n[bold cyan]--- Change Adminer Listening Port (Current: {current_port}) ---[/bold cyan]")
+    port_str = Prompt.ask("Enter new listening port", default=str(current_port), console=console).strip()
+    try:
+        port = int(port_str)
+        if port < 1 or port > 65535:
+            console.print("[red]Port must be between 1 and 65535.[/red]")
+            return None
+        return port
+    except ValueError:
+        console.print("[red]Invalid port number.[/red]")
+        return None

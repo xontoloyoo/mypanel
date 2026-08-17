@@ -368,6 +368,52 @@ def run_suite_3(temp_dir: Path) -> Tuple[int, Optional[str]]:
         assert ok_del, f"Failed to delete database: {msg_del}"
         assert len(db_mgr.list_databases()) == 0, "Database was not removed from DB"
 
+        # 6. Test Adminer Web DB GUI Installation, Port Changing, and Uninstallation
+        adminer_dir = suite_dir / "adminer"
+        nginx_avail = suite_dir / "nginx_avail"
+        nginx_enab = suite_dir / "nginx_enab"
+        db_mgr_adminer = DatabaseManager(
+            db=db,
+            adminer_dir=str(adminer_dir),
+            nginx_available=str(nginx_avail),
+            nginx_enabled=str(nginx_enab),
+        )
+
+        # Initial status (Not installed)
+        stat_init = db_mgr_adminer.get_adminer_status()
+        checks += 1
+        assert stat_init["installed"] is False
+        assert stat_init["active"] is False
+
+        # Install Adminer on port 8888
+        ok_inst, msg_inst = db_mgr_adminer.install_adminer(port=8888, php_version="8.2")
+        checks += 1
+        assert ok_inst, f"Failed to install Adminer: {msg_inst}"
+        stat_inst = db_mgr_adminer.get_adminer_status()
+        assert stat_inst["installed"] is True
+        assert stat_inst["port"] == 8888
+        assert (adminer_dir / "index.php").exists()
+        assert (nginx_avail / "00_adminer.conf").exists()
+        vhost_txt = (nginx_avail / "00_adminer.conf").read_text(encoding="utf-8")
+        assert "listen 8888;" in vhost_txt
+        assert "fastcgi_pass unix:/run/php/php8.2-fpm.sock;" in vhost_txt
+
+        # Change port to 9999
+        ok_port, msg_port = db_mgr_adminer.change_adminer_port(9999)
+        checks += 1
+        assert ok_port, f"Failed to change port: {msg_port}"
+        stat_port = db_mgr_adminer.get_adminer_status()
+        assert stat_port["port"] == 9999
+        assert "listen 9999;" in (nginx_avail / "00_adminer.conf").read_text(encoding="utf-8")
+
+        # Uninstall Adminer
+        ok_uninst, msg_uninst = db_mgr_adminer.uninstall_adminer()
+        checks += 1
+        assert ok_uninst, f"Failed to uninstall Adminer: {msg_uninst}"
+        stat_uninst = db_mgr_adminer.get_adminer_status()
+        assert stat_uninst["installed"] is False
+        assert not (nginx_avail / "00_adminer.conf").exists()
+
     finally:
         db.close()
 
