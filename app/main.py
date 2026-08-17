@@ -39,8 +39,10 @@ from app.ui.prompts import (
     ask_manual_backup_inputs,
     ask_menu_choice,
     ask_param_edit,
+    ask_password_protection_inputs,
     ask_php_version_selection,
     ask_preset_choice,
+    ask_rename_site_inputs,
     ask_site_inputs,
     ask_ssl_inputs,
     ask_swap_setup_inputs,
@@ -112,12 +114,16 @@ class PanelApp:
             menu_options = [
                 ("1", "Add New Website"),
                 ("2", "Delete Website"),
-                ("3", "Issue SSL Certificate (Let's Encrypt)"),
-                ("4", "Disable SSL Certificate"),
-                ("5", "View Nginx Vhost Config          [V]"),
-                ("6", "Edit Nginx Vhost Config (CLI)    [E]"),
-                ("7", "Reset Nginx Config to Default    [R]"),
-                ("8", "Refresh & Auto-Sync Server Sites [S]"),
+                ("3", "Rename Website / Change Domain"),
+                ("4", "View Website Logs (Access / Error)"),
+                ("5", "Clear / Truncate Website Logs"),
+                ("6", "Issue SSL Certificate (Let's Encrypt)"),
+                ("7", "Disable SSL Certificate"),
+                ("8", "Security: Open_basedir & Password Auth"),
+                ("v", "View Nginx Vhost Config          [V]"),
+                ("e", "Edit Nginx Vhost Config (CLI)    [E]"),
+                ("r", "Reset Nginx Config to Default    [R]"),
+                ("s", "Refresh & Auto-Sync Server Sites [S]"),
                 ("0", "Back to Main Menu"),
             ]
             console.print(render_menu("Website Actions", menu_options))
@@ -159,6 +165,108 @@ class PanelApp:
                     pause_for_user()
             elif choice == "3":
                 if not sites:
+                    show_message("No websites registered to rename.", "warning")
+                    pause_for_user()
+                    continue
+
+                domain = Prompt.ask("\nEnter domain name to rename", console=console).strip().lower()
+                if not domain:
+                    continue
+
+                site_to_rename = self.site_mgr.get_site(domain)
+                if not site_to_rename:
+                    show_message(f"Website '{domain}' not found.", "error")
+                    pause_for_user()
+                    continue
+
+                rename_inputs = ask_rename_site_inputs(domain)
+                if rename_inputs:
+                    with console.status(f"[bold cyan]Migrating website to '{rename_inputs['new_domain']}'..."):
+                        ok, msg = self.site_mgr.rename_site(
+                            old_domain=rename_inputs["old_domain"],
+                            new_domain=rename_inputs["new_domain"],
+                            rename_root=rename_inputs["rename_root"],
+                        )
+                    show_message(msg, "success" if ok else "error")
+                    pause_for_user()
+            elif choice == "4":
+                if not sites:
+                    show_message("No websites registered.", "warning")
+                    pause_for_user()
+                    continue
+
+                domain = Prompt.ask("\nEnter domain name to view logs", console=console).strip().lower()
+                if not domain:
+                    continue
+
+                if not self.site_mgr.get_site(domain):
+                    show_message(f"Website '{domain}' not found.", "error")
+                    pause_for_user()
+                    continue
+
+                console.print(f"\n[bold cyan]Select Log Target for '{domain}':[/bold cyan]")
+                console.print("  [1] Access Log  (Traffic & Client Requests)")
+                console.print("  [2] Error Log   (PHP / FastCGI / Nginx Errors)")
+                console.print("  [0] Cancel")
+
+                log_type_opt = ask_menu_choice("Choose log type", ["1", "2", "0"], default="1")
+                if log_type_opt == "0":
+                    continue
+
+                log_key = "access" if log_type_opt == "1" else "error"
+                log_name = "Access Log" if log_key == "access" else "Error Log"
+                log_paths = self.site_mgr.get_site_log_paths(domain)
+                target_path = log_paths[log_key]
+
+                console.print(f"\n[bold cyan]Mode for {domain} {log_name}:[/bold cyan]")
+                console.print("  [1] View Last 50 Lines (Snapshot)")
+                console.print("  [2] Realtime Live Stream (Tail -f)")
+                console.print("  [0] Cancel")
+
+                mode_opt = ask_menu_choice("Select mode", ["1", "2", "0"], default="1")
+                if mode_opt == "1":
+                    ok, lines, p_str = self.site_mgr.read_site_log(domain, log_type=log_key, lines=50)
+                    clear_screen()
+                    console.print(render_log_snapshot(f"{domain} ({log_name})", p_str, lines))
+                    pause_for_user("Press Enter to return to Website menu...")
+                elif mode_opt == "2":
+                    custom_key = f"site_{log_key}_{domain}"
+                    self.log_mgr.default_paths[custom_key] = [target_path]
+                    view_live_log_stream(f"{domain} ({log_name})", custom_key, self.log_mgr)
+                    pause_for_user("Press Enter to return to Website menu...")
+            elif choice == "5":
+                if not sites:
+                    show_message("No websites registered.", "warning")
+                    pause_for_user()
+                    continue
+
+                domain = Prompt.ask("\nEnter domain name to clear logs", console=console).strip().lower()
+                if not domain:
+                    continue
+
+                if not self.site_mgr.get_site(domain):
+                    show_message(f"Website '{domain}' not found.", "error")
+                    pause_for_user()
+                    continue
+
+                console.print(f"\n[bold red]Select Log to Truncate for '{domain}':[/bold red]")
+                console.print("  [1] Truncate Access Log Only")
+                console.print("  [2] Truncate Error Log Only")
+                console.print("  [3] Truncate Both Access and Error Logs")
+                console.print("  [0] Cancel")
+
+                clear_opt = ask_menu_choice("Choose option", ["1", "2", "3", "0"], default="0")
+                if clear_opt == "0":
+                    continue
+
+                type_map = {"1": "access", "2": "error", "3": "all"}
+                target_type = type_map[clear_opt]
+                if confirm_action(f"Are you sure you want to clear '{target_type}' log(s) for '{domain}'?"):
+                    ok, msg = self.site_mgr.clear_site_log(domain, log_type=target_type)
+                    show_message(msg, "success" if ok else "error")
+                    pause_for_user()
+            elif choice == "6":
+                if not sites:
                     show_message("No websites registered. Add a website first.", "warning")
                     pause_for_user()
                     continue
@@ -172,7 +280,7 @@ class PanelApp:
                         )
                     show_message(msg, "success" if ok else "error")
                     pause_for_user()
-            elif choice == "4":
+            elif choice == "7":
                 if not sites:
                     show_message("No websites registered.", "warning")
                     pause_for_user()
@@ -187,6 +295,60 @@ class PanelApp:
                         ok, msg = self.ssl_mgr.disable_ssl(domain)
                     show_message(msg, "success" if ok else "error")
                     pause_for_user()
+            elif choice == "8":
+                if not sites:
+                    show_message("No websites registered.", "warning")
+                    pause_for_user()
+                    continue
+
+                domain = Prompt.ask("\nEnter domain name for Security Settings", console=console).strip().lower()
+                if not domain:
+                    continue
+
+                site_sec = self.site_mgr.get_site(domain)
+                if not site_sec:
+                    show_message(f"Website '{domain}' not found.", "error")
+                    pause_for_user()
+                    continue
+
+                ob_status = self.site_mgr.get_open_basedir_status(domain)
+                pw_active, pw_user = self.site_mgr.get_password_protection_status(domain)
+
+                console.print(f"\n[bold cyan]--- Website Security Controls: {domain} ---[/bold cyan]")
+                console.print(f"  [1] PHP open_basedir Isolation (.user.ini) : [{'green' if ob_status else 'red'}]{'ENABLED' if ob_status else 'DISABLED'}[/]")
+                console.print(f"  [2] HTTP Password Protection (Basic Auth)  : [{'green' if pw_active else 'dim'}]{'PROTECTED (User: ' + str(pw_user) + ')' if pw_active else 'DISABLED'}[/]")
+                if pw_active:
+                    console.print("  [3] Disable HTTP Password Protection")
+                console.print("  [0] Back to Website Menu")
+
+                sec_choices = ["1", "2", "3", "0"] if pw_active else ["1", "2", "0"]
+                sec_opt = ask_menu_choice("Select security action", sec_choices, default="0")
+
+                if sec_opt == "1":
+                    new_ob_state = not ob_status
+                    action_txt = "ENABLE" if new_ob_state else "DISABLE"
+                    if confirm_action(f"Are you sure you want to {action_txt} open_basedir isolation for '{domain}'?"):
+                        with console.status(f"[bold cyan]Updating open_basedir for '{domain}'..."):
+                            ok, msg = self.site_mgr.toggle_open_basedir(domain, new_ob_state)
+                        show_message(msg, "success" if ok else "error")
+                        pause_for_user()
+                elif sec_opt == "2":
+                    pw_inputs = ask_password_protection_inputs(domain)
+                    if pw_inputs:
+                        with console.status(f"[bold cyan]Configuring password authentication for '{domain}'..."):
+                            ok, msg = self.site_mgr.set_password_protection(
+                                domain=domain,
+                                username=pw_inputs["username"],
+                                password=pw_inputs["password"],
+                            )
+                        show_message(msg, "success" if ok else "error")
+                        pause_for_user()
+                elif sec_opt == "3" and pw_active:
+                    if confirm_action(f"Are you sure you want to remove password protection from '{domain}'?"):
+                        with console.status(f"[bold yellow]Removing password authentication from '{domain}'..."):
+                            ok, msg = self.site_mgr.disable_password_protection(domain)
+                        show_message(msg, "success" if ok else "error")
+                        pause_for_user()
             elif choice in ("5", "v", "V"):
                 if not sites:
                     show_message("No websites registered.", "warning")
@@ -551,13 +713,14 @@ class PanelApp:
                 ("3", "Control Panel App Log   (logs/app.log)"),
                 ("4", "System Syslog           (/var/log/syslog)"),
                 ("5", "Authentication Log      (/var/log/auth.log)"),
-                ("6", "Clear / Truncate a Log File"),
+                ("6", "Per-Website Access & Error Logs"),
+                ("7", "Clear / Truncate a Log File"),
                 ("0", "Back to Main Menu"),
             ]
             console.print(render_menu("Log Viewer Targets", menu_options))
             console.print(render_footer())
 
-            choice = ask_menu_choice("Choose log to inspect", ["1", "2", "3", "4", "5", "6", "0"], default="0")
+            choice = ask_menu_choice("Choose log to inspect", ["1", "2", "3", "4", "5", "6", "7", "0"], default="0")
 
             if choice in log_targets:
                 title, log_key = log_targets[choice]
@@ -577,6 +740,53 @@ class PanelApp:
                     view_live_log_stream(title, log_key, self.log_mgr)
                     pause_for_user("Press Enter to return to Log Viewer menu...")
             elif choice == "6":
+                sites = self.site_mgr.list_sites()
+                if not sites:
+                    show_message("No websites registered in panel.", "warning")
+                    pause_for_user()
+                    continue
+
+                console.print("\n[bold cyan]Select Website to Inspect Logs:[/bold cyan]")
+                for idx, s in enumerate(sites, 1):
+                    console.print(f"  [{idx}] {s['domain']}")
+                console.print("  [0] Cancel")
+
+                site_choice = ask_menu_choice("Choose website", [str(i) for i in range(len(sites) + 1)], default="1")
+                if site_choice == "0":
+                    continue
+
+                sel_domain = sites[int(site_choice) - 1]["domain"]
+                console.print(f"\n[bold cyan]Select Log Target for '{sel_domain}':[/bold cyan]")
+                console.print("  [1] Access Log  (Traffic & Client Requests)")
+                console.print("  [2] Error Log   (PHP / FastCGI / Nginx Errors)")
+                console.print("  [0] Cancel")
+
+                log_type_opt = ask_menu_choice("Choose log type", ["1", "2", "0"], default="1")
+                if log_type_opt == "0":
+                    continue
+
+                log_key = "access" if log_type_opt == "1" else "error"
+                log_name = "Access Log" if log_key == "access" else "Error Log"
+                log_paths = self.site_mgr.get_site_log_paths(sel_domain)
+                target_path = log_paths[log_key]
+
+                console.print(f"\n[bold cyan]Mode for {sel_domain} {log_name}:[/bold cyan]")
+                console.print("  [1] View Last 50 Lines (Snapshot)")
+                console.print("  [2] Realtime Live Stream (Tail -f)")
+                console.print("  [0] Cancel")
+
+                mode_opt = ask_menu_choice("Select mode", ["1", "2", "0"], default="1")
+                if mode_opt == "1":
+                    ok, lines, p_str = self.site_mgr.read_site_log(sel_domain, log_type=log_key, lines=50)
+                    clear_screen()
+                    console.print(render_log_snapshot(f"{sel_domain} ({log_name})", p_str, lines))
+                    pause_for_user("Press Enter to return to Log Viewer menu...")
+                elif mode_opt == "2":
+                    custom_key = f"site_{log_key}_{sel_domain}"
+                    self.log_mgr.default_paths[custom_key] = [target_path]
+                    view_live_log_stream(f"{sel_domain} ({log_name})", custom_key, self.log_mgr)
+                    pause_for_user("Press Enter to return to Log Viewer menu...")
+            elif choice == "7":
                 console.print("\n[bold red]Select log file to clear:[/bold red]")
                 for k, (t, _) in log_targets.items():
                     console.print(f"  [{k}] {t}")

@@ -1,5 +1,8 @@
 """Site management module for Nginx and web server virtual hosts."""
 
+import base64
+from collections import deque
+import hashlib
 import os
 from pathlib import Path
 import re
@@ -812,3 +815,396 @@ class SiteManager:
             err_msg = f"Failed to reset vhost for '{domain}': {exc}"
             logger.exception(err_msg)
             return False, err_msg
+
+    def rename_site(
+        self,
+        old_domain: str,
+        new_domain: str,
+        rename_root: bool = False,
+    ) -> Tuple[bool, str]:
+        """Rename an existing website domain name and optionally rename its document root folder.
+
+        Args:
+            old_domain: Current domain name.
+            new_domain: New desired domain name.
+            rename_root: Whether to also rename the document root folder.
+
+        Returns:
+            Tuple[bool, str]: (Success boolean, Status/error message).
+        """
+        old_domain = old_domain.strip().lower()
+        new_domain = new_domain.strip().lower()
+
+        if old_domain == new_domain:
+            return False, "New domain name is identical to current domain name."
+
+        if not self.validate_domain(new_domain):
+            return False, f"Invalid new domain name '{new_domain}'. Must be a valid FQDN."
+
+        site = self.get_site(old_domain)
+        if not site:
+            return False, f"Site '{old_domain}' not found in database."
+
+        if self.get_site(new_domain):
+            return False, f"A website with domain '{new_domain}' already exists in the database."
+
+        old_avail = Path(self.nginx_available) / f"{old_domain}.conf"
+        old_enabled = Path(self.nginx_enabled) / f"{old_domain}.conf"
+        new_avail = Path(self.nginx_available) / f"{new_domain}.conf"
+        new_enabled = Path(self.nginx_enabled) / f"{new_domain}.conf"
+
+        if new_avail.exists():
+            return False, f"Configuration file for '{new_domain}' already exists at '{new_avail}'."
+
+        old_root = Path(site.get("root_path") or os.path.join(self.webroot_base, old_domain))
+        new_root_str = str(old_root)
+        root_was_moved = False
+
+        # 1. Optionally rename root directory
+        if rename_root and old_root.exists() and old_root.is_dir():
+            target_root = old_root.parent / new_domain
+            if target_root.exists():
+                return False, f"Target directory '{target_root}' already exists on disk."
+            try:
+                shutil.move(str(old_root), str(target_root))
+                new_root_str = str(target_root)
+                root_was_moved = True
+            except Exception as exc:
+                return False, f"Failed to rename document root: {exc}"
+
+        # 2. Prepare new Nginx configuration
+        try:
+            if old_avail.exists():
+                old_conf = old_avail.read_text(encoding="utf-8")
+                new_conf = re.sub(
+                    rf"\bserver_name\s+{re.escape(old_domain)}\b",
+                    f"server_name {new_domain}",
+                    old_conf,
+                )
+                new_conf = new_conf.replace(f"{old_domain}_access.log", f"{new_domain}_access.log")
+                new_conf = new_conf.replace(f"{old_domain}_error.log", f"{new_domain}_error.log")
+                new_conf = new_conf.replace(f"{old_domain}_ssl_access.log", f"{new_domain}_ssl_access.log")
+                new_conf = new_conf.replace(f"{old_domain}_ssl_error.log", f"{new_domain}_ssl_error.log")
+                new_conf = new_conf.replace(f"{old_domain}.pass", f"{new_domain}.pass")
+                if root_was_moved:
+                    new_conf = new_conf.replace(str(old_root), new_root_str)
+            else:
+                new_conf = self._generate_nginx_config(
+                    domain=new_domain,
+                    root_path=new_root_str,
+                    php_version=site.get("php_version", "none"),
+                )
+
+            new_avail.parent.mkdir(parents=True, exist_ok=True)
+            new_avail.write_text(new_conf, encoding="utf-8")
+
+            # Update symlink
+            if new_enabled.parent.exists() or os.name == "nt":
+                new_enabled.parent.mkdir(parents=True, exist_ok=True)
+                if new_enabled.exists() or new_enabled.is_symlink():
+                    new_enabled.unlink()
+                try:
+                    if hasattr(os, "symlink"):
+                        os.symlink(str(new_avail), str(new_enabled))
+                except Exception as sym_exc:
+                    logger.debug("Symlink error on rename: %s", sym_exc)
+
+            # Unlink old files
+            if old_enabled.exists() or old_enabled.is_symlink():
+                old_enabled.unlink()
+            if old_avail.exists():
+                old_avail.unlink()
+
+            # 3. Update Database
+            with self.db:
+                self.db.execute(
+                    "UPDATE sites SET domain = ?, root_path = ? WHERE domain = ?;",
+                    (new_domain, new_root_str, old_domain),
+                )
+
+            # 4. Test & Reload Nginx
+            reload_ok, reload_msg = self._reload_nginx()
+            if not reload_ok:
+                logger.warning("Nginx reload warning on rename: %s", reload_msg)
+
+            # 5. Update open_basedir .user.ini if present
+            if root_was_moved:
+                user_ini = Path(new_root_str) / ".user.ini"
+                if user_ini.exists():
+                    try:
+                        run_cmd(f"chattr -i '{user_ini}'")
+                        user_ini.write_text(f"open_basedir={new_root_str}/:/tmp/:/proc/\n", encoding="utf-8")
+                        run_cmd(f"chattr +i '{user_ini}'")
+                    except Exception:
+                        pass
+
+            logger.info("Successfully renamed site '%s' to '%s'.", old_domain, new_domain)
+            return True, f"Website '{old_domain}' successfully renamed to '{new_domain}'."
+
+        except Exception as exc:
+            err_msg = f"Failed to rename site '{old_domain}' to '{new_domain}': {exc}"
+            logger.exception(err_msg)
+            return False, err_msg
+
+    def get_site_log_paths(self, domain: str) -> Dict[str, Path]:
+        """Resolve access and error log paths for a website domain.
+
+        Args:
+            domain: Target domain name.
+
+        Returns:
+            Dict[str, Path]: Dict containing 'access' and 'error' Path objects.
+        """
+        clean_domain = domain.strip().lower()
+        log_dir = Path("/var/log/nginx")
+        fallback_dir = BASE_DIR / "logs"
+
+        target_dir = log_dir if (log_dir.exists() or os.name != "nt") else fallback_dir
+        target_dir.mkdir(parents=True, exist_ok=True)
+
+        return {
+            "access": target_dir / f"{clean_domain}_access.log",
+            "error": target_dir / f"{clean_domain}_error.log",
+        }
+
+    def read_site_log(
+        self,
+        domain: str,
+        log_type: str = "access",
+        lines: int = 50,
+    ) -> Tuple[bool, List[str], str]:
+        """Read the last N lines from a specific site's access or error log.
+
+        Args:
+            domain: Domain name.
+            log_type: 'access' or 'error'.
+            lines: Number of lines to retrieve.
+
+        Returns:
+            Tuple[bool, List[str], str]: (Success boolean, List of log lines, Path string).
+        """
+        paths = self.get_site_log_paths(domain)
+        target_path = paths.get(log_type, paths["access"])
+
+        if not target_path.exists():
+            return True, [f"[INFO] Log file '{target_path.name}' does not exist on disk yet (no traffic recorded)."], str(target_path)
+
+        try:
+            with open(target_path, "r", encoding="utf-8", errors="replace") as f:
+                trailing_lines = list(deque(f, maxlen=lines))
+                return True, [l.rstrip("\r\n") for l in trailing_lines], str(target_path)
+        except Exception as exc:
+            return False, [f"[ERROR] Could not read log file: {exc}"], str(target_path)
+
+    def clear_site_log(
+        self,
+        domain: str,
+        log_type: str = "all",
+    ) -> Tuple[bool, str]:
+        """Truncate and clear access log, error log, or both for a specific website.
+
+        Args:
+            domain: Domain name.
+            log_type: 'access', 'error', or 'all'.
+
+        Returns:
+            Tuple[bool, str]: (Success boolean, Status message).
+        """
+        paths = self.get_site_log_paths(domain)
+        targets: List[Path] = []
+        if log_type in ("access", "all"):
+            targets.append(paths["access"])
+        if log_type in ("error", "all"):
+            targets.append(paths["error"])
+
+        cleared = []
+        for p in targets:
+            if p.exists():
+                try:
+                    with open(p, "w", encoding="utf-8") as f:
+                        f.truncate(0)
+                    cleared.append(p.name)
+                except Exception as exc:
+                    return False, f"Failed to clear log '{p.name}': {exc}"
+
+        if not cleared:
+            return True, f"Log files for '{domain}' are already empty or do not exist on disk."
+        return True, f"Successfully cleared log(s) for '{domain}': {', '.join(cleared)}"
+
+    def toggle_open_basedir(self, domain: str, enable: bool) -> Tuple[bool, str]:
+        """Enable or disable PHP open_basedir directory isolation via .user.ini.
+
+        Args:
+            domain: Domain name.
+            enable: True to enable, False to disable.
+
+        Returns:
+            Tuple[bool, str]: (Success boolean, Status message).
+        """
+        site = self.get_site(domain)
+        if not site:
+            return False, f"Site '{domain}' not found."
+
+        root_path = site.get("root_path") or os.path.join(self.webroot_base, domain)
+        user_ini = Path(root_path) / ".user.ini"
+
+        try:
+            if enable:
+                user_ini.parent.mkdir(parents=True, exist_ok=True)
+                run_cmd(f"chattr -i '{user_ini}'")
+                user_ini.write_text(f"open_basedir={root_path}/:/tmp/:/proc/\n", encoding="utf-8")
+                run_cmd(f"chattr +i '{user_ini}'")
+                logger.info("Enabled open_basedir for '%s'", domain)
+                return True, f"Open_basedir (.user.ini) isolation successfully ENABLED for '{domain}'."
+            else:
+                run_cmd(f"chattr -i '{user_ini}'")
+                if user_ini.exists():
+                    user_ini.unlink()
+                logger.info("Disabled open_basedir for '%s'", domain)
+                return True, f"Open_basedir (.user.ini) isolation DISABLED for '{domain}'."
+        except Exception as exc:
+            err_msg = f"Failed to update open_basedir for '{domain}': {exc}"
+            logger.exception(err_msg)
+            return False, err_msg
+
+    def get_open_basedir_status(self, domain: str) -> bool:
+        """Check if open_basedir protection is active for a site."""
+        site = self.get_site(domain)
+        if not site:
+            return False
+        root_path = site.get("root_path") or os.path.join(self.webroot_base, domain)
+        user_ini = Path(root_path) / ".user.ini"
+        if not user_ini.exists():
+            return False
+        try:
+            content = user_ini.read_text(encoding="utf-8", errors="replace")
+            return "open_basedir" in content
+        except Exception:
+            return False
+
+    def set_password_protection(
+        self,
+        domain: str,
+        username: str,
+        password: str,
+    ) -> Tuple[bool, str]:
+        """Set HTTP Basic Auth password protection on a website.
+
+        Args:
+            domain: Domain name.
+            username: Authorized username.
+            password: Plaintext password to hash.
+
+        Returns:
+            Tuple[bool, str]: (Success boolean, Status message).
+        """
+        clean_domain = domain.strip().lower()
+        clean_user = username.strip()
+        if not clean_user or not password:
+            return False, "Username and password cannot be empty."
+
+        site = self.get_site(clean_domain)
+        if not site:
+            return False, f"Site '{clean_domain}' not found."
+
+        vhost_path = Path(self.get_vhost_path(clean_domain))
+        if not vhost_path.exists():
+            return False, f"Virtual host configuration for '{clean_domain}' not found."
+
+        passwords_dir = Path("/etc/nginx/passwords")
+        if not passwords_dir.exists() and os.name == "nt":
+            passwords_dir = BASE_DIR / "data" / "passwords"
+
+        try:
+            passwords_dir.mkdir(parents=True, exist_ok=True)
+            pass_file = passwords_dir / f"{clean_domain}.pass"
+
+            # Generate SHA-1 encoded htpasswd entry
+            sha1_hash = hashlib.sha1(password.encode("utf-8")).digest()
+            b64_hash = base64.b64encode(sha1_hash).decode("ascii")
+            pass_file.write_text(f"{clean_user}:{{SHA}}{b64_hash}\n", encoding="utf-8")
+
+            pass_posix = pass_file.as_posix()
+
+            # Update Nginx vhost with auth_basic directives
+            vhost_content = vhost_path.read_text(encoding="utf-8")
+            if "auth_basic" not in vhost_content:
+                auth_snippet = f"""    # Password Access Protection
+    auth_basic "Restricted Access";
+    auth_basic_user_file {pass_posix};
+"""
+                # Inject right below server_name safely without regex escape bugs
+                vhost_content = re.sub(
+                    r"(server_name\s+[^;]+;\n)",
+                    lambda m: m.group(1) + auth_snippet,
+                    vhost_content,
+                    count=1,
+                )
+                vhost_path.write_text(vhost_content, encoding="utf-8")
+
+            self._reload_nginx()
+            logger.info("Password protection enabled for site '%s' (user: %s)", clean_domain, clean_user)
+            return True, f"Password protection successfully enabled for '{clean_domain}' (Username: {clean_user})."
+
+        except Exception as exc:
+            err_msg = f"Failed to enable password protection for '{clean_domain}': {exc}"
+            logger.exception(err_msg)
+            return False, err_msg
+
+    def disable_password_protection(self, domain: str) -> Tuple[bool, str]:
+        """Disable HTTP Basic Auth password protection on a website.
+
+        Args:
+            domain: Domain name.
+
+        Returns:
+            Tuple[bool, str]: (Success boolean, Status message).
+        """
+        clean_domain = domain.strip().lower()
+        vhost_path = Path(self.get_vhost_path(clean_domain))
+        if not vhost_path.exists():
+            return False, f"Virtual host configuration for '{clean_domain}' not found."
+
+        try:
+            vhost_content = vhost_path.read_text(encoding="utf-8")
+            vhost_clean = re.sub(r"^[ \t]*auth_basic\s+.*$\n?", "", vhost_content, flags=re.MULTILINE)
+            vhost_clean = re.sub(r"^[ \t]*auth_basic_user_file\s+.*$\n?", "", vhost_clean, flags=re.MULTILINE)
+            vhost_path.write_text(vhost_clean, encoding="utf-8")
+
+            passwords_dir = Path("/etc/nginx/passwords")
+            if not passwords_dir.exists() and os.name == "nt":
+                passwords_dir = BASE_DIR / "data" / "passwords"
+            pass_file = passwords_dir / f"{clean_domain}.pass"
+            if pass_file.exists():
+                pass_file.unlink()
+
+            self._reload_nginx()
+            logger.info("Password protection disabled for site '%s'", clean_domain)
+            return True, f"Password protection disabled for '{clean_domain}'."
+
+        except Exception as exc:
+            err_msg = f"Failed to disable password protection for '{clean_domain}': {exc}"
+            logger.exception(err_msg)
+            return False, err_msg
+
+    def get_password_protection_status(self, domain: str) -> Tuple[bool, Optional[str]]:
+        """Check if password protection is active and return associated username."""
+        clean_domain = domain.strip().lower()
+        vhost_path = Path(self.get_vhost_path(clean_domain))
+        if not vhost_path.exists():
+            return False, None
+        try:
+            vhost_content = vhost_path.read_text(encoding="utf-8", errors="replace")
+            if "auth_basic" in vhost_content:
+                passwords_dir = Path("/etc/nginx/passwords")
+                if not passwords_dir.exists() and os.name == "nt":
+                    passwords_dir = BASE_DIR / "data" / "passwords"
+                pass_file = passwords_dir / f"{clean_domain}.pass"
+                if pass_file.exists():
+                    first_line = pass_file.read_text(encoding="utf-8").splitlines()
+                    if first_line:
+                        return True, first_line[0].split(":")[0]
+                return True, "enabled"
+            return False, None
+        except Exception:
+            return False, None

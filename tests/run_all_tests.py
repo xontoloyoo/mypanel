@@ -255,11 +255,53 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         assert "fastcgi_pass" not in static_vhost, "Static site must not include fastcgi_pass"
         site_mgr.delete_site("relative.local", delete_root=True)
 
-        # 6. Delete Site
-        ok_del, msg_del = site_mgr.delete_site("mysite.local", delete_root=True)
+        # 6. Test Site Rename & Root Migration
+        ok_ren, msg_ren = site_mgr.rename_site("mysite.local", "renamed.local", rename_root=True)
+        checks += 1
+        assert ok_ren, f"Failed to rename site: {msg_ren}"
+        assert site_mgr.get_site("mysite.local") is None, "Old site still exists in database"
+        renamed_site = site_mgr.get_site("renamed.local")
+        assert renamed_site is not None, "New site missing in database"
+        assert "renamed.local" in renamed_site["root_path"], "Root path was not updated on rename"
+        renamed_vhost = (nginx_avail / "renamed.local.conf").read_text(encoding="utf-8")
+        assert "server_name renamed.local;" in renamed_vhost, "server_name not updated in vhost"
+
+        # 7. Test Per-Site Logs Reading & Truncation
+        log_paths = site_mgr.get_site_log_paths("renamed.local")
+        checks += 1
+        assert "access" in log_paths and "error" in log_paths
+        # Mock write a log line
+        log_paths["access"].parent.mkdir(parents=True, exist_ok=True)
+        log_paths["access"].write_text("127.0.0.1 - GET /index.php 200 OK\n", encoding="utf-8")
+        ok_lread, lines, _ = site_mgr.read_site_log("renamed.local", "access", lines=10)
+        assert ok_lread and len(lines) == 1 and "200 OK" in lines[0]
+        ok_lclr, _ = site_mgr.clear_site_log("renamed.local", "access")
+        assert ok_lclr and log_paths["access"].stat().st_size == 0
+
+        # 8. Test Open_basedir (.user.ini) Isolation
+        ok_ob, msg_ob = site_mgr.toggle_open_basedir("renamed.local", True)
+        checks += 1
+        assert ok_ob, f"Failed to enable open_basedir: {msg_ob}"
+        assert site_mgr.get_open_basedir_status("renamed.local") is True
+        ok_ob_dis, _ = site_mgr.toggle_open_basedir("renamed.local", False)
+        assert ok_ob_dis and site_mgr.get_open_basedir_status("renamed.local") is False
+
+        # 9. Test HTTP Basic Auth Password Protection
+        ok_pw, msg_pw = site_mgr.set_password_protection("renamed.local", "admin", "SecretPassword123!")
+        checks += 1
+        assert ok_pw, f"Failed to set password protection: {msg_pw}"
+        pw_active, pw_user = site_mgr.get_password_protection_status("renamed.local")
+        assert pw_active and pw_user == "admin"
+        pw_vhost = (nginx_avail / "renamed.local.conf").read_text(encoding="utf-8")
+        assert "auth_basic" in pw_vhost
+        ok_pw_dis, _ = site_mgr.disable_password_protection("renamed.local")
+        assert ok_pw_dis and site_mgr.get_password_protection_status("renamed.local")[0] is False
+
+        # 10. Delete Renamed Site
+        ok_del, msg_del = site_mgr.delete_site("renamed.local", delete_root=True)
         checks += 1
         assert ok_del, f"Failed to delete site: {msg_del}"
-        assert not vhost_file.exists(), "Vhost file was not removed"
+        assert not (nginx_avail / "renamed.local.conf").exists(), "Vhost file was not removed"
 
     finally:
         app.modules.ssl.run_cmd = orig_ssl_run_cmd

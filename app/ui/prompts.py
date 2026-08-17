@@ -246,6 +246,47 @@ def ask_site_inputs(available_php_versions: Optional[List[str]] = None) -> Optio
     }
 
 
+def ask_rename_site_inputs(existing_domain: str) -> Optional[Dict[str, Any]]:
+    """Interactive input flow for renaming a website."""
+    console.print(f"\n[bold cyan]--- Rename Website: {existing_domain} ---[/bold cyan]")
+    new_domain = Prompt.ask("New Domain Name (e.g., newdomain.com)", console=console).strip().lower()
+    if not new_domain:
+        console.print("[red]New domain name cannot be empty.[/red]")
+        return None
+
+    if new_domain == existing_domain.lower():
+        console.print("[yellow]New domain is identical to current domain.[/yellow]")
+        return None
+
+    rename_root = confirm_action(f"Also rename document root folder on disk to match '{new_domain}'?")
+
+    return {
+        "old_domain": existing_domain,
+        "new_domain": new_domain,
+        "rename_root": rename_root,
+    }
+
+
+def ask_password_protection_inputs(domain: str) -> Optional[Dict[str, str]]:
+    """Interactive input flow for setting HTTP Basic Auth on a website."""
+    console.print(f"\n[bold cyan]--- Set Password Protection (HTTP Basic Auth): {domain} ---[/bold cyan]")
+    username = Prompt.ask("Authorized Username (e.g., admin)", default="admin", console=console).strip()
+    if not username:
+        console.print("[red]Username cannot be empty.[/red]")
+        return None
+
+    password = Prompt.ask("Password for Login", console=console).strip()
+    if not password:
+        console.print("[red]Password cannot be empty.[/red]")
+        return None
+
+    return {
+        "domain": domain,
+        "username": username,
+        "password": password,
+    }
+
+
 def ask_database_inputs() -> Optional[Dict[str, Any]]:
     """Interactive input flow for creating a new database."""
     console.print("\n[bold blue]--- Create New Database ---[/bold blue]")
