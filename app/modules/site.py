@@ -449,3 +449,198 @@ class SiteManager:
         except Exception as exc:
             logger.error("Failed to get site '%s': %s", domain, exc)
             return None
+
+    def get_vhost_path(self, domain: str) -> str:
+        """Get absolute path to Nginx virtual host configuration file.
+
+        Args:
+            domain: Website domain name.
+
+        Returns:
+            str: Path to vhost .conf file.
+        """
+        domain = domain.strip().lower()
+        avail_file = Path(self.nginx_available) / f"{domain}.conf"
+        if avail_file.exists():
+            return str(avail_file)
+
+        std_avail = Path(f"/etc/nginx/sites-available/{domain}.conf")
+        if std_avail.exists():
+            return str(std_avail)
+
+        conf_d = Path(f"/etc/nginx/conf.d/{domain}.conf")
+        if conf_d.exists():
+            return str(conf_d)
+
+        return str(avail_file)
+
+    def read_vhost_config(self, domain: str) -> Tuple[bool, str]:
+        """Read content of Nginx virtual host configuration file.
+
+        Args:
+            domain: Website domain name.
+
+        Returns:
+            Tuple[bool, str]: (Success boolean, Content string or error message).
+        """
+        domain = domain.strip().lower()
+        vhost_path = self.get_vhost_path(domain)
+        p = Path(vhost_path)
+
+        if not p.exists():
+            return False, f"Virtual host configuration file not found at '{vhost_path}'."
+
+        try:
+            content = p.read_text(encoding="utf-8")
+            return True, content
+        except Exception as exc:
+            err_msg = f"Failed to read vhost file '{vhost_path}': {exc}"
+            logger.error(err_msg)
+            return False, err_msg
+
+    def edit_vhost_config_interactive(self, domain: str) -> Tuple[bool, str]:
+        """Open Nginx vhost in CLI editor with auto-backup, syntax check, and rollback.
+
+        Args:
+            domain: Website domain name.
+
+        Returns:
+            Tuple[bool, str]: (Success boolean, Status or error message).
+        """
+        domain = domain.strip().lower()
+        vhost_path = self.get_vhost_path(domain)
+        p = Path(vhost_path)
+
+        if not p.exists():
+            return False, f"Virtual host file '{vhost_path}' does not exist."
+
+        bak_path = Path(f"{vhost_path}.bak")
+
+        try:
+            # 1. Create temporary backup
+            shutil.copy2(str(p), str(bak_path))
+            logger.debug("Created vhost backup before edit: %s", bak_path)
+
+            # 2. Select system editor
+            editor = os.environ.get("EDITOR")
+            if not editor:
+                if shutil.which("nano"):
+                    editor = "nano"
+                elif shutil.which("vim"):
+                    editor = "vim"
+                elif shutil.which("vi"):
+                    editor = "vi"
+                elif os.name == "nt":
+                    editor = "notepad"
+                else:
+                    editor = "nano"
+
+            # 3. Launch interactive editor
+            os.system(f"{editor} \"{vhost_path}\"")
+
+            # 4. Test Nginx configuration syntax
+            test_res = run_cmd("nginx -t")
+            if test_res.success or "not found" in test_res.stderr.lower() or "not recognized" in test_res.stderr.lower():
+                if bak_path.exists():
+                    bak_path.unlink()
+                self._reload_nginx()
+                logger.info("Nginx vhost for '%s' updated and reloaded successfully.", domain)
+                return True, "Nginx vhost updated and reloaded successfully."
+            else:
+                # Syntax error - auto-rollback from backup
+                err_msg = test_res.stderr.strip() if test_res.stderr else "Nginx syntax check failed."
+                if bak_path.exists():
+                    shutil.copy2(str(bak_path), str(p))
+                    bak_path.unlink()
+                logger.warning("Nginx vhost syntax error for '%s', rolled back: %s", domain, err_msg)
+                return False, f"Syntax error detected. Changes rolled back:\n{err_msg}"
+
+        except Exception as exc:
+            if bak_path.exists():
+                try:
+                    shutil.copy2(str(bak_path), str(p))
+                    bak_path.unlink()
+                except Exception:
+                    pass
+            err_msg = f"Failed to edit vhost for '{domain}': {exc}"
+            logger.exception(err_msg)
+            return False, err_msg
+
+    def reset_vhost_config(self, domain: str) -> Tuple[bool, str]:
+        """Regenerate Nginx vhost config back to panel default template (including WAF & security headers).
+
+        Args:
+            domain: Website domain name.
+
+        Returns:
+            Tuple[bool, str]: (Success boolean, Status or error message).
+        """
+        domain = domain.strip().lower()
+        site = self.get_site(domain)
+        if not site:
+            return False, f"Site '{domain}' not found in database."
+
+        root_path = site.get("root_path") or os.path.join(self.webroot_base, domain)
+        php_version = site.get("php_version", "none")
+        ssl_status = site.get("ssl_status", 0)
+
+        try:
+            ensure_waf_snippet()
+
+            vhost_path = Path(self.get_vhost_path(domain))
+            vhost_path.parent.mkdir(parents=True, exist_ok=True)
+
+            cert_dir = Path(f"/etc/letsencrypt/live/{domain}")
+            cert_file = cert_dir / "fullchain.pem"
+            key_file = cert_dir / "privkey.pem"
+
+            is_ssl_active = (ssl_status == 1 or str(ssl_status).lower() == "enabled") and cert_file.exists() and key_file.exists()
+
+            if is_ssl_active:
+                from app.modules.ssl import SSLManager
+                ssl_mgr = SSLManager(
+                    nginx_available=self.nginx_available,
+                    nginx_enabled=self.nginx_enabled,
+                    db=self.db,
+                )
+                vhost_content = ssl_mgr._generate_ssl_nginx_config(
+                    domain=domain,
+                    root_path=root_path,
+                    php_version=php_version,
+                    cert_file=str(cert_file),
+                    key_file=str(key_file),
+                )
+            else:
+                vhost_content = self._generate_nginx_config(
+                    domain=domain,
+                    root_path=root_path,
+                    php_version=php_version,
+                )
+
+            vhost_path.write_text(vhost_content, encoding="utf-8")
+
+            # Symlink in sites-enabled
+            enabled_dir = Path(self.nginx_enabled)
+            if enabled_dir.parent.exists() or os.name == "nt":
+                enabled_dir.mkdir(parents=True, exist_ok=True)
+                symlink_file = enabled_dir / f"{domain}.conf"
+                if symlink_file.exists() or symlink_file.is_symlink():
+                    symlink_file.unlink()
+                try:
+                    if hasattr(os, "symlink"):
+                        os.symlink(str(vhost_path), str(symlink_file))
+                except Exception as sym_exc:
+                    logger.debug("Symlink creation skipped: %s", sym_exc)
+
+            # Reload Nginx
+            reload_ok, reload_msg = self._reload_nginx()
+            if not reload_ok:
+                logger.warning("Nginx reload warning on reset: %s", reload_msg)
+
+            logger.info("Nginx vhost for '%s' reset to default template.", domain)
+            return True, f"Nginx configuration for '{domain}' has been reset to default and reloaded."
+
+        except Exception as exc:
+            err_msg = f"Failed to reset vhost for '{domain}': {exc}"
+            logger.exception(err_msg)
+            return False, err_msg

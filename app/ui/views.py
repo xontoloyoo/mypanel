@@ -6,6 +6,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from rich.console import Console, Group
 from rich.panel import Panel
+from rich.syntax import Syntax
 from rich.table import Table
 from rich.text import Text
 
@@ -707,3 +708,15 @@ def render_menu(title: str, options: List[Tuple[str, str]], description: str = "
         border_style="cyan",
         padding=(0, 1),
     )
+
+
+def render_vhost_content(domain: str, content: str) -> None:
+    """Display Nginx virtual host configuration with syntax highlighting and line numbers.
+
+    Args:
+        domain: Domain name.
+        content: Nginx configuration file content string.
+    """
+    syntax = Syntax(content, "nginx", theme="monokai", line_numbers=True, word_wrap=True)
+    console.print(Panel(syntax, title=f"[bold cyan]Nginx Configuration: {domain}[/bold cyan]", border_style="cyan"))
+

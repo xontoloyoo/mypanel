@@ -2,9 +2,10 @@
 
 from datetime import timedelta
 import os
+from pathlib import Path
 import platform
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import psutil
 
@@ -237,16 +238,83 @@ class SystemManager:
 
     @staticmethod
     def get_service_status(service_name: str) -> Dict[str, Any]:
-        """Check whether a systemd service is active/running.
+        """Check whether a systemd service is active/running with smart aliasing.
 
         Args:
-            service_name: Name of the service (e.g., 'nginx', 'mysql').
+            service_name: Name of the service (e.g., 'nginx', 'mysql', 'php-fpm').
 
         Returns:
             Dict[str, Any]: Service status dictionary.
         """
+        # 1. Special handling for PHP-FPM (Debian/Ubuntu versioned daemons: php8.2-fpm, php8.3-fpm, etc.)
+        if service_name in ("php-fpm", "php"):
+            # Check generic php-fpm first
+            res = run_cmd("systemctl is-active php-fpm")
+            st = res.stdout.strip().lower()
+            if st == "active":
+                return {"service": "php-fpm", "status": "active", "is_active": True}
+
+            # Discover installed PHP versions
+            candidates: List[str] = []
+            etc_php = Path("/etc/php")
+            if etc_php.exists() and etc_php.is_dir():
+                try:
+                    for v_dir in sorted(etc_php.iterdir(), reverse=True):
+                        if (v_dir / "fpm").is_dir():
+                            candidates.append(f"php{v_dir.name}-fpm")
+                except Exception:
+                    pass
+
+            for fallback_ver in ["php8.2-fpm", "php8.3-fpm", "php8.1-fpm", "php8.0-fpm", "php7.4-fpm"]:
+                if fallback_ver not in candidates:
+                    candidates.append(fallback_ver)
+
+            installed_inactive: Optional[Tuple[str, str]] = None
+            for cand in candidates:
+                c_res = run_cmd(f"systemctl is-active {cand}")
+                c_st = c_res.stdout.strip().lower()
+                if c_st == "active":
+                    return {
+                        "service": "php-fpm",
+                        "status": f"active ({cand})",
+                        "is_active": True,
+                    }
+                elif c_st in ("inactive", "failed", "dead", "activating"):
+                    if not installed_inactive:
+                        installed_inactive = (cand, c_st)
+
+            if installed_inactive:
+                cand_name, cand_st = installed_inactive
+                return {
+                    "service": "php-fpm",
+                    "status": f"{cand_st} ({cand_name})",
+                    "is_active": False,
+                }
+
+            is_not_installed = (
+                not res.success
+                and ("not found" in res.stderr.lower() or "not-found" in res.stderr.lower())
+            )
+            return {
+                "service": "php-fpm",
+                "status": "not-installed" if is_not_installed else (st or "inactive"),
+                "is_active": False,
+            }
+
+        # 2. Standard Service Check
         result = run_cmd(f"systemctl is-active {service_name}")
         status_text = result.stdout.strip().lower()
+
+        # Check mariadb alias if mysql is queried
+        if service_name == "mysql" and status_text != "active":
+            m_res = run_cmd("systemctl is-active mariadb")
+            m_st = m_res.stdout.strip().lower()
+            if m_st == "active":
+                return {
+                    "service": "mysql",
+                    "status": "active (mariadb)",
+                    "is_active": True,
+                }
 
         if not status_text and not result.success:
             if "not found" in result.stderr.lower() or "not-found" in result.stderr.lower():

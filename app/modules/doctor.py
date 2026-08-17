@@ -12,7 +12,7 @@ import psutil
 from app.core.database import DB_PATH, Database, get_db, init_db
 from app.core.executor import run_cmd
 from app.core.logger import BASE_DIR, get_logger
-from app.modules.system import format_bytes
+from app.modules.system import SystemManager, format_bytes
 
 logger = get_logger("doctor")
 
@@ -116,41 +116,41 @@ class PanelDoctor:
     def _check_services(self) -> List[DiagnosticItem]:
         """Check active status of key system services."""
         items: List[DiagnosticItem] = []
-        services = ["nginx", "mariadb", "mysql", "ufw", "cron"]
+        services = ["nginx", "mysql", "ufw", "cron", "php-fpm"]
 
         for svc in services:
-            res = run_cmd(f"systemctl is-active {svc}")
-            out = res.stdout.strip().lower()
+            st = SystemManager.get_service_status(svc)
+            is_active = st.get("is_active", False)
+            status_desc = st.get("status", "inactive")
 
-            if "active" in out and "inactive" not in out:
+            if is_active:
                 items.append(
                     DiagnosticItem(
                         category="Services",
                         name=f"Service '{svc}'",
                         status="passed",
-                        message="Service is active and running.",
+                        message=f"Service is active and running ({status_desc}).",
                     )
                 )
-            elif "inactive" in out or "failed" in out or "dead" in out:
+            elif status_desc == "not-installed":
                 items.append(
                     DiagnosticItem(
                         category="Services",
                         name=f"Service '{svc}'",
                         status="warning",
-                        message=f"Service is {out}.",
-                        fixable=True,
-                        fix_action=f"restart_service_{svc}",
+                        message="Service binary/unit not installed in current environment.",
+                        fixable=False,
                     )
                 )
             else:
-                # Fallback for environments without systemctl
                 items.append(
                     DiagnosticItem(
                         category="Services",
                         name=f"Service '{svc}'",
                         status="warning",
-                        message="systemctl not available in current environment.",
-                        fixable=False,
+                        message=f"Service status: {status_desc}.",
+                        fixable=True,
+                        fix_action=f"restart_service_{svc}",
                     )
                 )
 
@@ -463,7 +463,13 @@ class PanelDoctor:
 
             elif action.startswith("restart_service_"):
                 svc_name = action.replace("restart_service_", "")
-                res = run_cmd(f"systemctl restart {svc_name}")
+                if svc_name == "php-fpm":
+                    res = run_cmd("systemctl restart php8.2-fpm || systemctl restart php8.3-fpm || systemctl restart php8.1-fpm || systemctl restart php-fpm")
+                elif svc_name == "mysql":
+                    res = run_cmd("systemctl restart mysql || systemctl restart mariadb")
+                else:
+                    res = run_cmd(f"systemctl restart {svc_name}")
+
                 if res.success:
                     results.append((f"Restart Service '{svc_name}'", True, "Service restarted successfully."))
                     logger.info("Auto-repair: Restarted service '%s'.", svc_name)

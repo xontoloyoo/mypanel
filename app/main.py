@@ -65,6 +65,7 @@ from app.ui.views import (
     render_sites_table,
     render_swap_info,
     render_tuner_dashboard,
+    render_vhost_content,
     view_live_log_stream,
 )
 
@@ -113,13 +114,20 @@ class PanelApp:
                 ("2", "Delete Website"),
                 ("3", "Issue SSL Certificate (Let's Encrypt)"),
                 ("4", "Disable SSL Certificate"),
-                ("5", "Refresh List"),
+                ("5", "View Nginx Vhost Config          [V]"),
+                ("6", "Edit Nginx Vhost Config (CLI)    [E]"),
+                ("7", "Reset Nginx Config to Default    [R]"),
+                ("8", "Refresh List"),
                 ("0", "Back to Main Menu"),
             ]
             console.print(render_menu("Website Actions", menu_options))
             console.print(render_footer())
 
-            choice = ask_menu_choice("Choose action", ["1", "2", "3", "4", "5", "0"], default="0")
+            choice = ask_menu_choice(
+                "Choose action",
+                ["1", "2", "3", "4", "5", "6", "7", "8", "v", "V", "e", "E", "r", "R", "0"],
+                default="0",
+            )
 
             if choice == "1":
                 inputs = ask_site_inputs()
@@ -178,7 +186,53 @@ class PanelApp:
                         ok, msg = self.ssl_mgr.disable_ssl(domain)
                     show_message(msg, "success" if ok else "error")
                     pause_for_user()
-            elif choice == "5":
+            elif choice in ("5", "v", "V"):
+                if not sites:
+                    show_message("No websites registered.", "warning")
+                    pause_for_user()
+                    continue
+
+                domain = Prompt.ask("\nEnter domain name to view Nginx config", console=console).strip().lower()
+                if not domain:
+                    continue
+
+                ok, content = self.site_mgr.read_vhost_config(domain)
+                if ok:
+                    clear_screen()
+                    render_vhost_content(domain, content)
+                    pause_for_user("Press Enter to return to Website menu...")
+                else:
+                    show_message(content, "error")
+                    pause_for_user()
+            elif choice in ("6", "e", "E"):
+                if not sites:
+                    show_message("No websites registered.", "warning")
+                    pause_for_user()
+                    continue
+
+                domain = Prompt.ask("\nEnter domain name to edit Nginx config", console=console).strip().lower()
+                if not domain:
+                    continue
+
+                ok, msg = self.site_mgr.edit_vhost_config_interactive(domain)
+                show_message(msg, "success" if ok else "error")
+                pause_for_user()
+            elif choice in ("7", "r", "R"):
+                if not sites:
+                    show_message("No websites registered.", "warning")
+                    pause_for_user()
+                    continue
+
+                domain = Prompt.ask("\nEnter domain name to reset Nginx config", console=console).strip().lower()
+                if not domain:
+                    continue
+
+                if confirm_action(f"Are you sure you want to RESET Nginx config for '{domain}' to panel default template?"):
+                    with console.status(f"[bold yellow]Resetting Nginx configuration for '{domain}'..."):
+                        ok, msg = self.site_mgr.reset_vhost_config(domain)
+                    show_message(msg, "success" if ok else "error")
+                    pause_for_user()
+            elif choice == "8":
                 continue
             elif choice == "0":
                 break

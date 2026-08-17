@@ -109,6 +109,7 @@ class DatabaseManager:
         db_user: Optional[str] = None,
         db_pass: Optional[str] = None,
         charset: str = "utf8mb4",
+        host: str = "localhost",
     ) -> Tuple[bool, str]:
         """Create a new MySQL/MariaDB database and user with privileges.
 
@@ -117,12 +118,14 @@ class DatabaseManager:
             db_user: Database user (defaults to db_name if not provided).
             db_pass: Password for user (generates random password if None).
             charset: Character set (default 'utf8mb4').
+            host: Host matcher for user (default 'localhost').
 
         Returns:
             Tuple[bool, str]: (Success boolean, Status/error message).
         """
         db_name = db_name.strip()
         user_name = (db_user or db_name).strip()
+        host = host.strip() or "localhost"
 
         # 1. Validation
         if not self.validate_identifier(db_name):
@@ -138,19 +141,32 @@ class DatabaseManager:
         password = db_pass if db_pass else generate_secure_password(16)
         collate = f"{charset}_unicode_ci" if charset == "utf8mb4" else f"{charset}_general_ci"
 
-        # 3. SQL statements
-        sql = (
-            f"CREATE DATABASE IF NOT EXISTS `{db_name}` CHARACTER SET {charset} COLLATE {collate}; "
-            f"CREATE USER IF NOT EXISTS '{user_name}'@'localhost' IDENTIFIED BY '{password}'; "
-            f"GRANT ALL PRIVILEGES ON `{db_name}`.* TO '{user_name}'@'localhost'; "
-            f"FLUSH PRIVILEGES;"
-        )
+        # 3. Create database
+        sql_db = f"CREATE DATABASE IF NOT EXISTS `{db_name}` CHARACTER SET {charset} COLLATE {collate};"
+        ok_db, msg_db = self._exec_sql(sql_db)
+        if not ok_db:
+            return False, f"MySQL database creation error: {msg_db}"
 
-        ok, msg = self._exec_sql(sql)
-        if not ok:
-            return False, f"MySQL execution error: {msg}"
+        # 4. Create user & grant privileges with multi-engine fallback
+        user_queries = [
+            f"CREATE USER IF NOT EXISTS '{user_name}'@'{host}' IDENTIFIED BY '{password}'; GRANT ALL PRIVILEGES ON `{db_name}`.* TO '{user_name}'@'{host}'; FLUSH PRIVILEGES;",
+            f"GRANT ALL PRIVILEGES ON `{db_name}`.* TO '{user_name}'@'{host}' IDENTIFIED BY '{password}'; FLUSH PRIVILEGES;",
+            f"CREATE USER IF NOT EXISTS '{user_name}'@'{host}'; SET PASSWORD FOR '{user_name}'@'{host}' = PASSWORD('{password}'); GRANT ALL PRIVILEGES ON `{db_name}`.* TO '{user_name}'@'{host}'; FLUSH PRIVILEGES;",
+            f"CREATE USER IF NOT EXISTS '{user_name}'@'{host}'; SET PASSWORD FOR '{user_name}'@'{host}' = '{password}'; GRANT ALL PRIVILEGES ON `{db_name}`.* TO '{user_name}'@'{host}'; FLUSH PRIVILEGES;",
+        ]
 
-        # 4. Save metadata to internal SQLite
+        ok_u = False
+        last_u_err = ""
+        for u_sql in user_queries:
+            ok_u, msg_u = self._exec_sql(u_sql)
+            if ok_u:
+                break
+            last_u_err = msg_u
+
+        if not ok_u:
+            return False, f"MySQL user creation error: {last_u_err}"
+
+        # 5. Save metadata to internal SQLite
         try:
             with self.db:
                 self.db.execute(
@@ -160,24 +176,129 @@ class DatabaseManager:
                     """,
                     (db_name, user_name, password, charset),
                 )
-            logger.info("Database '%s' with user '%s' created successfully.", db_name, user_name)
+            logger.info("Database '%s' with user '%s'@'%s' created successfully.", db_name, user_name, host)
             return True, f"Database '{db_name}' and user '{user_name}' created successfully."
         except Exception as exc:
             err_msg = f"Failed to record database in registry: {exc}"
             logger.exception(err_msg)
             return False, err_msg
 
-    def delete_database(self, db_name: str, delete_user: bool = True) -> Tuple[bool, str]:
+    def create_user(
+        self,
+        db_user: Optional[str] = None,
+        db_pass: Optional[str] = None,
+        host: str = "localhost",
+        username: Optional[str] = None,
+        password: Optional[str] = None,
+    ) -> Tuple[bool, str]:
+        """Create a standalone MySQL database user.
+
+        Args:
+            db_user: Database username.
+            db_pass: User password.
+            host: Host matcher (default 'localhost').
+            username: Alternative keyword for user.
+            password: Alternative keyword for password.
+
+        Returns:
+            Tuple[bool, str]: (Success boolean, Status/error message).
+        """
+        user = (db_user or username or "").strip()
+        pwd = (db_pass or password or "").strip()
+        host = host.strip() or "localhost"
+        if not self.validate_identifier(user):
+            return False, f"Invalid database username format: '{user}'."
+
+        candidate_queries = [
+            f"CREATE USER IF NOT EXISTS '{user}'@'{host}' IDENTIFIED BY '{pwd}'; FLUSH PRIVILEGES;",
+            f"CREATE USER IF NOT EXISTS '{user}'@'{host}'; SET PASSWORD FOR '{user}'@'{host}' = PASSWORD('{pwd}'); FLUSH PRIVILEGES;",
+            f"CREATE USER IF NOT EXISTS '{user}'@'{host}'; SET PASSWORD FOR '{user}'@'{host}' = '{pwd}'; FLUSH PRIVILEGES;",
+            f"GRANT ALL PRIVILEGES ON *.* TO '{user}'@'{host}' IDENTIFIED BY '{pwd}'; FLUSH PRIVILEGES;",
+        ]
+
+        ok = False
+        last_err = ""
+        for sql in candidate_queries:
+            ok, msg = self._exec_sql(sql)
+            if ok:
+                break
+            last_err = msg
+
+        if not ok:
+            return False, f"Failed to create MySQL user: {last_err}"
+        return True, f"User '{user}'@'{host}' created successfully."
+
+    def delete_user(
+        self,
+        db_user: Optional[str] = None,
+        host: str = "localhost",
+        username: Optional[str] = None,
+    ) -> Tuple[bool, str]:
+        """Drop an existing MySQL database user.
+
+        Args:
+            db_user: Database username.
+            host: Host matcher (default 'localhost').
+            username: Alternative keyword for user.
+
+        Returns:
+            Tuple[bool, str]: (Success boolean, Status/error message).
+        """
+        user = (db_user or username or "").strip()
+        host = host.strip() or "localhost"
+        sql = f"DROP USER IF EXISTS '{user}'@'{host}'; FLUSH PRIVILEGES;"
+        ok, msg = self._exec_sql(sql)
+        if not ok:
+            return False, f"Failed to delete MySQL user: {msg}"
+        return True, f"User '{user}'@'{host}' deleted."
+
+    def grant_privileges(
+        self,
+        db_name: Optional[str] = None,
+        db_user: Optional[str] = None,
+        host: str = "localhost",
+        username: Optional[str] = None,
+        database_name: Optional[str] = None,
+    ) -> Tuple[bool, str]:
+        """Grant all privileges on a database to a user.
+
+        Args:
+            db_name: Target database name.
+            db_user: Database username.
+            host: Host matcher (default 'localhost').
+            username: Alternative keyword for user.
+            database_name: Alternative keyword for database.
+
+        Returns:
+            Tuple[bool, str]: (Success boolean, Status/error message).
+        """
+        target_db = (db_name or database_name or "").strip()
+        target_user = (db_user or username or "").strip()
+        host = host.strip() or "localhost"
+        sql = f"GRANT ALL PRIVILEGES ON `{target_db}`.* TO '{target_user}'@'{host}'; FLUSH PRIVILEGES;"
+        ok, msg = self._exec_sql(sql)
+        if not ok:
+            return False, f"Failed to grant privileges: {msg}"
+        return True, "Privileges granted."
+
+    def delete_database(
+        self,
+        db_name: str,
+        delete_user: bool = True,
+        host: str = "localhost",
+    ) -> Tuple[bool, str]:
         """Delete an existing MySQL database and optionally remove its user.
 
         Args:
             db_name: Database name to drop.
             delete_user: Whether to also drop the associated user (default True).
+            host: Host matcher (default 'localhost').
 
         Returns:
             Tuple[bool, str]: (Success boolean, Status/error message).
         """
         db_name = db_name.strip()
+        host = host.strip() or "localhost"
         record = self.get_database(db_name)
         if not record:
             return False, f"Database '{db_name}' not found in registry."
@@ -185,7 +306,7 @@ class DatabaseManager:
         user_name = record.get("db_user")
         sql_parts = [f"DROP DATABASE IF EXISTS `{db_name}`;"]
         if delete_user and user_name:
-            sql_parts.append(f"DROP USER IF EXISTS '{user_name}'@'localhost';")
+            sql_parts.append(f"DROP USER IF EXISTS '{user_name}'@'{host}';")
             sql_parts.append("FLUSH PRIVILEGES;")
 
         sql = " ".join(sql_parts)
@@ -248,17 +369,19 @@ class DatabaseManager:
             logger.error("Failed to get database '%s': %s", db_name, exc)
             return None
 
-    def change_password(self, db_user: str, new_pass: str) -> Tuple[bool, str]:
+    def change_password(self, db_user: str, new_pass: str, host: str = "localhost") -> Tuple[bool, str]:
         """Update password for an existing database user in MySQL and SQLite.
 
         Args:
             db_user: Database username.
             new_pass: New password.
+            host: Host matcher for MySQL user (default 'localhost').
 
         Returns:
             Tuple[bool, str]: (Success boolean, Status/error message).
         """
         db_user = db_user.strip()
+        host = host.strip() or "localhost"
         if not new_pass or len(new_pass) < 6:
             return False, "Password must be at least 6 characters long."
 
@@ -267,11 +390,26 @@ class DatabaseManager:
         if not records:
             return False, f"User '{db_user}' not found in registry."
 
-        # Execute MySQL password update
-        sql = f"ALTER USER '{db_user}'@'localhost' IDENTIFIED BY '{new_pass}'; FLUSH PRIVILEGES;"
-        ok, msg = self._exec_sql(sql)
+        # Execute MySQL password update across MySQL 8.x, 5.7, MariaDB 10.x, 11.x
+        candidate_queries = [
+            f"ALTER USER '{db_user}'@'{host}' IDENTIFIED BY '{new_pass}'; FLUSH PRIVILEGES;",
+            f"CREATE USER IF NOT EXISTS '{db_user}'@'{host}' IDENTIFIED BY '{new_pass}'; ALTER USER '{db_user}'@'{host}' IDENTIFIED BY '{new_pass}'; FLUSH PRIVILEGES;",
+            f"SET PASSWORD FOR '{db_user}'@'{host}' = PASSWORD('{new_pass}'); FLUSH PRIVILEGES;",
+            f"SET PASSWORD FOR '{db_user}'@'{host}' = '{new_pass}'; FLUSH PRIVILEGES;",
+            f"ALTER USER '{db_user}'@'{host}' IDENTIFIED VIA mysql_native_password USING PASSWORD('{new_pass}'); FLUSH PRIVILEGES;",
+            f"GRANT ALL PRIVILEGES ON *.* TO '{db_user}'@'{host}' IDENTIFIED BY '{new_pass}'; FLUSH PRIVILEGES;",
+        ]
+
+        ok = False
+        last_err = ""
+        for sql in candidate_queries:
+            ok, msg = self._exec_sql(sql)
+            if ok:
+                break
+            last_err = msg
+
         if not ok:
-            return False, f"Failed to update MySQL user password: {msg}"
+            return False, f"Failed to update MySQL user password: {last_err}"
 
         # Update SQLite record
         try:
@@ -280,7 +418,7 @@ class DatabaseManager:
                     "UPDATE databases SET db_pass = ? WHERE db_user = ?;",
                     (new_pass, db_user),
                 )
-            logger.info("Password updated for user '%s'", db_user)
+            logger.info("Password updated for user '%s'@'%s'", db_user, host)
             return True, f"Password for user '{db_user}' updated successfully."
         except Exception as exc:
             err_msg = f"Failed to update password in registry: {exc}"

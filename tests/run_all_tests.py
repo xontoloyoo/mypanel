@@ -160,6 +160,22 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         db=db,
     )
 
+    import app.modules.ssl
+    orig_ssl_run_cmd = app.modules.ssl.run_cmd
+
+    # Mock certbot ACME execution for dummy test domains to avoid live network registration failures
+    def mock_ssl_run_cmd(cmd, timeout=60, check_root=False):
+        cmd_str = cmd if isinstance(cmd, str) else " ".join(cmd)
+        if "certbot" in cmd_str:
+            d_cert_dir = cert_base / "mysite.local"
+            d_cert_dir.mkdir(parents=True, exist_ok=True)
+            (d_cert_dir / "fullchain.pem").write_text("-----BEGIN CERTIFICATE-----\nMOCK\n-----END CERTIFICATE-----\n", encoding="utf-8")
+            (d_cert_dir / "privkey.pem").write_text("-----BEGIN PRIVATE KEY-----\nMOCK\n-----END PRIVATE KEY-----\n", encoding="utf-8")
+            return ExecutionResult(success=True, stdout="Mock certificate generated", stderr="", returncode=0)
+        return orig_ssl_run_cmd(cmd, timeout=timeout, check_root=check_root)
+
+    app.modules.ssl.run_cmd = mock_ssl_run_cmd
+
     try:
         # 1. Create Site
         ok, msg = site_mgr.create_site(domain="mysite.local", php_version="8.2")
@@ -196,13 +212,30 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         plain_content = vhost_file.read_text(encoding="utf-8")
         assert "listen 443 ssl" not in plain_content
 
-        # 4. Delete Site
+        # 4. Test View & Reset Vhost Config
+        vhost_p = site_mgr.get_vhost_path("mysite.local")
+        checks += 1
+        assert vhost_p == str(vhost_file), f"Unexpected vhost path: {vhost_p}"
+
+        ok_read, read_content = site_mgr.read_vhost_config("mysite.local")
+        checks += 1
+        assert ok_read, f"Failed to read vhost config: {read_content}"
+        assert "server_name mysite.local" in read_content
+
+        ok_reset, msg_reset = site_mgr.reset_vhost_config("mysite.local")
+        checks += 1
+        assert ok_reset, f"Failed to reset vhost config: {msg_reset}"
+        reset_content = vhost_file.read_text(encoding="utf-8")
+        assert "include /etc/nginx/waf/waf_default.conf;" in reset_content
+
+        # 5. Delete Site
         ok_del, msg_del = site_mgr.delete_site("mysite.local", delete_root=True)
         checks += 1
         assert ok_del, f"Failed to delete site: {msg_del}"
         assert not vhost_file.exists(), "Vhost file was not removed"
 
     finally:
+        app.modules.ssl.run_cmd = orig_ssl_run_cmd
         db.close()
 
     return checks, None
@@ -212,7 +245,7 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
 # Suite 3: Database Management
 # ==============================================================================
 def run_suite_3(temp_dir: Path) -> Tuple[int, Optional[str]]:
-    """Test DatabaseManager creation, secure password generator, and deletion."""
+    """Test DatabaseManager creation, secure password generator, user privileges, and deletion."""
     checks = 0
     suite_dir = temp_dir / "suite_3"
     suite_dir.mkdir(parents=True, exist_ok=True)
@@ -231,8 +264,8 @@ def run_suite_3(temp_dir: Path) -> Tuple[int, Optional[str]]:
         assert any(c.isdigit() for c in pwd), "Password missing digit"
         assert any(c in "!#%*+-_=@$" for c in pwd), "Password missing special symbol"
 
-        # 2. Create Database
-        ok, msg = db_mgr.create_database("store_db", "store_user", "SecurePass123!@#", "utf8mb4")
+        # 2. Create Database & User with localhost host matching
+        ok, msg = db_mgr.create_database("store_db", "store_user", "SecurePass123!@#", "utf8mb4", host="localhost")
         checks += 1
         assert ok, f"Failed to create database: {msg}"
 
@@ -242,13 +275,26 @@ def run_suite_3(temp_dir: Path) -> Tuple[int, Optional[str]]:
         assert len(dbs) == 1, "Database record not found in internal SQLite table"
         assert dbs[0]["db_name"] == "store_db"
 
-        # 3. Change Password
-        ok_pwd, msg_pwd = db_mgr.change_password("store_user", "NewSecurePass987!#")
+        # 3. Change Password with localhost host matching
+        ok_pwd, msg_pwd = db_mgr.change_password("store_user", "NewSecurePass987!#", host="localhost")
         checks += 1
         assert ok_pwd, f"Failed to change password: {msg_pwd}"
 
-        # 4. Delete Database
-        ok_del, msg_del = db_mgr.delete_database("store_db", delete_user=True)
+        # 4. Standalone User & Privileges Check
+        ok_u, msg_u = db_mgr.create_user("temp_user", "TempPass123!@#", host="localhost")
+        checks += 1
+        assert ok_u, f"Failed to create user: {msg_u}"
+
+        ok_gp, msg_gp = db_mgr.grant_privileges("store_db", "temp_user", host="localhost")
+        checks += 1
+        assert ok_gp, f"Failed to grant privileges: {msg_gp}"
+
+        ok_du, msg_du = db_mgr.delete_user("temp_user", host="localhost")
+        checks += 1
+        assert ok_du, f"Failed to delete user: {msg_du}"
+
+        # 5. Delete Database
+        ok_del, msg_del = db_mgr.delete_database("store_db", delete_user=True, host="localhost")
         checks += 1
         assert ok_del, f"Failed to delete database: {msg_del}"
         assert len(db_mgr.list_databases()) == 0, "Database was not removed from DB"
