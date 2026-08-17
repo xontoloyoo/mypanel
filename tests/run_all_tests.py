@@ -42,7 +42,7 @@ from app.modules.php_manager import PHPManager, POPULAR_EXTENSIONS, SECURITY_BAS
 from app.modules.site import SiteManager, WAF_DEFAULT_CONFIG, ensure_waf_snippet
 from app.modules.ssl import SSLManager
 from app.modules.system import SystemManager
-from app.modules.tuner import ConfigTuner, SwapManager, TUNER_REGISTRY
+from app.modules.tuner import ConfigTuner, SwapManager, TUNER_REGISTRY, ensure_nginx_security_conf
 from app.ui.views import colorize_log_line
 
 console = Console(safe_box=True)
@@ -713,6 +713,15 @@ def run_suite_10(temp_dir: Path) -> Tuple[int, Optional[str]]:
     assert "wp-admin" in waf_text, "Missing wp-admin scanner bot rule in WAF"
     assert "union.*select" in waf_text, "Missing SQLi rule in WAF"
     assert "(/\\.|%2e%2e|%2fetc%2fpasswd|/etc/passwd|/bin/sh|%00)" in waf_text, "Missing path traversal rule in WAF"
+
+    # 6. Verify Update-Proof Global Nginx Security Config
+    sec_file = mock_conf_dir / "00_global_security.conf"
+    ensure_nginx_security_conf(sec_file)
+    checks += 1
+    assert sec_file.exists(), "Global security conf was not created"
+    sec_text = sec_file.read_text(encoding="utf-8")
+    assert "server_tokens off;" in sec_text, "Missing server_tokens off in global security conf"
+    assert "client_body_timeout 10s;" in sec_text, "Missing client_body_timeout in global security conf"
 
     return checks, None
 
