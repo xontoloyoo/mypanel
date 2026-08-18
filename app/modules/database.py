@@ -102,8 +102,13 @@ class DatabaseManager:
         Returns:
             Tuple[bool, str]: (Success boolean, Output/Error message).
         """
-        # Escape double quotes for shell wrapper
-        sanitized_sql = sql_statement.replace('"', '\\"')
+        # Escape shell sensitive characters: \ -> \\, " -> \", ` -> \`, $ -> \$
+        sanitized_sql = (
+            sql_statement.replace("\\", "\\\\")
+            .replace('"', '\\"')
+            .replace("`", "\\`")
+            .replace("$", "\\$")
+        )
 
         if self.root_pass:
             cmd = f'mysql -u {self.root_user} -p"{self.root_pass}" -e "{sanitized_sql}"'
@@ -114,8 +119,13 @@ class DatabaseManager:
 
         if not res.success:
             err_lower = res.stderr.lower()
-            # Handle non-Linux or test environment where MySQL CLI is not present
-            if "not found" in err_lower or "not recognized" in err_lower:
+            # Only treat as mock mode if the mysql CLI binary itself is missing/unrecognized
+            if (
+                "mysql: not found" in err_lower
+                or "mysql: command not found" in err_lower
+                or "'mysql' is not recognized" in err_lower
+                or "cannot find the path specified" in err_lower
+            ):
                 logger.debug("MySQL CLI binary not available on host. Proceeding in mock mode.")
                 return True, "MySQL CLI not found on host (mock mode)"
             logger.error("MySQL query execution failed: %s | Query: %s", res.stderr, sql_statement)
@@ -167,23 +177,26 @@ class DatabaseManager:
         if not ok_db:
             return False, f"MySQL database creation error: {msg_db}"
 
-        # 4. Create user & grant privileges with multi-engine fallback
-        user_queries = [
-            f"CREATE USER IF NOT EXISTS '{user_name}'@'{host}' IDENTIFIED BY '{password}'; GRANT ALL PRIVILEGES ON `{db_name}`.* TO '{user_name}'@'{host}'; FLUSH PRIVILEGES;",
-            f"GRANT ALL PRIVILEGES ON `{db_name}`.* TO '{user_name}'@'{host}' IDENTIFIED BY '{password}'; FLUSH PRIVILEGES;",
-            f"CREATE USER IF NOT EXISTS '{user_name}'@'{host}'; SET PASSWORD FOR '{user_name}'@'{host}' = PASSWORD('{password}'); GRANT ALL PRIVILEGES ON `{db_name}`.* TO '{user_name}'@'{host}'; FLUSH PRIVILEGES;",
-            f"CREATE USER IF NOT EXISTS '{user_name}'@'{host}'; SET PASSWORD FOR '{user_name}'@'{host}' = '{password}'; GRANT ALL PRIVILEGES ON `{db_name}`.* TO '{user_name}'@'{host}'; FLUSH PRIVILEGES;",
-        ]
-
-        ok_u = False
+        # 4. Create user & grant privileges for both socket (localhost) and TCP (127.0.0.1)
+        target_hosts = ["localhost", "127.0.0.1"] if host in ("localhost", "127.0.0.1") else [host]
+        created_any = False
         last_u_err = ""
-        for u_sql in user_queries:
-            ok_u, msg_u = self._exec_sql(u_sql)
-            if ok_u:
-                break
-            last_u_err = msg_u
 
-        if not ok_u:
+        for h in target_hosts:
+            user_queries = [
+                f"CREATE USER IF NOT EXISTS '{user_name}'@'{h}' IDENTIFIED BY '{password}'; GRANT ALL PRIVILEGES ON `{db_name}`.* TO '{user_name}'@'{h}'; FLUSH PRIVILEGES;",
+                f"GRANT ALL PRIVILEGES ON `{db_name}`.* TO '{user_name}'@'{h}' IDENTIFIED BY '{password}'; FLUSH PRIVILEGES;",
+                f"CREATE USER IF NOT EXISTS '{user_name}'@'{h}'; SET PASSWORD FOR '{user_name}'@'{h}' = PASSWORD('{password}'); GRANT ALL PRIVILEGES ON `{db_name}`.* TO '{user_name}'@'{h}'; FLUSH PRIVILEGES;",
+                f"CREATE USER IF NOT EXISTS '{user_name}'@'{h}'; SET PASSWORD FOR '{user_name}'@'{h}' = '{password}'; GRANT ALL PRIVILEGES ON `{db_name}`.* TO '{user_name}'@'{h}'; FLUSH PRIVILEGES;",
+            ]
+            for u_sql in user_queries:
+                ok_u, msg_u = self._exec_sql(u_sql)
+                if ok_u:
+                    created_any = True
+                    break
+                last_u_err = msg_u
+
+        if not created_any:
             return False, f"MySQL user creation error: {last_u_err}"
 
         # 5. Save metadata to internal SQLite
@@ -229,24 +242,27 @@ class DatabaseManager:
         if not self.validate_identifier(user):
             return False, f"Invalid database username format: '{user}'."
 
-        candidate_queries = [
-            f"CREATE USER IF NOT EXISTS '{user}'@'{host}' IDENTIFIED BY '{pwd}'; FLUSH PRIVILEGES;",
-            f"CREATE USER IF NOT EXISTS '{user}'@'{host}'; SET PASSWORD FOR '{user}'@'{host}' = PASSWORD('{pwd}'); FLUSH PRIVILEGES;",
-            f"CREATE USER IF NOT EXISTS '{user}'@'{host}'; SET PASSWORD FOR '{user}'@'{host}' = '{pwd}'; FLUSH PRIVILEGES;",
-            f"GRANT ALL PRIVILEGES ON *.* TO '{user}'@'{host}' IDENTIFIED BY '{pwd}'; FLUSH PRIVILEGES;",
-        ]
-
-        ok = False
+        target_hosts = ["localhost", "127.0.0.1"] if host in ("localhost", "127.0.0.1") else [host]
+        created_any = False
         last_err = ""
-        for sql in candidate_queries:
-            ok, msg = self._exec_sql(sql)
-            if ok:
-                break
-            last_err = msg
 
-        if not ok:
+        for h in target_hosts:
+            candidate_queries = [
+                f"CREATE USER IF NOT EXISTS '{user}'@'{h}' IDENTIFIED BY '{pwd}'; FLUSH PRIVILEGES;",
+                f"CREATE USER IF NOT EXISTS '{user}'@'{h}'; SET PASSWORD FOR '{user}'@'{h}' = PASSWORD('{pwd}'); FLUSH PRIVILEGES;",
+                f"CREATE USER IF NOT EXISTS '{user}'@'{h}'; SET PASSWORD FOR '{user}'@'{h}' = '{pwd}'; FLUSH PRIVILEGES;",
+                f"GRANT ALL PRIVILEGES ON *.* TO '{user}'@'{h}' IDENTIFIED BY '{pwd}'; FLUSH PRIVILEGES;",
+            ]
+            for sql in candidate_queries:
+                ok, msg = self._exec_sql(sql)
+                if ok:
+                    created_any = True
+                    break
+                last_err = msg
+
+        if not created_any:
             return False, f"Failed to create MySQL user: {last_err}"
-        return True, f"User '{user}'@'{host}' created successfully."
+        return True, f"User '{user}' created successfully."
 
     def delete_user(
         self,
@@ -266,11 +282,13 @@ class DatabaseManager:
         """
         user = (db_user or username or "").strip()
         host = host.strip() or "localhost"
-        sql = f"DROP USER IF EXISTS '{user}'@'{host}'; FLUSH PRIVILEGES;"
-        ok, msg = self._exec_sql(sql)
-        if not ok:
-            return False, f"Failed to delete MySQL user: {msg}"
-        return True, f"User '{user}'@'{host}' deleted."
+        target_hosts = ["localhost", "127.0.0.1"] if host in ("localhost", "127.0.0.1") else [host]
+        
+        for h in target_hosts:
+            sql = f"DROP USER IF EXISTS '{user}'@'{h}'; FLUSH PRIVILEGES;"
+            self._exec_sql(sql)
+
+        return True, f"User '{user}' deleted."
 
     def grant_privileges(
         self,
@@ -295,10 +313,12 @@ class DatabaseManager:
         target_db = (db_name or database_name or "").strip()
         target_user = (db_user or username or "").strip()
         host = host.strip() or "localhost"
-        sql = f"GRANT ALL PRIVILEGES ON `{target_db}`.* TO '{target_user}'@'{host}'; FLUSH PRIVILEGES;"
-        ok, msg = self._exec_sql(sql)
-        if not ok:
-            return False, f"Failed to grant privileges: {msg}"
+        target_hosts = ["localhost", "127.0.0.1"] if host in ("localhost", "127.0.0.1") else [host]
+
+        for h in target_hosts:
+            sql = f"GRANT ALL PRIVILEGES ON `{target_db}`.* TO '{target_user}'@'{h}'; FLUSH PRIVILEGES;"
+            self._exec_sql(sql)
+
         return True, "Privileges granted."
 
     def delete_database(
@@ -324,9 +344,11 @@ class DatabaseManager:
             return False, f"Database '{db_name}' not found in registry."
 
         user_name = record.get("db_user")
+        target_hosts = ["localhost", "127.0.0.1"] if host in ("localhost", "127.0.0.1") else [host]
         sql_parts = [f"DROP DATABASE IF EXISTS `{db_name}`;"]
         if delete_user and user_name:
-            sql_parts.append(f"DROP USER IF EXISTS '{user_name}'@'{host}';")
+            for h in target_hosts:
+                sql_parts.append(f"DROP USER IF EXISTS '{user_name}'@'{h}';")
             sql_parts.append("FLUSH PRIVILEGES;")
 
         sql = " ".join(sql_parts)
@@ -410,26 +432,21 @@ class DatabaseManager:
         if not records:
             return False, f"User '{db_user}' not found in registry."
 
-        # Execute MySQL password update across MySQL 8.x, 5.7, MariaDB 10.x, 11.x
-        candidate_queries = [
-            f"ALTER USER '{db_user}'@'{host}' IDENTIFIED BY '{new_pass}'; FLUSH PRIVILEGES;",
-            f"CREATE USER IF NOT EXISTS '{db_user}'@'{host}' IDENTIFIED BY '{new_pass}'; ALTER USER '{db_user}'@'{host}' IDENTIFIED BY '{new_pass}'; FLUSH PRIVILEGES;",
-            f"SET PASSWORD FOR '{db_user}'@'{host}' = PASSWORD('{new_pass}'); FLUSH PRIVILEGES;",
-            f"SET PASSWORD FOR '{db_user}'@'{host}' = '{new_pass}'; FLUSH PRIVILEGES;",
-            f"ALTER USER '{db_user}'@'{host}' IDENTIFIED VIA mysql_native_password USING PASSWORD('{new_pass}'); FLUSH PRIVILEGES;",
-            f"GRANT ALL PRIVILEGES ON *.* TO '{db_user}'@'{host}' IDENTIFIED BY '{new_pass}'; FLUSH PRIVILEGES;",
-        ]
+        target_hosts = ["localhost", "127.0.0.1"] if host in ("localhost", "127.0.0.1") else [host]
 
-        ok = False
-        last_err = ""
-        for sql in candidate_queries:
-            ok, msg = self._exec_sql(sql)
-            if ok:
-                break
-            last_err = msg
-
-        if not ok:
-            return False, f"Failed to update MySQL user password: {last_err}"
+        for h in target_hosts:
+            candidate_queries = [
+                f"ALTER USER '{db_user}'@'{h}' IDENTIFIED BY '{new_pass}'; FLUSH PRIVILEGES;",
+                f"CREATE USER IF NOT EXISTS '{db_user}'@'{h}' IDENTIFIED BY '{new_pass}'; ALTER USER '{db_user}'@'{h}' IDENTIFIED BY '{new_pass}'; FLUSH PRIVILEGES;",
+                f"SET PASSWORD FOR '{db_user}'@'{h}' = PASSWORD('{new_pass}'); FLUSH PRIVILEGES;",
+                f"SET PASSWORD FOR '{db_user}'@'{h}' = '{new_pass}'; FLUSH PRIVILEGES;",
+                f"ALTER USER '{db_user}'@'{h}' IDENTIFIED VIA mysql_native_password USING PASSWORD('{new_pass}'); FLUSH PRIVILEGES;",
+                f"GRANT ALL PRIVILEGES ON *.* TO '{db_user}'@'{h}' IDENTIFIED BY '{new_pass}'; FLUSH PRIVILEGES;",
+            ]
+            for sql in candidate_queries:
+                ok, msg = self._exec_sql(sql)
+                if ok:
+                    break
 
         # Update SQLite record
         try:
