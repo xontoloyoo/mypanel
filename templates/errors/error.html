@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><!--# echo var="status" default="Error" --> <!--# if expr="$status = 403" -->Forbidden<!--# elif expr="$status = 404" -->Not Found<!--# elif expr="$status = 500" -->Internal Server Error<!--# elif expr="$status = 502" -->Bad Gateway<!--# elif expr="$status = 503" -->Service Temporarily Unavailable<!--# elif expr="$status = 504" -->Gateway Timeout<!--# else -->Error<!--# endif --></title>
+    <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+body{background:#000;color:#f8fafc;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.container{text-align:center;max-width:500px;width:100%}
+.code{font-size:110px;font-weight:900;color:#fff;line-height:1;margin-bottom:16px;position:relative;display:inline-block;letter-spacing:4px;animation:glitch-skew 1s infinite linear alternate-reverse}
+.code::before,.code::after{content:"<!--# echo var='status' default='404' -->";position:absolute;top:0;left:0;width:100%;height:100%;background:#000}
+.code::before{left:2px;text-shadow:-2px 0 #f05;clip:rect(44px,450px,56px,0);animation:glitch-anim 5s infinite linear alternate-reverse}
+.code::after{left:-2px;text-shadow:-2px 0 #00ffff,0 2px #f05;clip:rect(85px,450px,140px,0);animation:glitch-anim2 5s infinite linear alternate-reverse}
+.title{font-size:20px;font-weight:600;margin-bottom:10px;color:#e2e8f0;letter-spacing:1px;text-transform:uppercase}
+.desc{font-size:14px;color:#64748b;line-height:1.6}
+@keyframes glitch-anim {
+0%{clip:rect(31px,9999px,94px,0)}
+10%{clip:rect(112px,9999px,76px,0)}
+20%{clip:rect(85px,9999px,5px,0)}
+30%{clip:rect(27px,9999px,115px,0)}
+40%{clip:rect(110px,9999px,23px,0)}
+50%{clip:rect(48px,9999px,98px,0)}
+60%{clip:rect(12px,9999px,62px,0)}
+70%{clip:rect(95px,9999px,141px,0)}
+80%{clip:rect(4px,9999px,55px,0)}
+90%{clip:rect(72px,9999px,120px,0)}
+100%{clip:rect(50px,9999px,80px,0)}
+}
+@keyframes glitch-anim2 {
+0%{clip:rect(76px,9999px,11px,0)}
+10%{clip:rect(23px,9999px,130px,0)}
+20%{clip:rect(98px,9999px,45px,0)}
+30%{clip:rect(5px,9999px,89px,0)}
+40%{clip:rect(120px,9999px,12px,0)}
+50%{clip:rect(62px,9999px,145px,0)}
+70%{clip:rect(15px,9999px,95px,0)}
+90%{clip:rect(88px,9999px,34px,0)}
+100%{clip:rect(40px,9999px,110px,0)}
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Angka Status Code Dinamis -->
+        <div class="code"><!--# echo var="status" default="404" --></div>
+
+        <!-- Judul Dinamis Standar HTTP -->
+        <div class="title">
+            <!--# if expr="$status = 403" -->Forbidden
+            <!--# elif expr="$status = 404" -->Page Not Found
+            <!--# elif expr="$status = 500" -->Internal Server Error
+            <!--# elif expr="$status = 502" -->Bad Gateway
+            <!--# elif expr="$status = 503" -->Service Unavailable
+            <!--# elif expr="$status = 504" -->Gateway Timeout
+            <!--# else -->An Error Occurred
+            <!--# endif -->
+        </div>
+        <div class="desc">
+            <!--# if expr="$status = 403" -->You don't have permission to access this resource on this server.
+            <!--# elif expr="$status = 404" -->The resource you are looking for might have been removed, had its name changed, or is temporarily unavailable.
+            <!--# elif expr="$status = 500" -->The server encountered an internal error or misconfiguration and was unable to complete your request.
+            <!--# elif expr="$status = 502" -->The server received an invalid response from the upstream server while trying to fulfill the request.
+            <!--# elif expr="$status = 503" -->The server is currently unable to handle the request due to a temporary overloading or maintenance of the server.
+            <!--# elif expr="$status = 504" -->The gateway server did not receive a timely response from the upstream server or application.
+            <!--# else -->A server-side error occurred while processing your request. Please try again later.
+            <!--# endif -->
+        </div>
+    </div>
+</body>
+</html>
