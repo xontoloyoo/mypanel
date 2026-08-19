@@ -10,14 +10,9 @@
 </head>
 <body style="--error-code: '500';"> 
     <div class="container">
-        <div class="code">500</div>
+        <div class="code"><!--# echo var="status" default="Unknown" --></div>
         <div class="title">Service Temporarily Unavailable</div>
         <div class="desc">The server encountered an internal error and was unable to complete your request.</div>
     </div>
-    <script>
-        const errorCode = "500"; 
-        document.body.style.setProperty('--error-code', `'${errorCode}'`);
-        document.querySelector('.code').innerText = errorCode;
-    </script>
 </body>
 </html>
