@@ -448,8 +448,14 @@ class PanelDoctor:
                     ]
                     for p in paths:
                         p.mkdir(parents=True, exist_ok=True)
-                    results.append(("Create Missing Directories", True, "Standard directory structure restored."))
-                    logger.info("Auto-repair: Created missing storage directories.")
+                    try:
+                        from app.modules.site import ensure_default_block_config, ensure_waf_snippet
+                        ensure_waf_snippet()
+                        ensure_default_block_config()
+                    except Exception:
+                        pass
+                    results.append(("Create Missing Directories", True, "Standard directory structure and Nginx configs restored."))
+                    logger.info("Auto-repair: Created missing storage directories and Nginx configs.")
                 except Exception as exc:
                     results.append(("Create Missing Directories", False, str(exc)))
 

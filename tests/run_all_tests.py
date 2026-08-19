@@ -39,7 +39,7 @@ from app.modules.firewall import FirewallManager
 from app.modules.log_viewer import LogViewerManager
 from app.modules.migration import MigrationManager
 from app.modules.php_manager import PHPManager, POPULAR_EXTENSIONS, SECURITY_BASELINE_FUNCTIONS
-from app.modules.site import SiteManager, WAF_DEFAULT_CONFIG, ensure_waf_snippet
+from app.modules.site import SiteManager, WAF_DEFAULT_CONFIG, ensure_default_block_config, ensure_waf_snippet
 from app.modules.ssl import SSLManager
 from app.modules.system import SystemManager
 from app.modules.tuner import ConfigTuner, SwapManager, TUNER_REGISTRY, ensure_nginx_security_conf
@@ -191,17 +191,18 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         checks += 1
         assert "include /etc/nginx/waf/waf_default.conf;" in content, "WAF include missing in HTTP vhost"
         assert "X-Frame-Options" in content, "Security headers missing in HTTP vhost"
-        assert 'more_set_headers "Server: Aegis-Gateway";' in content, "more_set_headers missing in HTTP vhost"
+        assert "ssi on;" in content, "ssi on directive missing in HTTP vhost"
         assert "location ~ /\\.well-known" in content, "ACME .well-known block missing in HTTP vhost"
         assert "expires 30d;" in content, "Static asset cache missing in HTTP vhost"
         assert "index index.php index.html index.htm;" in content, "index.php priority missing in HTTP vhost"
         assert "charset utf-8;" in content, "charset utf-8 missing in HTTP vhost"
         assert "fastcgi_pass" in content, "PHP fastcgi block missing"
+        assert "fastcgi_intercept_errors on;" in content, "fastcgi_intercept_errors missing in HTTP vhost"
         assert "try_files $uri $uri/ /index.php?$query_string;" in content, "Framework routing missing in PHP vhost"
         assert "fastcgi_split_path_info" in content, "PATH_INFO splitting missing in FastCGI block"
         assert "fastcgi_buffers 4 256k;" in content, "FastCGI buffer optimization missing"
-        assert "error_page 404 /404.html;" in content, "404 error_page directive missing in HTTP vhost"
-        assert "location = /404.html" in content, "404 location block missing in HTTP vhost"
+        assert "error_page 403 404 500 502 503 504 /error.html;" in content, "error_page directive missing in HTTP vhost"
+        assert "location = /error.html" in content, "error.html location block missing in HTTP vhost"
         assert "root /www/server/panel/templates/errors;" in content, "Custom error template root missing in HTTP vhost"
 
         # 2. Request / Setup SSL
@@ -213,12 +214,13 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         checks += 1
         assert "listen 443 ssl" in ssl_content, "HTTPS port 443 block missing"
         assert "charset utf-8;" in ssl_content, "charset utf-8 missing in HTTPS vhost"
+        assert "ssi on;" in ssl_content, "ssi on directive missing in HTTPS vhost"
         assert "ssl_stapling on;" in ssl_content, "OCSP stapling missing in HTTPS vhost"
         assert "Strict-Transport-Security" in ssl_content, "HSTS header missing in HTTPS vhost"
-        assert 'more_set_headers "Server: Aegis-Gateway";' in ssl_content, "more_set_headers missing in HTTPS vhost"
         assert "include /etc/nginx/waf/waf_default.conf;" in ssl_content, "WAF include missing in HTTPS vhost"
+        assert "fastcgi_intercept_errors on;" in ssl_content, "fastcgi_intercept_errors missing in HTTPS vhost"
         assert "try_files $uri $uri/ /index.php?$query_string;" in ssl_content, "Framework routing missing in HTTPS PHP vhost"
-        assert "location = /404.html" in ssl_content, "404 location block missing in HTTPS vhost"
+        assert "location = /error.html" in ssl_content, "error.html location block missing in HTTPS vhost"
 
         # 3. Disable SSL
         ok_dis, msg_dis = ssl_mgr.disable_ssl("mysite.local")
@@ -832,6 +834,15 @@ def run_suite_10(temp_dir: Path) -> Tuple[int, Optional[str]]:
     sec_text = sec_file.read_text(encoding="utf-8")
     assert "server_tokens off;" in sec_text, "Missing server_tokens off in global security conf"
     assert "client_body_timeout 10s;" in sec_text, "Missing client_body_timeout in global security conf"
+
+    # 7. Verify Default Catch-All Block (00_default_block.conf)
+    def_block_file = mock_conf_dir / "00_default_block.conf"
+    ensure_default_block_config(mock_conf_dir)
+    checks += 1
+    assert def_block_file.exists(), "00_default_block.conf was not created"
+    def_block_text = def_block_file.read_text(encoding="utf-8")
+    assert "listen 80 default_server;" in def_block_text
+    assert "return 444;" in def_block_text
 
     return checks, None
 

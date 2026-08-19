@@ -46,6 +46,15 @@ if ($query_string ~* "(union.*select|select.*from|cmd=|pearcmd|invokefunction|ca
 }
 """
 
+DEFAULT_BLOCK_CONFIG = """# Blok penangkap semua trafik liar/IP langsung
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name _;
+    return 444;
+}
+"""
+
 
 def ensure_waf_snippet(waf_path: Optional[Path] = None) -> Path:
     """Ensure the centralized WAF snippet file exists on the host.
@@ -74,6 +83,33 @@ def ensure_waf_snippet(waf_path: Optional[Path] = None) -> Path:
     return target
 
 
+def ensure_default_block_config(conf_d_dir: Optional[Path] = None) -> Path:
+    """Ensure the centralized 00_default_block.conf file exists in conf.d.
+
+    Args:
+        conf_d_dir: Target directory for conf.d (optional).
+
+    Returns:
+        Path: Resolved Path to 00_default_block.conf.
+    """
+    if conf_d_dir:
+        target = conf_d_dir / "00_default_block.conf" if conf_d_dir.is_dir() else conf_d_dir
+    else:
+        primary = Path("/etc/nginx/conf.d/00_default_block.conf")
+        fallback = BASE_DIR / "data" / "mock_config" / "00_default_block.conf"
+        target = primary if (primary.parent.exists() or os.name != "nt") else fallback
+
+    try:
+        if not target.exists():
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(DEFAULT_BLOCK_CONFIG, encoding="utf-8")
+            logger.info("Created Nginx default block config at %s", target)
+    except Exception as exc:
+        logger.warning("Could not create default block config at '%s': %s", target, exc)
+
+    return target
+
+
 class SiteManager:
     """Manager for Nginx web server virtual hosts and database synchronization."""
 
@@ -96,8 +132,9 @@ class SiteManager:
         self.nginx_available = nginx_available
         self.nginx_enabled = nginx_enabled
         self.db = db or get_db()
-        # Ensure default WAF rule file is prepared
+        # Ensure default WAF rule file and default catch-all block are prepared
         ensure_waf_snippet()
+        ensure_default_block_config()
 
     @staticmethod
     def validate_domain(domain: str) -> bool:
@@ -119,12 +156,12 @@ class SiteManager:
         root_path: str,
         php_version: str = "none",
     ) -> str:
-        """Generate Nginx virtual host configuration file content with WAF, cloaking, and security headers.
+        """Generate virtual host Nginx configuration string.
 
         Args:
             domain: Website domain name.
-            root_path: Document root directory path.
-            php_version: PHP version (e.g., '8.2', '8.1', 'none').
+            root_path: Absolute directory root path.
+            php_version: PHP version to attach, or 'none' for static HTML.
 
         Returns:
             str: Generated Nginx server block configuration.
@@ -136,7 +173,7 @@ class SiteManager:
         if is_php:
             php_sock = f"/run/php/php{php_version}-fpm.sock"
             php_block = f"""
-    # PHP-FPM FastCGI Configuration (Self-Contained & Optimized)
+    # PHP-FPM FastCGI Configuration
     location ~ \\.php$ {{
         try_files $uri =404;
         fastcgi_split_path_info ^(.+\\.php)(/.+)$;
@@ -148,6 +185,7 @@ class SiteManager:
         fastcgi_read_timeout 300;
         fastcgi_buffer_size 128k;
         fastcgi_buffers 4 256k;
+        fastcgi_intercept_errors on;
     }}"""
 
         routing_block = """    # Standard Application Routing (Framework & Permalinks Friendly)
@@ -166,12 +204,12 @@ class SiteManager:
     root {root_path};
     index index.php index.html index.htm;
     charset utf-8;
+    ssi on;
 
     # Include Modular WAF Protection
     include /etc/nginx/waf/waf_default.conf;
 
     # Server Identity Cloaking & Security Headers
-    more_set_headers "Server: Aegis-Gateway";
     add_header X-Frame-Options "SAMEORIGIN" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-XSS-Protection "1; mode=block" always;
@@ -196,25 +234,26 @@ class SiteManager:
         access_log off;
     }}
 
+    # =========================================================================
+    # [CUSTOM USER RULES & ROUTING SECTION]
+    # Anda dapat menambahkan rule kustom di bawah ini (misal: reverse proxy,
+    # redirect khusus, atau sub-location) tanpa khawatir bentrok dengan sistem.
+    # Contoh Reverse Proxy:
+    # location /api/ {{
+    #     proxy_pass http://127.0.0.1:3000;
+    #     proxy_set_header Host $host;
+    # }}
+    # =========================================================================
+
 {routing_block}
 {php_block}
 
-    # Custom Error Pages
-    error_page 403 /403.html;
-    error_page 404 /404.html;
-    error_page 500 502 503 504 /50x.html;
+    # Unified Custom Error Pages via SSI
+    error_page 403 404 500 502 503 504 /error.html;
 
-    location = /403.html {{
-        root /www/server/panel/templates/errors;
+    location = /error.html {{
         internal;
-    }}
-    location = /404.html {{
         root /www/server/panel/templates/errors;
-        internal;
-    }}
-    location = /50x.html {{
-        root /www/server/panel/templates/errors;
-        internal;
     }}
 
     location ~ /\\.ht {{

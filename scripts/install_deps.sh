@@ -2,7 +2,7 @@
 # ==============================================================================
 # cli-panel: Linux Host Dependency & Environment Installer
 # Supports: Ubuntu 20.04+, Ubuntu 22.04+, Ubuntu 24.04+, Debian 11+, Debian 12+
-# Features: Pre-Flight System Inspection, Single PHP Version & Missing-Only Install
+# Features: Interactive Mode Selection, Missing-Only Install, Modular WAF & Venv
 # ==============================================================================
 
 set -euo pipefail
@@ -14,12 +14,48 @@ if [ "${EUID:-$(id -u)}" -ne 0 ]; then
 fi
 
 echo "========================================================"
-echo "⚡ cli-panel: Initializing Linux Environment Installation"
+echo "⚡ cli-panel: Linux Environment Installation"
 echo "========================================================"
 echo ""
 
+# Helper to check commands
+has_cmd() {
+    command -v "$1" >/dev/null 2>&1
+}
+
 # ------------------------------------------------------------------------------
-# 2. Pre-Flight System Inspection
+# 2. Interactive Installation Mode Selection
+# ------------------------------------------------------------------------------
+NON_INTERACTIVE=0
+for arg in "$@"; do
+    if [ "$arg" = "-y" ] || [ "$arg" = "--yes" ] || [ "$arg" = "--non-interactive" ]; then
+        NON_INTERACTIVE=1
+    fi
+done
+
+if [ ! -t 0 ]; then
+    NON_INTERACTIVE=1
+fi
+
+INSTALL_MODE=1
+
+if [ "${NON_INTERACTIVE}" -eq 0 ]; then
+    echo "Pilih Mode Instalasi:"
+    echo "  [1] Express Auto-Install (Rekomendasi: Otomatis pasang semua dependensi yang belum ada)"
+    echo "  [2] Custom / Interactive (Tanya satu per satu komponen yang ingin dipasang/di-skip)"
+    echo "  [3] Panel Core Only      (Hanya siapkan direktori /www/, venv, WAF, & launcher - software diinstall manual)"
+    echo "--------------------------------------------------------"
+    read -r -p "Pilih mode [1-3] (Default: 1): " MODE_INPUT </dev/tty || MODE_INPUT="1"
+    case "${MODE_INPUT}" in
+        2) INSTALL_MODE=2 ;;
+        3) INSTALL_MODE=3 ;;
+        *) INSTALL_MODE=1 ;;
+    esac
+    echo ""
+fi
+
+# ------------------------------------------------------------------------------
+# 3. Pre-Flight System Inspection
 # ------------------------------------------------------------------------------
 echo "========================================================"
 echo "       PRE-FLIGHT SYSTEM INSPECTION (cli-panel)         "
@@ -30,24 +66,25 @@ TARGET_PHP="${DEFAULT_PHP}"
 PACKAGES_TO_INSTALL=()
 NEED_PHP_REPO=0
 
-# Helper to check commands
-has_cmd() {
-    command -v "$1" >/dev/null 2>&1
-}
-
-# [A] Nginx & Security Headers Filter Module
+# [A] Nginx Inspection
 if has_cmd nginx; then
     NGINX_VER=$(nginx -v 2>&1 | awk -F'/' '{print $2}' | awk '{print $1}')
     echo "[+] Nginx           : INSTALLED (v${NGINX_VER}) -> Skip reinstall"
 else
-    echo "[-] Nginx           : NOT FOUND           -> Will install"
-    PACKAGES_TO_INSTALL+=("nginx")
-fi
-if [ ! -f /etc/nginx/modules-enabled/50-mod-http-headers-more-filter.conf ]; then
-    PACKAGES_TO_INSTALL+=("libnginx-mod-http-headers-more-filter")
+    echo "[-] Nginx           : NOT FOUND"
+    if [ "${INSTALL_MODE}" -eq 1 ]; then
+        PACKAGES_TO_INSTALL+=("nginx")
+    elif [ "${INSTALL_MODE}" -eq 2 ]; then
+        read -r -p "    [?] Nginx belum ada. Install Nginx via apt repository? [Y/n]: " ANS </dev/tty || ANS="Y"
+        if [ "${ANS:-Y}" != "n" ] && [ "${ANS:-Y}" != "N" ]; then
+            PACKAGES_TO_INSTALL+=("nginx")
+        else
+            echo "        -> Nginx dilewati (akan diinstall manual oleh Anda)"
+        fi
+    fi
 fi
 
-# [B] MariaDB / MySQL
+# [B] MariaDB / MySQL Inspection
 if has_cmd mariadb; then
     MARIA_VER=$(mariadb --version 2>&1 | awk '{for(i=1;i<=NF;i++) if($i ~ /^[0-9]+\.[0-9]+/) print $i}' | head -n1)
     echo "[+] MariaDB/MySQL   : INSTALLED (v${MARIA_VER:-detected}) -> Skip reinstall"
@@ -55,8 +92,17 @@ elif has_cmd mysql; then
     MYSQL_VER=$(mysql --version 2>&1 | awk '{for(i=1;i<=NF;i++) if($i ~ /^[0-9]+\.[0-9]+/) print $i}' | head -n1)
     echo "[+] MariaDB/MySQL   : INSTALLED (v${MYSQL_VER:-detected}) -> Skip reinstall"
 else
-    echo "[-] MariaDB/MySQL   : NOT FOUND           -> Will install"
-    PACKAGES_TO_INSTALL+=("mariadb-server")
+    echo "[-] MariaDB/MySQL   : NOT FOUND"
+    if [ "${INSTALL_MODE}" -eq 1 ]; then
+        PACKAGES_TO_INSTALL+=("mariadb-server")
+    elif [ "${INSTALL_MODE}" -eq 2 ]; then
+        read -r -p "    [?] MariaDB/MySQL belum ada. Install MariaDB via apt repository? [Y/n]: " ANS </dev/tty || ANS="Y"
+        if [ "${ANS:-Y}" != "n" ] && [ "${ANS:-Y}" != "N" ]; then
+            PACKAGES_TO_INSTALL+=("mariadb-server")
+        else
+            echo "        -> MariaDB dilewati (akan diinstall manual oleh Anda)"
+        fi
+    fi
 fi
 
 # [C] PHP & Target Version Detection
@@ -66,23 +112,48 @@ if has_cmd php; then
     TARGET_PHP="${PHP_MM_VER}"
     echo "[+] PHP CLI         : INSTALLED (v${PHP_FULL_VER}) -> Use existing PHP ${TARGET_PHP}"
 else
-    echo "[-] PHP CLI         : NOT FOUND           -> Will install single version PHP ${DEFAULT_PHP}"
-    TARGET_PHP="${DEFAULT_PHP}"
-    NEED_PHP_REPO=1
-    PACKAGES_TO_INSTALL+=(
-        "php${TARGET_PHP}-fpm"
-        "php${TARGET_PHP}-mysql"
-        "php${TARGET_PHP}-curl"
-        "php${TARGET_PHP}-gd"
-        "php${TARGET_PHP}-mbstring"
-        "php${TARGET_PHP}-xml"
-        "php${TARGET_PHP}-zip"
-        "php${TARGET_PHP}-opcache"
-        "php${TARGET_PHP}-cli"
-    )
+    echo "[-] PHP CLI         : NOT FOUND"
+    if [ "${INSTALL_MODE}" -eq 1 ]; then
+        TARGET_PHP="${DEFAULT_PHP}"
+        NEED_PHP_REPO=1
+        PACKAGES_TO_INSTALL+=(
+            "php${TARGET_PHP}-fpm"
+            "php${TARGET_PHP}-mysql"
+            "php${TARGET_PHP}-curl"
+            "php${TARGET_PHP}-gd"
+            "php${TARGET_PHP}-mbstring"
+            "php${TARGET_PHP}-xml"
+            "php${TARGET_PHP}-zip"
+            "php${TARGET_PHP}-opcache"
+            "php${TARGET_PHP}-cli"
+        )
+    elif [ "${INSTALL_MODE}" -eq 2 ]; then
+        read -r -p "    [?] PHP belum ada. Install PHP & PHP-FPM via repository PPA? [Y/n]: " ANS </dev/tty || ANS="Y"
+        if [ "${ANS:-Y}" != "n" ] && [ "${ANS:-Y}" != "N" ]; then
+            read -r -p "        Pilih versi PHP (misal: 8.1, 8.2, 8.3, 8.4) [Default: ${DEFAULT_PHP}]: " VER_INPUT </dev/tty || VER_INPUT="${DEFAULT_PHP}"
+            TARGET_PHP="${VER_INPUT:-$DEFAULT_PHP}"
+            NEED_PHP_REPO=1
+            PACKAGES_TO_INSTALL+=(
+                "php${TARGET_PHP}-fpm"
+                "php${TARGET_PHP}-mysql"
+                "php${TARGET_PHP}-curl"
+                "php${TARGET_PHP}-gd"
+                "php${TARGET_PHP}-mbstring"
+                "php${TARGET_PHP}-xml"
+                "php${TARGET_PHP}-zip"
+                "php${TARGET_PHP}-opcache"
+                "php${TARGET_PHP}-cli"
+            )
+        else
+            TARGET_PHP=""
+            echo "        -> PHP dilewati (akan diinstall manual oleh Anda)"
+        fi
+    else
+        TARGET_PHP=""
+    fi
 fi
 
-# [D] Python3
+# [D] Python3 Inspection (Mandatory for CLI Panel engine)
 if has_cmd python3; then
     PY_VER=$(python3 --version 2>&1 | awk '{print $2}')
     echo "[+] Python3         : INSTALLED (v${PY_VER}) -> Ready"
@@ -102,19 +173,37 @@ if has_cmd certbot; then
     CERTBOT_VER=$(certbot --version 2>&1 | awk '{print $2}')
     echo "[+] Certbot         : INSTALLED (v${CERTBOT_VER:-detected}) -> Ready"
 else
-    echo "[-] Certbot         : NOT FOUND           -> Will install"
-    PACKAGES_TO_INSTALL+=("certbot" "python3-certbot-nginx")
+    echo "[-] Certbot         : NOT FOUND"
+    if [ "${INSTALL_MODE}" -eq 1 ]; then
+        PACKAGES_TO_INSTALL+=("certbot" "python3-certbot-nginx")
+    elif [ "${INSTALL_MODE}" -eq 2 ]; then
+        read -r -p "    [?] Certbot belum ada. Install Certbot (Let's Encrypt)? [Y/n]: " ANS </dev/tty || ANS="Y"
+        if [ "${ANS:-Y}" != "n" ] && [ "${ANS:-Y}" != "N" ]; then
+            PACKAGES_TO_INSTALL+=("certbot" "python3-certbot-nginx")
+        else
+            echo "        -> Certbot dilewati"
+        fi
+    fi
 fi
 
 # [F] Firewall (UFW)
 if has_cmd ufw; then
     echo "[+] UFW             : INSTALLED           -> Ready"
 else
-    echo "[-] UFW             : NOT FOUND           -> Will install"
-    PACKAGES_TO_INSTALL+=("ufw")
+    echo "[-] UFW             : NOT FOUND"
+    if [ "${INSTALL_MODE}" -eq 1 ]; then
+        PACKAGES_TO_INSTALL+=("ufw")
+    elif [ "${INSTALL_MODE}" -eq 2 ]; then
+        read -r -p "    [?] UFW Firewall belum ada. Install UFW? [Y/n]: " ANS </dev/tty || ANS="Y"
+        if [ "${ANS:-Y}" != "n" ] && [ "${ANS:-Y}" != "N" ]; then
+            PACKAGES_TO_INSTALL+=("ufw")
+        else
+            echo "        -> UFW dilewati"
+        fi
+    fi
 fi
 
-# [G] Base Utilities
+# [G] Base Utilities (Required Core Tools)
 for util in cron tar gzip sqlite3 curl git; do
     if has_cmd "$util"; then
         echo "[+] Util (${util})    : INSTALLED           -> Ready"
@@ -134,17 +223,17 @@ echo "========================================================"
 echo ""
 
 # ------------------------------------------------------------------------------
-# 3. Conditional Package Installation (Install Missing Only)
+# 4. Conditional Package Installation (Install Missing Only)
 # ------------------------------------------------------------------------------
 export DEBIAN_FRONTEND=noninteractive
 
 if [ ${#PACKAGES_TO_INSTALL[@]} -gt 0 ]; then
-    echo "[*] Step 1/5: Installing missing system packages: ${PACKAGES_TO_INSTALL[*]}"
+    echo "[*] Step 1/5: Installing selected system packages: ${PACKAGES_TO_INSTALL[*]}"
 
     if has_cmd apt-get; then
         # Setup Ondrej Surý PPA for single PHP if PHP repository is needed
         if [ "${NEED_PHP_REPO}" -eq 1 ]; then
-            echo "[*] Adding PHP repository for single-version PHP ${TARGET_PHP}..."
+            echo "[*] Adding PHP repository for PHP ${TARGET_PHP}..."
             apt-get update -y
             apt-get install -y software-properties-common ca-certificates lsb-release apt-transport-https
 
@@ -169,11 +258,11 @@ if [ ${#PACKAGES_TO_INSTALL[@]} -gt 0 ]; then
         exit 1
     fi
 else
-    echo "[*] Step 1/5: All core software dependencies are already present. Skipping package installation."
+    echo "[*] Step 1/5: No additional packages to install. Continuing with panel configuration."
 fi
 
 # ------------------------------------------------------------------------------
-# 4. Create Standard aaPanel-compatible Directory Scaffold & WAF Snippet
+# 5. Create Standard aaPanel-compatible Directory Scaffold & WAF Snippet
 # ------------------------------------------------------------------------------
 echo "[*] Step 2/5: Creating standard directory layout & Nginx WAF (/www/ & /etc/nginx/waf)..."
 mkdir -p /www/wwwroot
@@ -224,8 +313,22 @@ EOF
     chmod 644 /etc/nginx/waf/waf_default.conf
 fi
 
+# 3. Write default catch-all drop block for direct IP / wild domains
+if [ ! -f /etc/nginx/conf.d/00_default_block.conf ]; then
+    cat << 'EOF' > /etc/nginx/conf.d/00_default_block.conf
+# Blok penangkap semua trafik liar/IP langsung
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name _;
+    return 444;
+}
+EOF
+    chmod 644 /etc/nginx/conf.d/00_default_block.conf
+fi
+
 # ------------------------------------------------------------------------------
-# 5. Copy / Link Project to /www/server/panel
+# 6. Copy / Link Project to /www/server/panel
 # ------------------------------------------------------------------------------
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PANEL_DIR="/www/server/panel"
@@ -242,7 +345,7 @@ if [ -d "${PANEL_DIR}/templates" ]; then
 fi
 
 # ------------------------------------------------------------------------------
-# 6. Virtual Environment & Python Dependencies
+# 7. Virtual Environment & Python Dependencies
 # ------------------------------------------------------------------------------
 echo "[*] Step 4/5: Initializing Python virtual environment (.venv)..."
 cd "${PANEL_DIR}"
@@ -256,7 +359,7 @@ fi
 .venv/bin/pip install -r requirements.txt --quiet
 
 # ------------------------------------------------------------------------------
-# 7. Global Command Launcher (mypanel)
+# 8. Global Command Launcher (mypanel)
 # ------------------------------------------------------------------------------
 echo "[*] Step 5/5: Configuring global CLI executable '/usr/local/bin/mypanel'..."
 cat << 'EOF' > /usr/local/bin/mypanel
@@ -273,17 +376,31 @@ EOF
 chmod +x /usr/local/bin/mypanel
 
 # ------------------------------------------------------------------------------
-# 8. Start & Enable Core Services
+# 9. Start & Enable Core Services
 # ------------------------------------------------------------------------------
 echo "[*] Ensuring background daemons are active..."
-systemctl enable nginx 2>/dev/null || true
-systemctl start nginx 2>/dev/null || true
-systemctl enable mariadb 2>/dev/null || systemctl enable mysql 2>/dev/null || true
-systemctl start mariadb 2>/dev/null || systemctl start mysql 2>/dev/null || true
-systemctl enable cron 2>/dev/null || systemctl enable crond 2>/dev/null || true
-systemctl start cron 2>/dev/null || systemctl start crond 2>/dev/null || true
+if has_cmd nginx; then
+    systemctl enable nginx 2>/dev/null || true
+    systemctl start nginx 2>/dev/null || true
+fi
 
-# Enable and start single target PHP-FPM service
+if has_cmd mariadb; then
+    systemctl enable mariadb 2>/dev/null || true
+    systemctl start mariadb 2>/dev/null || true
+elif has_cmd mysql; then
+    systemctl enable mysql 2>/dev/null || true
+    systemctl start mysql 2>/dev/null || true
+fi
+
+if has_cmd cron; then
+    systemctl enable cron 2>/dev/null || true
+    systemctl start cron 2>/dev/null || true
+elif has_cmd crond; then
+    systemctl enable crond 2>/dev/null || true
+    systemctl start crond 2>/dev/null || true
+fi
+
+# Enable and start single target PHP-FPM service if configured
 if [ -n "${TARGET_PHP}" ]; then
     systemctl enable "php${TARGET_PHP}-fpm" 2>/dev/null || systemctl enable php-fpm 2>/dev/null || true
     systemctl start "php${TARGET_PHP}-fpm" 2>/dev/null || systemctl start php-fpm 2>/dev/null || true
@@ -292,9 +409,14 @@ fi
 echo ""
 echo "========================================================"
 echo "✓ cli-panel installation completed successfully!"
-echo "  - Active PHP Version : PHP ${TARGET_PHP}"
+if [ -n "${TARGET_PHP}" ]; then
+    echo "  - Active PHP Version : PHP ${TARGET_PHP}"
+else
+    echo "  - Active PHP Version : (Manual installation chosen)"
+fi
 echo "  - Panel Directory    : ${PANEL_DIR}"
 echo "  - Modular WAF Rules  : /etc/nginx/waf/waf_default.conf"
+echo "  - Default Block Rule : /etc/nginx/conf.d/00_default_block.conf"
 echo ""
 echo "You can now run your server panel anytime by typing:"
 echo "    sudo mypanel"

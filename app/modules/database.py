@@ -576,12 +576,12 @@ class DatabaseManager:
     root {self.adminer_dir.as_posix()};
     index index.php index.html;
     charset utf-8;
+    ssi on;
 
     # Include Modular WAF Protection
     include /etc/nginx/waf/waf_default.conf;
 
     # Server Identity Cloaking & Security Headers
-    more_set_headers "Server: Aegis-Gateway";
     add_header X-Frame-Options "SAMEORIGIN" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-XSS-Protection "1; mode=block" always;
@@ -610,6 +610,15 @@ class DatabaseManager:
         fastcgi_read_timeout 300;
         fastcgi_buffer_size 128k;
         fastcgi_buffers 4 256k;
+        fastcgi_intercept_errors on;
+    }}
+
+    # Unified Custom Error Pages via SSI
+    error_page 403 404 500 502 503 504 /error.html;
+
+    location = /error.html {{
+        internal;
+        root /www/server/panel/templates/errors;
     }}
 
     location ~ /\\.ht {{

@@ -64,7 +64,7 @@ class SSLManager:
         if is_php:
             php_sock = f"/run/php/php{php_version}-fpm.sock"
             php_block = f"""
-    # PHP-FPM FastCGI Configuration (Self-Contained & Optimized)
+    # PHP-FPM FastCGI Configuration
     location ~ \\.php$ {{
         try_files $uri =404;
         fastcgi_split_path_info ^(.+\\.php)(/.+)$;
@@ -76,6 +76,7 @@ class SSLManager:
         fastcgi_read_timeout 300;
         fastcgi_buffer_size 128k;
         fastcgi_buffers 4 256k;
+        fastcgi_intercept_errors on;
     }}"""
 
         routing_block = """    # Standard Application Routing (Framework & Permalinks Friendly)
@@ -110,6 +111,7 @@ server {{
     root {root_path};
     index index.php index.html index.htm;
     charset utf-8;
+    ssi on;
 
     # SSL Certificates
     ssl_certificate {cert_file};
@@ -130,7 +132,6 @@ server {{
     include /etc/nginx/waf/waf_default.conf;
 
     # Server Identity Cloaking & Security Headers
-    more_set_headers "Server: Aegis-Gateway";
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
     add_header X-Frame-Options "SAMEORIGIN" always;
     add_header X-Content-Type-Options "nosniff" always;
@@ -156,25 +157,21 @@ server {{
         access_log off;
     }}
 
+    # =========================================================================
+    # [CUSTOM USER RULES & ROUTING SECTION]
+    # Anda dapat menambahkan rule kustom di bawah ini (misal: reverse proxy,
+    # redirect khusus, atau sub-location) tanpa khawatir bentrok dengan sistem.
+    # =========================================================================
+
 {routing_block}
 {php_block}
 
-    # Custom Error Pages
-    error_page 403 /403.html;
-    error_page 404 /404.html;
-    error_page 500 502 503 504 /50x.html;
+    # Unified Custom Error Pages via SSI
+    error_page 403 404 500 502 503 504 /error.html;
 
-    location = /403.html {{
-        root /www/server/panel/templates/errors;
+    location = /error.html {{
         internal;
-    }}
-    location = /404.html {{
         root /www/server/panel/templates/errors;
-        internal;
-    }}
-    location = /50x.html {{
-        root /www/server/panel/templates/errors;
-        internal;
     }}
 
     location ~ /\\.ht {{
@@ -210,7 +207,7 @@ server {{
         if is_php:
             php_sock = f"/run/php/php{php_version}-fpm.sock"
             php_block = f"""
-    # PHP-FPM FastCGI Configuration (Self-Contained & Optimized)
+    # PHP-FPM FastCGI Configuration
     location ~ \\.php$ {{
         try_files $uri =404;
         fastcgi_split_path_info ^(.+\\.php)(/.+)$;
@@ -222,6 +219,7 @@ server {{
         fastcgi_read_timeout 300;
         fastcgi_buffer_size 128k;
         fastcgi_buffers 4 256k;
+        fastcgi_intercept_errors on;
     }}"""
 
         routing_block = """    # Standard Application Routing (Framework & Permalinks Friendly)
@@ -240,12 +238,12 @@ server {{
     root {root_path};
     index index.php index.html index.htm;
     charset utf-8;
+    ssi on;
 
     # Include Modular WAF Protection
     include /etc/nginx/waf/waf_default.conf;
 
     # Server Identity Cloaking & Security Headers
-    more_set_headers "Server: Aegis-Gateway";
     add_header X-Frame-Options "SAMEORIGIN" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-XSS-Protection "1; mode=block" always;
@@ -270,25 +268,21 @@ server {{
         access_log off;
     }}
 
+    # =========================================================================
+    # [CUSTOM USER RULES & ROUTING SECTION]
+    # Anda dapat menambahkan rule kustom di bawah ini (misal: reverse proxy,
+    # redirect khusus, atau sub-location) tanpa khawatir bentrok dengan sistem.
+    # =========================================================================
+
 {routing_block}
 {php_block}
 
-    # Custom Error Pages
-    error_page 403 /403.html;
-    error_page 404 /404.html;
-    error_page 500 502 503 504 /50x.html;
+    # Unified Custom Error Pages via SSI
+    error_page 403 404 500 502 503 504 /error.html;
 
-    location = /403.html {{
-        root /www/server/panel/templates/errors;
+    location = /error.html {{
         internal;
-    }}
-    location = /404.html {{
         root /www/server/panel/templates/errors;
-        internal;
-    }}
-    location = /50x.html {{
-        root /www/server/panel/templates/errors;
-        internal;
     }}
 
     location ~ /\\.ht {{
