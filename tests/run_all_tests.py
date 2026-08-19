@@ -43,6 +43,7 @@ from app.modules.site import SiteManager, WAF_DEFAULT_CONFIG, ensure_default_blo
 from app.modules.ssl import SSLManager
 from app.modules.system import SystemManager
 from app.modules.tuner import ConfigTuner, SwapManager, TUNER_REGISTRY, ensure_nginx_security_conf
+from app.ui.prompts import resolve_database_choice, resolve_site_choice
 from app.ui.views import colorize_log_line
 
 console = Console(safe_box=True)
@@ -305,6 +306,26 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         assert ok_del, f"Failed to delete site: {msg_del}"
         assert not (nginx_avail / "renamed.local.conf").exists(), "Vhost file was not removed"
 
+        # 11. Test Smart ID & Domain Name Resolver
+        mock_sites_list = [
+            {"id": 1, "domain": "primary-store.com", "root_path": "/www/wwwroot/primary"},
+            {"id": 2, "domain": "blog.mycompany.id", "root_path": "/www/wwwroot/blog"},
+            {"id": 3, "domain": "123app.com", "root_path": "/www/wwwroot/123app"},
+        ]
+        # Match by ID
+        assert resolve_site_choice(mock_sites_list, "1")["domain"] == "primary-store.com"
+        assert resolve_site_choice(mock_sites_list, "2")["domain"] == "blog.mycompany.id"
+        # Match by domain name
+        assert resolve_site_choice(mock_sites_list, "primary-store.com")["id"] == 1
+        assert resolve_site_choice(mock_sites_list, "BLOG.MYCOMPANY.ID")["id"] == 2
+        # Match with whitespace
+        assert resolve_site_choice(mock_sites_list, "  2  ")["domain"] == "blog.mycompany.id"
+        # Invalid inputs
+        assert resolve_site_choice(mock_sites_list, "99") is None
+        assert resolve_site_choice(mock_sites_list, "nonexistent.com") is None
+        assert resolve_site_choice(mock_sites_list, "") is None
+        checks += 1
+
     finally:
         app.modules.ssl.run_cmd = orig_ssl_run_cmd
         db.close()
@@ -415,6 +436,25 @@ def run_suite_3(temp_dir: Path) -> Tuple[int, Optional[str]]:
         stat_uninst = db_mgr_adminer.get_adminer_status()
         assert stat_uninst["installed"] is False
         assert not (nginx_avail / "00_adminer.conf").exists()
+
+        # Test Smart Database ID & Name Resolver
+        mock_dbs_list = [
+            {"id": 1, "db_name": "prod_shop", "db_user": "u_shop"},
+            {"id": 2, "db_name": "test_blog", "db_user": "u_blog"},
+        ]
+        # Match by ID
+        assert resolve_database_choice(mock_dbs_list, "1")["db_name"] == "prod_shop"
+        assert resolve_database_choice(mock_dbs_list, "2")["db_name"] == "test_blog"
+        # Match by Name
+        assert resolve_database_choice(mock_dbs_list, "prod_shop")["id"] == 1
+        assert resolve_database_choice(mock_dbs_list, "TEST_BLOG")["id"] == 2
+        # Match with whitespace
+        assert resolve_database_choice(mock_dbs_list, "  1  ")["db_name"] == "prod_shop"
+        # Invalid inputs
+        assert resolve_database_choice(mock_dbs_list, "99") is None
+        assert resolve_database_choice(mock_dbs_list, "nonexistent_db") is None
+        assert resolve_database_choice(mock_dbs_list, "") is None
+        checks += 1
 
     finally:
         db.close()

@@ -33,6 +33,7 @@ from app.ui.prompts import (
     ask_auto_repair_confirmation,
     ask_cron_job_inputs,
     ask_database_inputs,
+    ask_database_selection,
     ask_extension_install,
     ask_firewall_inputs,
     ask_function_to_disable,
@@ -46,6 +47,7 @@ from app.ui.prompts import (
     ask_preset_choice,
     ask_rename_site_inputs,
     ask_site_inputs,
+    ask_site_selection,
     ask_ssl_inputs,
     ask_swap_setup_inputs,
     confirm_action,
@@ -155,11 +157,13 @@ class PanelApp:
                     pause_for_user()
                     continue
 
-                domain = Prompt.ask("\nEnter domain name to delete", console=console).strip().lower()
-                if not domain:
+                selected_site = ask_site_selection(sites, "delete")
+                if not selected_site:
                     continue
 
-                if confirm_action(f"Are you sure you want to delete website '{domain}'?"):
+                domain = selected_site["domain"]
+                site_id = selected_site.get("id")
+                if confirm_action(f"Are you sure you want to delete website '{domain}' (ID: {site_id})?"):
                     del_root = confirm_action("Also permanently delete document root directory?")
                     with console.status("[bold red]Removing Nginx config and database record..."):
                         ok, msg = self.site_mgr.delete_site(domain, delete_root=del_root)
@@ -171,16 +175,11 @@ class PanelApp:
                     pause_for_user()
                     continue
 
-                domain = Prompt.ask("\nEnter domain name to rename", console=console).strip().lower()
-                if not domain:
+                selected_site = ask_site_selection(sites, "rename")
+                if not selected_site:
                     continue
 
-                site_to_rename = self.site_mgr.get_site(domain)
-                if not site_to_rename:
-                    show_message(f"Website '{domain}' not found.", "error")
-                    pause_for_user()
-                    continue
-
+                domain = selected_site["domain"]
                 rename_inputs = ask_rename_site_inputs(domain)
                 if rename_inputs:
                     with console.status(f"[bold cyan]Migrating website to '{rename_inputs['new_domain']}'..."):
@@ -197,15 +196,11 @@ class PanelApp:
                     pause_for_user()
                     continue
 
-                domain = Prompt.ask("\nEnter domain name to view logs", console=console).strip().lower()
-                if not domain:
+                selected_site = ask_site_selection(sites, "view logs")
+                if not selected_site:
                     continue
 
-                if not self.site_mgr.get_site(domain):
-                    show_message(f"Website '{domain}' not found.", "error")
-                    pause_for_user()
-                    continue
-
+                domain = selected_site["domain"]
                 console.print(f"\n[bold cyan]Select Log Target for '{domain}':[/bold cyan]")
                 console.print("  [1] Access Log  (Traffic & Client Requests)")
                 console.print("  [2] Error Log   (PHP / FastCGI / Nginx Errors)")
@@ -242,15 +237,11 @@ class PanelApp:
                     pause_for_user()
                     continue
 
-                domain = Prompt.ask("\nEnter domain name to clear logs", console=console).strip().lower()
-                if not domain:
+                selected_site = ask_site_selection(sites, "clear logs")
+                if not selected_site:
                     continue
 
-                if not self.site_mgr.get_site(domain):
-                    show_message(f"Website '{domain}' not found.", "error")
-                    pause_for_user()
-                    continue
-
+                domain = selected_site["domain"]
                 console.print(f"\n[bold red]Select Log to Truncate for '{domain}':[/bold red]")
                 console.print("  [1] Truncate Access Log Only")
                 console.print("  [2] Truncate Error Log Only")
@@ -288,10 +279,11 @@ class PanelApp:
                     pause_for_user()
                     continue
 
-                domain = Prompt.ask("\nEnter domain name to disable SSL", console=console).strip().lower()
-                if not domain:
+                selected_site = ask_site_selection(sites, "disable SSL")
+                if not selected_site:
                     continue
 
+                domain = selected_site["domain"]
                 if confirm_action(f"Disable SSL for '{domain}' and revert to standard HTTP?"):
                     with console.status("[bold yellow]Reverting Nginx config to HTTP..."):
                         ok, msg = self.ssl_mgr.disable_ssl(domain)
@@ -303,15 +295,12 @@ class PanelApp:
                     pause_for_user()
                     continue
 
-                domain = Prompt.ask("\nEnter domain name for Security Settings", console=console).strip().lower()
-                if not domain:
+                selected_site = ask_site_selection(sites, "configure Security Settings")
+                if not selected_site:
                     continue
 
-                site_sec = self.site_mgr.get_site(domain)
-                if not site_sec:
-                    show_message(f"Website '{domain}' not found.", "error")
-                    pause_for_user()
-                    continue
+                domain = selected_site["domain"]
+                site_sec = selected_site
 
                 ob_status = self.site_mgr.get_open_basedir_status(domain)
                 pw_active, pw_user = self.site_mgr.get_password_protection_status(domain)
@@ -357,10 +346,11 @@ class PanelApp:
                     pause_for_user()
                     continue
 
-                domain = Prompt.ask("\nEnter domain name to view Nginx config", console=console).strip().lower()
-                if not domain:
+                selected_site = ask_site_selection(sites, "view Nginx config")
+                if not selected_site:
                     continue
 
+                domain = selected_site["domain"]
                 ok, content = self.site_mgr.read_vhost_config(domain)
                 if ok:
                     clear_screen()
@@ -375,10 +365,11 @@ class PanelApp:
                     pause_for_user()
                     continue
 
-                domain = Prompt.ask("\nEnter domain name to edit Nginx config", console=console).strip().lower()
-                if not domain:
+                selected_site = ask_site_selection(sites, "edit Nginx config")
+                if not selected_site:
                     continue
 
+                domain = selected_site["domain"]
                 ok, msg = self.site_mgr.edit_vhost_config_interactive(domain)
                 show_message(msg, "success" if ok else "error")
                 pause_for_user()
@@ -388,10 +379,11 @@ class PanelApp:
                     pause_for_user()
                     continue
 
-                domain = Prompt.ask("\nEnter domain name to reset Nginx config", console=console).strip().lower()
-                if not domain:
+                selected_site = ask_site_selection(sites, "reset Nginx config")
+                if not selected_site:
                     continue
 
+                domain = selected_site["domain"]
                 if confirm_action(f"Are you sure you want to RESET Nginx config for '{domain}' to panel default template?"):
                     with console.status(f"[bold yellow]Resetting Nginx configuration for '{domain}'..."):
                         ok, msg = self.site_mgr.reset_vhost_config(domain)
@@ -452,20 +444,30 @@ class PanelApp:
                     pause_for_user()
                     continue
 
-                db_name = Prompt.ask("\nEnter database name to delete", console=console).strip()
-                if not db_name:
+                selected_db = ask_database_selection(databases, "delete")
+                if not selected_db:
                     continue
 
-                if confirm_action(f"Are you sure you want to DROP database '{db_name}'? (Data will be lost!)"):
+                db_name = selected_db["db_name"]
+                db_id = selected_db.get("id")
+                if confirm_action(f"Are you sure you want to DROP database '{db_name}' (ID: {db_id})? (Data will be lost!)"):
                     del_user = confirm_action("Also drop the associated MySQL user?")
                     with console.status("[bold red]Dropping database..."):
                         ok, msg = self.db_mgr.delete_database(db_name, delete_user=del_user)
                     show_message(msg, "success" if ok else "error")
                     pause_for_user()
             elif choice == "3":
-                db_user = Prompt.ask("\nEnter database username", console=console).strip()
-                if not db_user:
+                if not databases:
+                    show_message("No databases available.", "warning")
+                    pause_for_user()
                     continue
+
+                selected_db = ask_database_selection(databases, "change password")
+                if not selected_db:
+                    continue
+
+                db_user = selected_db.get("db_user") or selected_db.get("db_name")
+                console.print(f"Selected Database User: [bold cyan]{db_user}[/bold cyan] (Database: {selected_db.get('db_name')})")
                 new_pass = Prompt.ask("Enter new password (min 6 characters)", console=console).strip()
                 if not new_pass:
                     continue

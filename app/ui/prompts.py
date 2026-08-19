@@ -544,3 +544,113 @@ def ask_adminer_port_input(current_port: int) -> Optional[int]:
     except ValueError:
         console.print("[red]Invalid port number.[/red]")
         return None
+
+
+def resolve_site_choice(sites: List[Dict[str, Any]], user_input: str) -> Optional[Dict[str, Any]]:
+    """Resolve a user input string to a site dictionary by integer ID or domain name.
+
+    Args:
+        sites: List of site dictionaries from database.
+        user_input: User entered string (e.g. '1', 'mysite.com').
+
+    Returns:
+        Optional[Dict[str, Any]]: Matched site dictionary or None.
+    """
+    cleaned = user_input.strip()
+    if not cleaned:
+        return None
+
+    # Priority 1: Match by numeric ID if input is purely numeric
+    if cleaned.isdigit():
+        target_id = int(cleaned)
+        for s in sites:
+            if s.get("id") == target_id:
+                return s
+
+    # Priority 2: Match by domain name (case-insensitive)
+    clean_domain = cleaned.lower()
+    for s in sites:
+        if s.get("domain", "").strip().lower() == clean_domain:
+            return s
+
+    return None
+
+
+def ask_site_selection(sites: List[Dict[str, Any]], prompt_title: str) -> Optional[Dict[str, Any]]:
+    """Prompt user to select a website by typing either its table ID or domain name.
+
+    Args:
+        sites: List of available site dictionaries.
+        prompt_title: Label describing the action (e.g. 'delete', 'rename', 'view logs').
+
+    Returns:
+        Optional[Dict[str, Any]]: Selected site dictionary or None.
+    """
+    if not sites:
+        return None
+
+    raw_input = Prompt.ask(f"\nEnter Website ID or Domain Name to {prompt_title}", console=console).strip()
+    if not raw_input:
+        return None
+
+    matched = resolve_site_choice(sites, raw_input)
+    if not matched:
+        console.print(f"[red]Error: Website with ID or domain '{raw_input}' not found.[/red]")
+        return None
+
+    return matched
+
+
+def resolve_database_choice(databases: List[Dict[str, Any]], user_input: str) -> Optional[Dict[str, Any]]:
+    """Resolve a user input string to a database dictionary by integer ID or database name.
+
+    Args:
+        databases: List of database dictionaries from database.
+        user_input: User entered string (e.g. '1', 'my_db').
+
+    Returns:
+        Optional[Dict[str, Any]]: Matched database dictionary or None.
+    """
+    cleaned = user_input.strip()
+    if not cleaned:
+        return None
+
+    # Priority 1: Match by numeric ID if input is purely numeric
+    if cleaned.isdigit():
+        target_id = int(cleaned)
+        for db in databases:
+            if db.get("id") == target_id:
+                return db
+
+    # Priority 2: Match by exact database name
+    for db in databases:
+        if db.get("db_name", "").strip() == cleaned or db.get("db_name", "").strip().lower() == cleaned.lower():
+            return db
+
+    return None
+
+
+def ask_database_selection(databases: List[Dict[str, Any]], prompt_title: str) -> Optional[Dict[str, Any]]:
+    """Prompt user to select a database by typing either its table ID or database name.
+
+    Args:
+        databases: List of available database dictionaries.
+        prompt_title: Label describing the action (e.g. 'delete', 'change password').
+
+    Returns:
+        Optional[Dict[str, Any]]: Selected database dictionary or None.
+    """
+    if not databases:
+        return None
+
+    raw_input = Prompt.ask(f"\nEnter Database ID or Name to {prompt_title}", console=console).strip()
+    if not raw_input:
+        return None
+
+    matched = resolve_database_choice(databases, raw_input)
+    if not matched:
+        console.print(f"[red]Error: Database with ID or name '{raw_input}' not found.[/red]")
+        return None
+
+    return matched
+
