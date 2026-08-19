@@ -157,7 +157,8 @@ def render_sites_table(sites: List[Dict[str, Any]]) -> Table:
         header_style="bold cyan",
         expand=True,
     )
-    table.add_column("ID", style="dim", width=6, justify="center")
+    table.add_column("No.", style="bold cyan", width=4, justify="center")
+    table.add_column("ID", style="dim", width=10, justify="center")
     table.add_column("Domain Name", style="bold white", width=24)
     table.add_column("Document Root Path", style="dim white")
     table.add_column("PHP Version", style="yellow", width=12, justify="center")
@@ -165,10 +166,10 @@ def render_sites_table(sites: List[Dict[str, Any]]) -> Table:
     table.add_column("Created At", style="dim", width=20)
 
     if not sites:
-        table.add_row("-", "[dim italic]No websites configured yet[/dim italic]", "-", "-", "-", "-")
+        table.add_row("-", "-", "[dim italic]No websites configured yet[/dim italic]", "-", "-", "-", "-")
         return table
 
-    for s in sites:
+    for idx, s in enumerate(sites, 1):
         ssl_val = s.get("ssl_status", 0)
         is_ssl = ssl_val == 1 or str(ssl_val).lower() == "enabled"
         ssl_badge = (
@@ -177,8 +178,10 @@ def render_sites_table(sites: List[Dict[str, Any]]) -> Table:
             else "[dim]DISABLED[/dim]"
         )
         php_ver = s.get("php_version") or "none"
+        raw_id = str(s.get("id", "-"))
         table.add_row(
-            str(s.get("id")),
+            str(idx),
+            raw_id[:8],
             s.get("domain", "-"),
             s.get("root_path", "-"),
             php_ver.upper() if php_ver != "none" else "Static",
@@ -196,19 +199,22 @@ def render_databases_table(databases: List[Dict[str, Any]]) -> Table:
         header_style="bold blue",
         expand=True,
     )
-    table.add_column("ID", style="dim", width=6, justify="center")
+    table.add_column("No.", style="bold cyan", width=4, justify="center")
+    table.add_column("ID", style="dim", width=10, justify="center")
     table.add_column("Database Name", style="bold white", width=24)
     table.add_column("Database User", style="cyan", width=20)
     table.add_column("Charset", style="dim", width=14, justify="center")
     table.add_column("Created At", style="dim", width=20)
 
     if not databases:
-        table.add_row("-", "[dim italic]No databases created yet[/dim italic]", "-", "-", "-")
+        table.add_row("-", "-", "[dim italic]No databases created yet[/dim italic]", "-", "-", "-")
         return table
 
-    for db in databases:
+    for idx, db in enumerate(databases, 1):
+        raw_id = str(db.get("id", "-"))
         table.add_row(
-            str(db.get("id")),
+            str(idx),
+            raw_id[:8],
             db.get("db_name", "-"),
             db.get("db_user", "-"),
             db.get("charset", "utf8mb4"),
@@ -233,7 +239,8 @@ def render_firewall_table(status: Dict[str, Any], rules: List[Dict[str, Any]]) -
         header_style="bold yellow",
         expand=True,
     )
-    table.add_column("ID", style="dim", width=6, justify="center")
+    table.add_column("No.", style="bold cyan", width=4, justify="center")
+    table.add_column("ID", style="dim", width=10, justify="center")
     table.add_column("Port / Range", style="bold white", width=16)
     table.add_column("Protocol", style="cyan", width=12, justify="center")
     table.add_column("Action", width=12, justify="center")
@@ -241,17 +248,19 @@ def render_firewall_table(status: Dict[str, Any], rules: List[Dict[str, Any]]) -
     table.add_column("Created At", style="dim", width=20)
 
     if not rules:
-        table.add_row("-", "[dim italic]No custom rules added yet[/dim italic]", "-", "-", "-", "-")
+        table.add_row("-", "-", "[dim italic]No custom rules added yet[/dim italic]", "-", "-", "-", "-")
     else:
-        for r in rules:
+        for idx, r in enumerate(rules, 1):
             action = r.get("action", "allow").upper()
             action_badge = (
                 "[bold green]ALLOW[/bold green]"
                 if action == "ALLOW"
                 else "[bold red]DENY[/bold red]"
             )
+            raw_id = str(r.get("id", "-"))
             table.add_row(
-                str(r.get("id")),
+                str(idx),
+                raw_id[:8],
                 str(r.get("port", "-")),
                 r.get("protocol", "tcp").upper(),
                 action_badge,
@@ -269,7 +278,8 @@ def render_cron_table(jobs: List[Dict[str, Any]]) -> Table:
         header_style="bold magenta",
         expand=True,
     )
-    table.add_column("ID", style="dim", width=6, justify="center")
+    table.add_column("No.", style="bold cyan", width=4, justify="center")
+    table.add_column("ID", style="dim", width=10, justify="center")
     table.add_column("Task Name", style="bold white", width=22)
     table.add_column("Job Type", style="cyan", width=16)
     table.add_column("Schedule", style="yellow", width=16, justify="center")
@@ -278,18 +288,20 @@ def render_cron_table(jobs: List[Dict[str, Any]]) -> Table:
     table.add_column("Created At", style="dim", width=20)
 
     if not jobs:
-        table.add_row("-", "[dim italic]No cron jobs scheduled yet[/dim italic]", "-", "-", "-", "-", "-")
+        table.add_row("-", "-", "[dim italic]No cron jobs scheduled yet[/dim italic]", "-", "-", "-", "-", "-")
         return table
 
-    for j in jobs:
+    for idx, j in enumerate(jobs, 1):
         status_str = j.get("status", "active").upper()
         status_badge = (
             "[bold green]ACTIVE[/bold green]"
             if status_str == "ACTIVE"
             else "[dim]DISABLED[/dim]"
         )
+        raw_id = str(j.get("id", "-"))
         table.add_row(
-            str(j.get("id")),
+            str(idx),
+            raw_id[:8],
             j.get("name", "-"),
             j.get("job_type", "-").replace("_", " ").title(),
             j.get("schedule", "-"),
@@ -308,7 +320,8 @@ def render_backups_table(backups: List[Dict[str, Any]]) -> Table:
         header_style="bold green",
         expand=True,
     )
-    table.add_column("ID", style="dim", width=6, justify="center")
+    table.add_column("No.", style="bold cyan", width=4, justify="center")
+    table.add_column("ID", style="dim", width=10, justify="center")
     table.add_column("Type", style="cyan", width=12, justify="center")
     table.add_column("Target Name", style="bold white", width=22)
     table.add_column("File Name", style="dim white")
@@ -317,10 +330,10 @@ def render_backups_table(backups: List[Dict[str, Any]]) -> Table:
     table.add_column("Created At", style="dim", width=20)
 
     if not backups:
-        table.add_row("-", "-", "[dim italic]No backups generated yet[/dim italic]", "-", "-", "-", "-")
+        table.add_row("-", "-", "-", "[dim italic]No backups generated yet[/dim italic]", "-", "-", "-", "-")
         return table
 
-    for b in backups:
+    for idx, b in enumerate(backups, 1):
         file_p = b.get("file_path", "")
         file_name = Path(file_p).name if file_p else "-"
         exists_badge = (
@@ -328,8 +341,10 @@ def render_backups_table(backups: List[Dict[str, Any]]) -> Table:
             if b.get("file_exists", True)
             else "[red]MISSING[/red]"
         )
+        raw_id = str(b.get("id", "-"))
         table.add_row(
-            str(b.get("id")),
+            str(idx),
+            raw_id[:8],
             b.get("backup_type", "-").upper(),
             b.get("target", "-"),
             file_name,

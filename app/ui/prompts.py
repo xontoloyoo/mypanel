@@ -547,37 +547,42 @@ def ask_adminer_port_input(current_port: int) -> Optional[int]:
 
 
 def resolve_site_choice(sites: List[Dict[str, Any]], user_input: str) -> Optional[Dict[str, Any]]:
-    """Resolve a user input string to a site dictionary by integer ID or domain name.
+    """Resolve a user input string to a site dictionary by table row number, Short ID, or domain name.
 
     Args:
         sites: List of site dictionaries from database.
-        user_input: User entered string (e.g. '1', 'mysite.com').
+        user_input: User entered string (e.g. '1', '8f3a9b1c', 'mysite.com').
 
     Returns:
         Optional[Dict[str, Any]]: Matched site dictionary or None.
     """
     cleaned = user_input.strip()
-    if not cleaned:
+    if not cleaned or not sites:
         return None
 
-    # Priority 1: Match by numeric ID if input is purely numeric
+    # Priority 1: Match by table row number (1-indexed 'No.' in CLI table)
     if cleaned.isdigit():
-        target_id = int(cleaned)
-        for s in sites:
-            if s.get("id") == target_id:
-                return s
+        row_num = int(cleaned)
+        if 1 <= row_num <= len(sites):
+            return sites[row_num - 1]
 
-    # Priority 2: Match by domain name (case-insensitive)
-    clean_domain = cleaned.lower()
+    # Priority 2: Match by Short Hex ID or Database ID (case-insensitive)
+    clean_lower = cleaned.lower()
     for s in sites:
-        if s.get("domain", "").strip().lower() == clean_domain:
+        site_id = str(s.get("id", "")).strip().lower()
+        if site_id and (site_id == clean_lower or (len(clean_lower) >= 4 and site_id.startswith(clean_lower))):
+            return s
+
+    # Priority 3: Match by domain name (case-insensitive)
+    for s in sites:
+        if s.get("domain", "").strip().lower() == clean_lower:
             return s
 
     return None
 
 
 def ask_site_selection(sites: List[Dict[str, Any]], prompt_title: str) -> Optional[Dict[str, Any]]:
-    """Prompt user to select a website by typing either its table ID or domain name.
+    """Prompt user to select a website by typing either its table row number (No.), Short ID, or domain name.
 
     Args:
         sites: List of available site dictionaries.
@@ -589,49 +594,55 @@ def ask_site_selection(sites: List[Dict[str, Any]], prompt_title: str) -> Option
     if not sites:
         return None
 
-    raw_input = Prompt.ask(f"\nEnter Website ID or Domain Name to {prompt_title}", console=console).strip()
+    raw_input = Prompt.ask(f"\nEnter Website No., ID, or Domain to {prompt_title}", console=console).strip()
     if not raw_input:
         return None
 
     matched = resolve_site_choice(sites, raw_input)
     if not matched:
-        console.print(f"[red]Error: Website with ID or domain '{raw_input}' not found.[/red]")
+        console.print(f"[red]Error: Website '{raw_input}' not found.[/red]")
         return None
 
     return matched
 
 
 def resolve_database_choice(databases: List[Dict[str, Any]], user_input: str) -> Optional[Dict[str, Any]]:
-    """Resolve a user input string to a database dictionary by integer ID or database name.
+    """Resolve a user input string to a database dictionary by table row number, Short ID, or database name.
 
     Args:
         databases: List of database dictionaries from database.
-        user_input: User entered string (e.g. '1', 'my_db').
+        user_input: User entered string (e.g. '1', 'd2e71a4f', 'my_db').
 
     Returns:
         Optional[Dict[str, Any]]: Matched database dictionary or None.
     """
     cleaned = user_input.strip()
-    if not cleaned:
+    if not cleaned or not databases:
         return None
 
-    # Priority 1: Match by numeric ID if input is purely numeric
+    # Priority 1: Match by table row number (1-indexed 'No.' in CLI table)
     if cleaned.isdigit():
-        target_id = int(cleaned)
-        for db in databases:
-            if db.get("id") == target_id:
-                return db
+        row_num = int(cleaned)
+        if 1 <= row_num <= len(databases):
+            return databases[row_num - 1]
 
-    # Priority 2: Match by exact database name
+    # Priority 2: Match by Short Hex ID or Database ID (case-insensitive)
+    clean_lower = cleaned.lower()
     for db in databases:
-        if db.get("db_name", "").strip() == cleaned or db.get("db_name", "").strip().lower() == cleaned.lower():
+        db_id = str(db.get("id", "")).strip().lower()
+        if db_id and (db_id == clean_lower or (len(clean_lower) >= 4 and db_id.startswith(clean_lower))):
+            return db
+
+    # Priority 3: Match by database name (case-insensitive)
+    for db in databases:
+        if db.get("db_name", "").strip().lower() == clean_lower:
             return db
 
     return None
 
 
 def ask_database_selection(databases: List[Dict[str, Any]], prompt_title: str) -> Optional[Dict[str, Any]]:
-    """Prompt user to select a database by typing either its table ID or database name.
+    """Prompt user to select a database by typing either its table row number (No.), Short ID, or database name.
 
     Args:
         databases: List of available database dictionaries.
@@ -643,13 +654,13 @@ def ask_database_selection(databases: List[Dict[str, Any]], prompt_title: str) -
     if not databases:
         return None
 
-    raw_input = Prompt.ask(f"\nEnter Database ID or Name to {prompt_title}", console=console).strip()
+    raw_input = Prompt.ask(f"\nEnter Database No., ID, or Name to {prompt_title}", console=console).strip()
     if not raw_input:
         return None
 
     matched = resolve_database_choice(databases, raw_input)
     if not matched:
-        console.print(f"[red]Error: Database with ID or name '{raw_input}' not found.[/red]")
+        console.print(f"[red]Error: Database '{raw_input}' not found.[/red]")
         return None
 
     return matched

@@ -162,7 +162,7 @@ class PanelApp:
                     continue
 
                 domain = selected_site["domain"]
-                site_id = selected_site.get("id")
+                site_id = str(selected_site.get("id", ""))[:8]
                 if confirm_action(f"Are you sure you want to delete website '{domain}' (ID: {site_id})?"):
                     del_root = confirm_action("Also permanently delete document root directory?")
                     with console.status("[bold red]Removing Nginx config and database record..."):
@@ -449,7 +449,7 @@ class PanelApp:
                     continue
 
                 db_name = selected_db["db_name"]
-                db_id = selected_db.get("id")
+                db_id = str(selected_db.get("id", ""))[:8]
                 if confirm_action(f"Are you sure you want to DROP database '{db_name}' (ID: {db_id})? (Data will be lost!)"):
                     del_user = confirm_action("Also drop the associated MySQL user?")
                     with console.status("[bold red]Dropping database..."):
@@ -578,15 +578,25 @@ class PanelApp:
                     pause_for_user()
                     continue
 
-                rule_id_str = Prompt.ask("\nEnter rule ID to delete", console=console).strip()
-                try:
-                    rule_id = int(rule_id_str)
-                except ValueError:
-                    show_message("Invalid rule ID. Please enter a valid number.", "error")
+                rule_input = Prompt.ask("\nEnter Rule No. or ID to delete", console=console).strip()
+                if not rule_input:
+                    continue
+
+                target_rule = None
+                if rule_input.isdigit() and 1 <= int(rule_input) <= len(rules):
+                    target_rule = rules[int(rule_input) - 1]
+                else:
+                    clean_lower = rule_input.lower()
+                    target_rule = next((r for r in rules if str(r.get("id", "")).lower().startswith(clean_lower)), None)
+
+                if not target_rule:
+                    show_message(f"Firewall rule '{rule_input}' not found.", "error")
                     pause_for_user()
                     continue
 
-                if confirm_action(f"Delete firewall rule ID {rule_id}?"):
+                rule_id = target_rule["id"]
+                rule_port = target_rule.get("port")
+                if confirm_action(f"Delete firewall rule for port {rule_port} (ID: {str(rule_id)[:8]})?"):
                     with console.status("[bold red]Deleting firewall rule..."):
                         ok, msg = self.fw_mgr.delete_rule(rule_id)
                     show_message(msg, "success" if ok else "error")
@@ -680,24 +690,29 @@ class PanelApp:
                     pause_for_user()
                     continue
 
-                job_id_str = Prompt.ask("\nEnter Task ID to toggle", console=console).strip()
-                try:
-                    job_id = int(job_id_str)
-                    target_job = next((j for j in jobs if j["id"] == job_id), None)
-                    if not target_job:
-                        show_message(f"Task ID {job_id} not found.", "error")
-                        pause_for_user()
-                        continue
+                job_input = Prompt.ask("\nEnter Task No. or ID to toggle", console=console).strip()
+                if not job_input:
+                    continue
 
-                    new_state = target_job.get("status") != "active"
-                    action_word = "activate" if new_state else "disable"
-                    if confirm_action(f"{action_word.capitalize()} task '{target_job['name']}'?"):
-                        with console.status(f"[bold yellow]Updating crontab..."):
-                            ok, msg = self.cron_mgr.toggle_job(job_id, enable=new_state)
-                        show_message(msg, "success" if ok else "error")
-                        pause_for_user()
-                except ValueError:
-                    show_message("Invalid Task ID.", "error")
+                target_job = None
+                if job_input.isdigit() and 1 <= int(job_input) <= len(jobs):
+                    target_job = jobs[int(job_input) - 1]
+                else:
+                    clean_lower = job_input.lower()
+                    target_job = next((j for j in jobs if str(j.get("id", "")).lower().startswith(clean_lower)), None)
+
+                if not target_job:
+                    show_message(f"Task '{job_input}' not found.", "error")
+                    pause_for_user()
+                    continue
+
+                job_id = target_job["id"]
+                new_state = target_job.get("status") != "active"
+                action_word = "activate" if new_state else "disable"
+                if confirm_action(f"{action_word.capitalize()} task '{target_job['name']}' (ID: {str(job_id)[:8]})?"):
+                    with console.status(f"[bold yellow]Updating crontab..."):
+                        ok, msg = self.cron_mgr.toggle_job(job_id, enable=new_state)
+                    show_message(msg, "success" if ok else "error")
                     pause_for_user()
             elif choice == "3":
                 if not jobs:
@@ -705,16 +720,27 @@ class PanelApp:
                     pause_for_user()
                     continue
 
-                job_id_str = Prompt.ask("\nEnter Task ID to delete", console=console).strip()
-                try:
-                    job_id = int(job_id_str)
-                    if confirm_action(f"Delete cron task ID {job_id}?"):
-                        with console.status("[bold red]Removing from crontab and database..."):
-                            ok, msg = self.cron_mgr.delete_job(job_id)
-                        show_message(msg, "success" if ok else "error")
-                        pause_for_user()
-                except ValueError:
-                    show_message("Invalid Task ID.", "error")
+                job_input = Prompt.ask("\nEnter Task No. or ID to delete", console=console).strip()
+                if not job_input:
+                    continue
+
+                target_job = None
+                if job_input.isdigit() and 1 <= int(job_input) <= len(jobs):
+                    target_job = jobs[int(job_input) - 1]
+                else:
+                    clean_lower = job_input.lower()
+                    target_job = next((j for j in jobs if str(j.get("id", "")).lower().startswith(clean_lower)), None)
+
+                if not target_job:
+                    show_message(f"Task '{job_input}' not found.", "error")
+                    pause_for_user()
+                    continue
+
+                job_id = target_job["id"]
+                if confirm_action(f"Delete cron task '{target_job['name']}' (ID: {str(job_id)[:8]})?"):
+                    with console.status("[bold red]Removing from crontab and database..."):
+                        ok, msg = self.cron_mgr.delete_job(job_id)
+                    show_message(msg, "success" if ok else "error")
                     pause_for_user()
             elif choice == "4":
                 sites = self.site_mgr.list_sites()
@@ -737,16 +763,28 @@ class PanelApp:
                     pause_for_user()
                     continue
 
-                backup_id_str = Prompt.ask("\nEnter Backup ID to delete", console=console).strip()
-                try:
-                    backup_id = int(backup_id_str)
-                    if confirm_action(f"Permanently delete backup archive ID {backup_id}?"):
-                        with console.status("[bold red]Deleting backup file..."):
-                            ok, msg = self.backup_mgr.delete_backup(backup_id)
-                        show_message(msg, "success" if ok else "error")
-                        pause_for_user()
-                except ValueError:
-                    show_message("Invalid Backup ID.", "error")
+                bk_input = Prompt.ask("\nEnter Backup No. or ID to delete", console=console).strip()
+                if not bk_input:
+                    continue
+
+                target_bk = None
+                if bk_input.isdigit() and 1 <= int(bk_input) <= len(backups):
+                    target_bk = backups[int(bk_input) - 1]
+                else:
+                    clean_lower = bk_input.lower()
+                    target_bk = next((b for b in backups if str(b.get("id", "")).lower().startswith(clean_lower)), None)
+
+                if not target_bk:
+                    show_message(f"Backup '{bk_input}' not found.", "error")
+                    pause_for_user()
+                    continue
+
+                backup_id = target_bk["id"]
+                target_name = target_bk.get("target", "unknown")
+                if confirm_action(f"Permanently delete backup archive '{target_name}' (ID: {str(backup_id)[:8]})?"):
+                    with console.status("[bold red]Deleting backup file..."):
+                        ok, msg = self.backup_mgr.delete_backup(backup_id)
+                    show_message(msg, "success" if ok else "error")
                     pause_for_user()
             elif choice == "6":
                 continue

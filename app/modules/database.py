@@ -9,7 +9,7 @@ import string
 from typing import Any, Dict, List, Optional, Tuple
 import urllib.request
 
-from app.core.database import Database, get_db
+from app.core.database import Database, generate_short_id, get_db
 from app.core.executor import run_cmd
 from app.core.logger import BASE_DIR, get_logger
 
@@ -201,13 +201,14 @@ class DatabaseManager:
 
         # 5. Save metadata to internal SQLite
         try:
+            db_id = generate_short_id()
             with self.db:
                 self.db.execute(
                     """
-                    INSERT INTO databases (db_name, db_user, db_pass, charset)
-                    VALUES (?, ?, ?, ?);
+                    INSERT INTO databases (id, db_name, db_user, db_pass, charset)
+                    VALUES (?, ?, ?, ?, ?);
                     """,
-                    (db_name, user_name, password, charset),
+                    (db_id, db_name, user_name, password, charset),
                 )
             logger.info("Database '%s' with user '%s'@'%s' created successfully.", db_name, user_name, host)
             return True, f"Database '{db_name}' and user '{user_name}' created successfully."

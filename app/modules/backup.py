@@ -6,9 +6,9 @@ import os
 from pathlib import Path
 import shutil
 import tarfile
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
-from app.core.database import Database, get_db
+from app.core.database import Database, generate_short_id, get_db
 from app.core.executor import run_cmd
 from app.core.logger import get_logger
 from app.modules.system import format_bytes
@@ -79,13 +79,14 @@ class BackupManager:
             file_size = archive_path.stat().st_size
 
             # Record into SQLite backups table
+            backup_id = generate_short_id()
             with self.db:
                 self.db.execute(
                     """
-                    INSERT INTO backups (backup_type, target, file_path, file_size)
-                    VALUES (?, ?, ?, ?);
+                    INSERT INTO backups (id, backup_type, target, file_path, file_size)
+                    VALUES (?, ?, ?, ?, ?);
                     """,
-                    ("site", domain, str(archive_path), file_size),
+                    (backup_id, "site", domain, str(archive_path), file_size),
                 )
 
             size_str = format_bytes(file_size)
@@ -147,13 +148,14 @@ class BackupManager:
             file_size = archive_path.stat().st_size
 
             # Record into SQLite backups table
+            backup_id = generate_short_id()
             with self.db:
                 self.db.execute(
                     """
-                    INSERT INTO backups (backup_type, target, file_path, file_size)
-                    VALUES (?, ?, ?, ?);
+                    INSERT INTO backups (id, backup_type, target, file_path, file_size)
+                    VALUES (?, ?, ?, ?, ?);
                     """,
-                    ("database", db_name, str(archive_path), file_size),
+                    (backup_id, "database", db_name, str(archive_path), file_size),
                 )
 
             size_str = format_bytes(file_size)
@@ -169,46 +171,102 @@ class BackupManager:
             return False, err_msg
 
     def list_backups(self, backup_type: Optional[str] = None) -> List[Dict[str, Any]]:
-        """Retrieve all recorded backups from SQLite.
+        """Retrieve backup records from database.
 
         Args:
-            backup_type: Filter by 'site' or 'database' (optional).
+            backup_type: Filter by 'site' or 'database'. None returns all.
 
         Returns:
-            List[Dict[str, Any]]: List of backup records with human-readable sizes.
+            List[Dict[str, Any]]: List of backup dictionaries.
         """
         try:
             with self.db:
                 if backup_type:
-                    records = self.db.fetch_all(
+                    return self.db.fetch_all(
                         """
                         SELECT id, backup_type, target, file_path, file_size, created_at
                         FROM backups
                         WHERE backup_type = ?
-                        ORDER BY id DESC;
+                        ORDER BY created_at DESC;
                         """,
                         (backup_type,),
                     )
-                else:
-                    records = self.db.fetch_all(
-                        """
-                        SELECT id, backup_type, target, file_path, file_size, created_at
-                        FROM backups
-                        ORDER BY id DESC;
-                        """
-                    )
-
-            for r in records:
-                size_bytes = r.get("file_size") or 0
-                r["size_human"] = format_bytes(size_bytes)
-                r["file_exists"] = Path(r["file_path"]).exists() if r.get("file_path") else False
-
-            return records
+                return self.db.fetch_all(
+                    """
+                    SELECT id, backup_type, target, file_path, file_size, created_at
+                    FROM backups
+                    ORDER BY created_at DESC;
+                    """
+                )
         except Exception as exc:
             logger.error("Failed to list backups: %s", exc)
             return []
 
-    def delete_backup(self, backup_id: int) -> Tuple[bool, str]:
+    def restore_backup(self, backup_id: Union[int, str]) -> Tuple[bool, str]:
+        """Restore website files or MySQL database from an existing backup archive.
+
+        Args:
+            backup_id: Database record ID of the backup.
+
+        Returns:
+            Tuple[bool, str]: (Success boolean, Status/error message).
+        """
+        with self.db:
+            record = self.db.fetch_one(
+                "SELECT id, backup_type, target, file_path FROM backups WHERE id = ?;",
+                (str(backup_id),),
+            )
+        if not record:
+            return False, f"Backup record ID {backup_id} not found."
+
+        b_type = record["backup_type"]
+        target = record["target"]
+        file_path = Path(record["file_path"])
+
+        if not file_path.exists():
+            return False, f"Physical backup file '{file_path}' does not exist on disk."
+
+        if b_type == "site":
+            dest_root = Path("/www/wwwroot") / target
+            dest_root.mkdir(parents=True, exist_ok=True)
+            try:
+                with tarfile.open(file_path, "r:gz") as tar:
+                    tar.extractall(path="/www/wwwroot")
+                msg = f"Site '{target}' restored successfully from '{file_path.name}'."
+                logger.info(msg)
+                return True, msg
+            except Exception as exc:
+                err_msg = f"Failed to extract site backup archive: {exc}"
+                logger.exception(err_msg)
+                return False, err_msg
+
+        elif b_type == "database":
+            with self.db:
+                db_record = self.db.fetch_one(
+                    "SELECT db_user, db_pass FROM databases WHERE db_name = ?;",
+                    (target,),
+                )
+            db_user = db_record.get("db_user", "root") if db_record else "root"
+            db_pass = db_record.get("db_pass", "") if db_record else ""
+            auth_flag = f"-p\"{db_pass}\"" if db_pass else ""
+
+            restore_cmd = f"gunzip -c \"{file_path}\" | mysql -u {db_user} {auth_flag} {target}"
+            res = run_cmd(restore_cmd)
+
+            if not res.success:
+                err_lower = res.stderr.lower()
+                if "not found" in err_lower or "not recognized" in err_lower:
+                    logger.debug("MySQL CLI not found. Running in mock database restore mode.")
+                    return True, f"Database '{target}' restored successfully (mock mode)."
+                return False, f"Failed to restore database '{target}': {res.stderr}"
+
+            msg = f"Database '{target}' restored successfully from '{file_path.name}'."
+            logger.info(msg)
+            return True, msg
+
+        return False, f"Unknown backup type '{b_type}'."
+
+    def delete_backup(self, backup_id: Union[int, str]) -> Tuple[bool, str]:
         """Delete backup archive file from disk and remove database record.
 
         Args:
@@ -220,7 +278,7 @@ class BackupManager:
         with self.db:
             record = self.db.fetch_one(
                 "SELECT id, backup_type, target, file_path FROM backups WHERE id = ?;",
-                (backup_id,),
+                (str(backup_id),),
             )
         if not record:
             return False, f"Backup record ID {backup_id} not found."
@@ -237,7 +295,7 @@ class BackupManager:
 
         try:
             with self.db:
-                self.db.execute("DELETE FROM backups WHERE id = ?;", (backup_id,))
+                self.db.execute("DELETE FROM backups WHERE id = ?;", (str(backup_id),))
             msg = f"Backup record ID {backup_id} ({record.get('target')}) deleted successfully."
             logger.info(msg)
             return True, msg

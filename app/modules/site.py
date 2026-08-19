@@ -9,7 +9,7 @@ import re
 import shutil
 from typing import Any, Dict, List, Optional, Tuple
 
-from app.core.database import Database, get_db
+from app.core.database import Database, generate_short_id, get_db
 from app.core.executor import run_cmd
 from app.core.logger import BASE_DIR, get_logger
 
@@ -440,13 +440,14 @@ class SiteManager:
                 logger.warning("Nginx reload returned warning: %s", reload_msg)
 
             # 8. Insert record into database
+            site_id = generate_short_id()
             with self.db:
                 self.db.execute(
                     """
-                    INSERT INTO sites (domain, root_path, php_version, ssl_status)
-                    VALUES (?, ?, ?, ?);
+                    INSERT INTO sites (id, domain, root_path, php_version, ssl_status)
+                    VALUES (?, ?, ?, ?, ?);
                     """,
-                    (domain, target_root, php_version, 0),
+                    (site_id, domain, target_root, php_version, 0),
                 )
 
             logger.info("Site '%s' successfully created with root '%s'", domain, target_root)

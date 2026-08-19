@@ -1,6 +1,7 @@
 """Internal SQLite database connection handler and query helper."""
 
 from pathlib import Path
+import secrets
 import sqlite3
 from typing import Any, List, Optional, Tuple, Union
 
@@ -11,6 +12,19 @@ logger = get_logger("database")
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 DATA_DIR = BASE_DIR / "data"
 DB_PATH = DATA_DIR / "panel.db"
+
+
+def generate_short_id(length: int = 8) -> str:
+    """Generate a cryptographically secure random short hexadecimal identifier.
+
+    Args:
+        length: Desired hex character length (default: 8 characters, e.g. '8f3a9b1c').
+
+    Returns:
+        str: Lowercase hex string.
+    """
+    nbytes = (length + 1) // 2
+    return secrets.token_hex(nbytes)[:length]
 
 
 def dict_factory(cursor: sqlite3.Cursor, row: Tuple[Any, ...]) -> dict[str, Any]:
@@ -143,7 +157,7 @@ class Database:
         """Initialize database schema with initial tables if they do not exist."""
         schema = """
         CREATE TABLE IF NOT EXISTS sites (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id TEXT PRIMARY KEY,
             domain TEXT UNIQUE NOT NULL,
             root_path TEXT NOT NULL,
             php_version TEXT,
@@ -152,7 +166,7 @@ class Database:
         );
 
         CREATE TABLE IF NOT EXISTS databases (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id TEXT PRIMARY KEY,
             db_name TEXT UNIQUE NOT NULL,
             db_user TEXT NOT NULL,
             db_pass TEXT NOT NULL,
@@ -161,7 +175,7 @@ class Database:
         );
 
         CREATE TABLE IF NOT EXISTS firewall_rules (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id TEXT PRIMARY KEY,
             port TEXT NOT NULL,
             protocol TEXT DEFAULT 'tcp',
             action TEXT DEFAULT 'allow',
@@ -175,7 +189,7 @@ class Database:
         );
 
         CREATE TABLE IF NOT EXISTS cron_jobs (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id TEXT PRIMARY KEY,
             name TEXT NOT NULL,
             job_type TEXT NOT NULL,
             schedule TEXT NOT NULL,
@@ -185,7 +199,7 @@ class Database:
         );
 
         CREATE TABLE IF NOT EXISTS backups (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id TEXT PRIMARY KEY,
             backup_type TEXT NOT NULL,
             target TEXT NOT NULL,
             file_path TEXT NOT NULL,

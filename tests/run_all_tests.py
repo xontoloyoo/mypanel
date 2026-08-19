@@ -29,7 +29,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from app.core.database import Database, get_db, init_db
+from app.core.database import Database, generate_short_id, get_db, init_db
 from app.core.executor import ExecutionResult, run_cmd
 from app.modules.backup import BackupManager
 from app.modules.cron import CronManager
@@ -78,41 +78,49 @@ def run_suite_1(temp_dir: Path) -> Tuple[int, Optional[str]]:
     try:
         with db:
             # 1. Insert & Query Sites table
+            site_id = generate_short_id()
             db.execute(
-                "INSERT INTO sites (domain, root_path, php_version, ssl_status) VALUES (?, ?, ?, ?);",
-                ("example.com", "/www/wwwroot/example.com", "8.2", 0),
+                "INSERT INTO sites (id, domain, root_path, php_version, ssl_status) VALUES (?, ?, ?, ?, ?);",
+                (site_id, "example.com", "/www/wwwroot/example.com", "8.2", 0),
             )
             site = db.fetch_one("SELECT * FROM sites WHERE domain = ?;", ("example.com",))
             checks += 1
             assert site is not None, "Failed to query inserted site"
             assert site["domain"] == "example.com"
+            assert site["id"] == site_id
 
             # 2. Insert & Query Databases table
+            db_id = generate_short_id()
             db.execute(
-                "INSERT INTO databases (db_name, db_user, db_pass, charset) VALUES (?, ?, ?, ?);",
-                ("app_db", "app_user", "SecretPass123!#", "utf8mb4"),
+                "INSERT INTO databases (id, db_name, db_user, db_pass, charset) VALUES (?, ?, ?, ?, ?);",
+                (db_id, "app_db", "app_user", "SecretPass123!#", "utf8mb4"),
             )
             db_rec = db.fetch_one("SELECT * FROM databases WHERE db_name = ?;", ("app_db",))
             checks += 1
             assert db_rec is not None, "Failed to query database record"
+            assert db_rec["id"] == db_id
 
             # 3. Insert & Query Cron Jobs
+            job_id = generate_short_id()
             db.execute(
-                "INSERT INTO cron_jobs (name, job_type, schedule, target, status) VALUES (?, ?, ?, ?, ?);",
-                ("Daily Backup", "site_backup", "0 2 * * *", "example.com", "active"),
+                "INSERT INTO cron_jobs (id, name, job_type, schedule, target, status) VALUES (?, ?, ?, ?, ?, ?);",
+                (job_id, "Daily Backup", "site_backup", "0 2 * * *", "example.com", "active"),
             )
             job = db.fetch_one("SELECT * FROM cron_jobs WHERE name = ?;", ("Daily Backup",))
             checks += 1
             assert job is not None, "Failed to query cron job record"
+            assert job["id"] == job_id
 
             # 4. Insert & Query Backups
+            backup_id = generate_short_id()
             db.execute(
-                "INSERT INTO backups (backup_type, target, file_path, file_size) VALUES (?, ?, ?, ?);",
-                ("site", "example.com", "/www/backup/site/test.tar.gz", 1024),
+                "INSERT INTO backups (id, backup_type, target, file_path, file_size) VALUES (?, ?, ?, ?, ?);",
+                (backup_id, "site", "example.com", "/www/backup/site/test.tar.gz", 1024),
             )
             bk = db.fetch_one("SELECT * FROM backups WHERE target = ?;", ("example.com",))
             checks += 1
             assert bk is not None, "Failed to query backup record"
+            assert bk["id"] == backup_id
 
         # 5. Test Command Executor
         res = run_cmd("echo 'cli-panel test'")
@@ -306,18 +314,23 @@ def run_suite_2(temp_dir: Path) -> Tuple[int, Optional[str]]:
         assert ok_del, f"Failed to delete site: {msg_del}"
         assert not (nginx_avail / "renamed.local.conf").exists(), "Vhost file was not removed"
 
-        # 11. Test Smart ID & Domain Name Resolver
+        # 11. Test Smart Row Number (No.), Short Hex ID & Domain Name Resolver
         mock_sites_list = [
-            {"id": 1, "domain": "primary-store.com", "root_path": "/www/wwwroot/primary"},
-            {"id": 2, "domain": "blog.mycompany.id", "root_path": "/www/wwwroot/blog"},
-            {"id": 3, "domain": "123app.com", "root_path": "/www/wwwroot/123app"},
+            {"id": "a1b2c3d4", "domain": "primary-store.com", "root_path": "/www/wwwroot/primary"},
+            {"id": "e5f6a7b8", "domain": "blog.mycompany.id", "root_path": "/www/wwwroot/blog"},
+            {"id": "c9d0e1f2", "domain": "123app.com", "root_path": "/www/wwwroot/123app"},
         ]
-        # Match by ID
+        # Match by table row number (1-indexed 'No.' in CLI table)
         assert resolve_site_choice(mock_sites_list, "1")["domain"] == "primary-store.com"
         assert resolve_site_choice(mock_sites_list, "2")["domain"] == "blog.mycompany.id"
+        assert resolve_site_choice(mock_sites_list, "3")["domain"] == "123app.com"
+        # Match by Short Hex ID
+        assert resolve_site_choice(mock_sites_list, "a1b2c3d4")["domain"] == "primary-store.com"
+        assert resolve_site_choice(mock_sites_list, "A1B2C3D4")["domain"] == "primary-store.com"
+        assert resolve_site_choice(mock_sites_list, "e5f6")["domain"] == "blog.mycompany.id"
         # Match by domain name
-        assert resolve_site_choice(mock_sites_list, "primary-store.com")["id"] == 1
-        assert resolve_site_choice(mock_sites_list, "BLOG.MYCOMPANY.ID")["id"] == 2
+        assert resolve_site_choice(mock_sites_list, "primary-store.com")["id"] == "a1b2c3d4"
+        assert resolve_site_choice(mock_sites_list, "BLOG.MYCOMPANY.ID")["id"] == "e5f6a7b8"
         # Match with whitespace
         assert resolve_site_choice(mock_sites_list, "  2  ")["domain"] == "blog.mycompany.id"
         # Invalid inputs
@@ -437,17 +450,21 @@ def run_suite_3(temp_dir: Path) -> Tuple[int, Optional[str]]:
         assert stat_uninst["installed"] is False
         assert not (nginx_avail / "00_adminer.conf").exists()
 
-        # Test Smart Database ID & Name Resolver
+        # Test Smart Database Row Number (No.), Short Hex ID & Name Resolver
         mock_dbs_list = [
-            {"id": 1, "db_name": "prod_shop", "db_user": "u_shop"},
-            {"id": 2, "db_name": "test_blog", "db_user": "u_blog"},
+            {"id": "8f3a9b1c", "db_name": "prod_shop", "db_user": "u_shop"},
+            {"id": "d2e71a4f", "db_name": "test_blog", "db_user": "u_blog"},
         ]
-        # Match by ID
+        # Match by table row number (1-indexed 'No.' in CLI table)
         assert resolve_database_choice(mock_dbs_list, "1")["db_name"] == "prod_shop"
         assert resolve_database_choice(mock_dbs_list, "2")["db_name"] == "test_blog"
+        # Match by Short Hex ID
+        assert resolve_database_choice(mock_dbs_list, "8f3a9b1c")["db_name"] == "prod_shop"
+        assert resolve_database_choice(mock_dbs_list, "D2E71A4F")["db_name"] == "test_blog"
+        assert resolve_database_choice(mock_dbs_list, "8f3a")["db_name"] == "prod_shop"
         # Match by Name
-        assert resolve_database_choice(mock_dbs_list, "prod_shop")["id"] == 1
-        assert resolve_database_choice(mock_dbs_list, "TEST_BLOG")["id"] == 2
+        assert resolve_database_choice(mock_dbs_list, "prod_shop")["id"] == "8f3a9b1c"
+        assert resolve_database_choice(mock_dbs_list, "TEST_BLOG")["id"] == "d2e71a4f"
         # Match with whitespace
         assert resolve_database_choice(mock_dbs_list, "  1  ")["db_name"] == "prod_shop"
         # Invalid inputs
@@ -589,8 +606,8 @@ def run_suite_6(temp_dir: Path) -> Tuple[int, Optional[str]]:
         # Mock website in database
         with db:
             db.execute(
-                "INSERT INTO sites (domain, root_path, php_version, ssl_status) VALUES (?, ?, ?, ?);",
-                ("site_a", str(site_dir), "8.2", 0),
+                "INSERT INTO sites (id, domain, root_path, php_version, ssl_status) VALUES (?, ?, ?, ?, ?);",
+                (generate_short_id(), "site_a", str(site_dir), "8.2", 0),
             )
 
         ok_bk, msg_bk = backup_mgr.backup_site("site_a")
@@ -681,12 +698,12 @@ def run_suite_8(temp_dir: Path) -> Tuple[int, Optional[str]]:
     # Seed some sample data
     with db:
         db.execute(
-            "INSERT INTO sites (domain, root_path, php_version, ssl_status) VALUES (?, ?, ?, ?);",
-            ("migratedsite.com", "/www/wwwroot/migratedsite.com", "8.2", 1),
+            "INSERT INTO sites (id, domain, root_path, php_version, ssl_status) VALUES (?, ?, ?, ?, ?);",
+            (generate_short_id(), "migratedsite.com", "/www/wwwroot/migratedsite.com", "8.2", 1),
         )
         db.execute(
-            "INSERT INTO databases (db_name, db_user, db_pass, charset) VALUES (?, ?, ?, ?);",
-            ("migrated_db", "mig_user", "SecretPass123!#", "utf8mb4"),
+            "INSERT INTO databases (id, db_name, db_user, db_pass, charset) VALUES (?, ?, ?, ?, ?);",
+            (generate_short_id(), "migrated_db", "mig_user", "SecretPass123!#", "utf8mb4"),
         )
 
     export_dir = suite_dir / "migration_exports"

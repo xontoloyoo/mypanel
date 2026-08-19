@@ -1,9 +1,9 @@
 """Cron and scheduled task management module for automated server jobs."""
 
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
-from app.core.database import Database, get_db
+from app.core.database import Database, generate_short_id, get_db
 from app.core.executor import run_cmd
 from app.core.logger import get_logger
 
@@ -28,24 +28,24 @@ class CronManager:
         self.db = db or get_db()
 
     @staticmethod
-    def validate_schedule(schedule: str) -> bool:
-        """Validate a cron expression string.
+    def validate_schedule(expression: str) -> bool:
+        """Validate whether a given string is a valid cron schedule expression.
 
         Args:
-            schedule: 5-part cron expression or alias (e.g. '0 2 * * *', '@daily').
+            expression: Cron expression string.
 
         Returns:
             bool: True if valid, False otherwise.
         """
-        if not schedule:
+        if not expression or not expression.strip():
             return False
-        return bool(CRON_REGEX.match(schedule.strip()))
+        return bool(CRON_REGEX.match(expression.strip()))
 
     def _get_crontab_lines(self) -> List[str]:
-        """Read all lines from current user/system crontab."""
+        """Read all lines currently configured in the user's crontab."""
         res = run_cmd("crontab -l")
         if not res.success:
-            logger.debug("crontab -l returned error or is empty: %s", res.stderr)
+            logger.debug("Could not read crontab or crontab is currently empty: %s", res.stderr)
             return []
         return [line.rstrip() for line in res.stdout.splitlines()]
 
@@ -66,7 +66,7 @@ class CronManager:
 
         return True, "Crontab updated successfully"
 
-    def _build_command_string(self, job_id: int, job_type: str, target: str) -> str:
+    def _build_command_string(self, job_id: Union[int, str], job_type: str, target: str) -> str:
         """Generate shell command invocation based on job type."""
         panel_python = "/www/server/panel/.venv/bin/python"
         panel_entry = "/www/server/panel/app/main.py"
@@ -89,16 +89,15 @@ class CronManager:
         """Register a new scheduled cron job in crontab and internal SQLite.
 
         Args:
-            name: Human-readable name for the job.
-            job_type: Type ('site_backup', 'db_backup', 'shell_cmd').
-            schedule: Cron schedule expression (e.g. '0 3 * * *').
-            target: Target domain name, database name, or shell command.
+            name: Human readable label.
+            job_type: Type of job ('site_backup', 'db_backup', 'shell_cmd').
+            schedule: 5-part cron syntax string (e.g. '0 2 * * *').
+            target: Target domain/database or shell script to execute.
 
         Returns:
             Tuple[bool, str]: (Success boolean, Status/error message).
         """
         name = name.strip()
-        job_type = job_type.strip().lower()
         schedule = schedule.strip()
         target = target.strip()
 
@@ -116,13 +115,14 @@ class CronManager:
 
         # 1. Insert into SQLite to obtain job_id
         try:
+            job_id = generate_short_id()
             with self.db:
-                job_id = self.db.execute(
+                self.db.execute(
                     """
-                    INSERT INTO cron_jobs (name, job_type, schedule, target, status)
-                    VALUES (?, ?, ?, ?, 'active');
+                    INSERT INTO cron_jobs (id, name, job_type, schedule, target, status)
+                    VALUES (?, ?, ?, ?, ?, 'active');
                     """,
-                    (name, job_type, schedule, target),
+                    (job_id, name, job_type, schedule, target),
                 )
         except Exception as exc:
             err_msg = f"Failed to record cron job in registry: {exc}"
@@ -141,7 +141,7 @@ class CronManager:
         logger.info("Cron job '%s' (ID %s) added to crontab.", name, job_id)
         return True, f"Cron job '{name}' registered successfully."
 
-    def toggle_job(self, job_id: int, enable: bool) -> Tuple[bool, str]:
+    def toggle_job(self, job_id: Union[int, str], enable: bool) -> Tuple[bool, str]:
         """Enable or disable an existing cron job.
 
         Args:
@@ -185,7 +185,7 @@ class CronManager:
             with self.db:
                 self.db.execute(
                     "UPDATE cron_jobs SET status = ? WHERE id = ?;",
-                    (new_status, job_id),
+                    (new_status, str(job_id)),
                 )
             logger.info("Cron job ID %s state changed to %s.", job_id, new_status)
             return True, f"Cron job '{job['name']}' is now {new_status}."
@@ -194,7 +194,7 @@ class CronManager:
             logger.exception(err_msg)
             return False, err_msg
 
-    def delete_job(self, job_id: int) -> Tuple[bool, str]:
+    def delete_job(self, job_id: Union[int, str]) -> Tuple[bool, str]:
         """Delete a cron job from crontab and database.
 
         Args:
@@ -217,7 +217,7 @@ class CronManager:
         # 2. Delete from SQLite
         try:
             with self.db:
-                self.db.execute("DELETE FROM cron_jobs WHERE id = ?;", (job_id,))
+                self.db.execute("DELETE FROM cron_jobs WHERE id = ?;", (str(job_id),))
             logger.info("Cron job ID %s deleted successfully.", job_id)
             return True, f"Cron job '{job['name']}' deleted successfully."
         except Exception as exc:
@@ -237,7 +237,7 @@ class CronManager:
                     """
                     SELECT id, name, job_type, schedule, target, status, created_at
                     FROM cron_jobs
-                    ORDER BY id DESC;
+                    ORDER BY created_at DESC;
                     """
                 )
                 return records
@@ -245,7 +245,7 @@ class CronManager:
             logger.error("Failed to list cron jobs: %s", exc)
             return []
 
-    def get_job(self, job_id: int) -> Optional[Dict[str, Any]]:
+    def get_job(self, job_id: Union[int, str]) -> Optional[Dict[str, Any]]:
         """Retrieve details of a single cron job by ID.
 
         Args:
@@ -262,7 +262,7 @@ class CronManager:
                     FROM cron_jobs
                     WHERE id = ?;
                     """,
-                    (job_id,),
+                    (str(job_id),),
                 )
                 return record
         except Exception as exc:
