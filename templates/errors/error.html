@@ -42,10 +42,7 @@ body{background:#000;color:#f8fafc;display:flex;align-items:center;justify-conte
 </head>
 <body>
     <div class="container">
-        <!-- Angka Status Code Dinamis -->
         <div class="code"><!--# echo var="status" default="404" --></div>
-
-        <!-- Judul Dinamis Standar HTTP -->
         <div class="title">
             <!--# if expr="$status = 403" -->Forbidden
             <!--# elif expr="$status = 404" -->Page Not Found
